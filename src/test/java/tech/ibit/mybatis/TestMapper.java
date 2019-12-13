@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class TestMapper<T> implements Mapper<T> {
     @Override
-    public List<T> selectWithResultMap(SqlParams sqlParams, String resultMap) {
+    public <P> List<P> selectWithResultMap(SqlParams sqlParams, String resultMap) {
         return null;
     }
 
     @Override
-    public List select(SqlParams sqlParams) {
+    public List<T> select(SqlParams sqlParams) {
         return null;
     }
 
@@ -44,7 +44,7 @@ public class TestMapper<T> implements Mapper<T> {
     }
 
     @Override
-    public List selectDefault(SqlParams sqlParams) {
+    public <P> List<P> selectDefault(SqlParams sqlParams) {
         return null;
     }
 }

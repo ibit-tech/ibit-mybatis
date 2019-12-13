@@ -43,7 +43,7 @@ public class MapperDaoUtils {
         if (null == idSetterMethod) {
             return mapper.insert(sqlParams);
         }
-        KeyValuePair key = new KeyValuePair("key", null);
+        KeyValuePair key = new KeyValuePair(SqlBuilder.KEY, null);
         //write auto increase key
         int result = mapper.insertWithGenerateKeys(sqlParams, key);
         if (result == 0) {

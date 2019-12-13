@@ -1,6 +1,7 @@
 package tech.ibit.mybatis;
 
 import org.junit.Test;
+import tech.ibit.mybatis.test.CommonTest;
 import tech.ibit.sqlbuilder.SqlParams;
 
 import java.util.HashMap;

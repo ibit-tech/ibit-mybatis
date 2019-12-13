@@ -4,6 +4,10 @@ import org.apache.ibatis.annotations.Param;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import tech.ibit.mybatis.test.entity.*;
+import tech.ibit.mybatis.test.entity.property.OrganizationProperties;
+import tech.ibit.mybatis.test.entity.property.UserProperties;
+import tech.ibit.mybatis.test.CommonTest;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.exception.*;
 
@@ -30,14 +34,16 @@ public class MapperDaoUtilsTest extends CommonTest {
         user.setLoginId("dev");
         user.setEmail("dev@ibit.tech");
         user.setMobilePhone("188");
+        user.setPassword("12345678");
         user.setType(1);
+        user.setName("dev");
         MapperDaoUtils.insert(new TestMapper() {
             @Override
             public int insertWithGenerateKeys(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams,
                                               @Param(SqlBuilder.KEY) KeyValuePair key) {
                 assertParamsEquals(
-                        "INSERT INTO user(login_id, email, mobile_phone, type) VALUES(?, ?, ?, ?)",
-                        Arrays.asList("login_id", "dev", "email", "dev@ibit.tech", "mobile_phone", "188", "type", 1),
+                        "INSERT INTO user(login_id, name, email, password, mobile_phone, type) VALUES(?, ?, ?, ?, ?, ?)",
+                        Arrays.asList("login_id", "dev", "name", "dev", "email", "dev@ibit.tech", "password", "12345678", "mobile_phone", "188", "type", 1),
                         sqlParams);
                 key.setValue(1);
                 return 1;
@@ -65,8 +71,8 @@ public class MapperDaoUtilsTest extends CommonTest {
     @Test
     public void insert1() {
         User user = new User();
-        thrown.expect(ColumnValueNotFoundException.class);
-        thrown.expectMessage("Column value not found!");
+        thrown.expect(ColumnNullPointerException.class);
+        thrown.expectMessage("Table(user)'s column(name) is null!");
         MapperDaoUtils.insert(new TestMapper(), user);
     }
 
@@ -328,8 +334,8 @@ public class MapperDaoUtilsTest extends CommonTest {
         MapperDaoUtils.updateByIdAndIgnoreColumns(new TestMapper() {
             @Override
             public int update(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
-                assertParamsEquals("UPDATE user u SET u.login_id = ?, u.email = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
-                        Arrays.asList("u.login_id", "dev1", "u.email", "dev1@ibit.tech",
+                assertParamsEquals("UPDATE user u SET u.login_id = ?, u.name = ?, u.email = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
+                        Arrays.asList("u.login_id", "dev1", "u.name", "dev1", "u.email", "dev1@ibit.tech",
                                 "u.password", "12345678", "u.mobile_phone", "188", "u.type", 1, "u.user_id", 1),
                         sqlParams);
                 return 1;
@@ -341,8 +347,8 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public int update(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "UPDATE user u SET u.login_id = ?, u.email = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
-                        Arrays.asList("u.login_id", null, "u.email", "dev1@ibit.tech", "u.password", "12345678",
+                        "UPDATE user u SET u.login_id = ?, u.name = ?, u.email = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
+                        Arrays.asList("u.login_id", null, "u.name", "dev1", "u.email", "dev1@ibit.tech", "u.password", "12345678",
                                 "u.mobile_phone", "188", "u.type", 1, "u.user_id", 1),
                         sqlParams);
                 return 1;
@@ -354,8 +360,8 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public int update(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "UPDATE user u SET u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?", 
-                        Arrays.asList("u.password", "12345678", "u.mobile_phone", "188", "u.type", 1, "u.user_id", 1),
+                        "UPDATE user u SET u.name = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
+                        Arrays.asList("u.name", "dev1", "u.password", "12345678", "u.mobile_phone", "188", "u.type", 1, "u.user_id", 1),
                         sqlParams);
                 return 1;
             }
@@ -366,8 +372,8 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public int update(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "UPDATE user u SET u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id IN(?, ?)",
-                        Arrays.asList("u.password", "12345678", "u.mobile_phone", "188", "u.type", 1, "u.user_id", 1, "u.user_id", 2),
+                        "UPDATE user u SET u.name = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id IN(?, ?)",
+                        Arrays.asList("u.name", "dev1", "u.password", "12345678", "u.mobile_phone", "188", "u.type", 1, "u.user_id", 1, "u.user_id", 2),
                         sqlParams);
                 return 2;
             }
@@ -379,8 +385,8 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public int update(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "UPDATE user u SET u.login_id = ?, u.email = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id IN(?, ?)",
-                        Arrays.asList("u.login_id", "dev1", "u.email", "dev1@ibit.tech", "u.password", "12345678",
+                        "UPDATE user u SET u.login_id = ?, u.name = ?, u.email = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id IN(?, ?)",
+                        Arrays.asList("u.login_id", "dev1", "u.name", "dev1", "u.email", "dev1@ibit.tech", "u.password", "12345678",
                                 "u.mobile_phone", "188", "u.type", 1, "u.user_id", 1, "u.user_id", 2),
                         sqlParams);
                 return 2;
@@ -581,6 +587,7 @@ public class MapperDaoUtilsTest extends CommonTest {
             }
         }, org, Collections.singletonList(OrganizationProperties.type), Collections.singletonList(oKey1));
 
+
         MapperDaoUtils.updateByMultiIds(new TestMapper() {
             @Override
             public int update(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
@@ -647,7 +654,7 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public List<User> select(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "SELECT u.user_id, u.login_id, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id = ? LIMIT ?, ?",
+                        "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id = ? LIMIT ?, ?",
                         Arrays.asList("u.user_id", 1, "$start", 0, "$limit", 1),
                         sqlParams);
                 return Collections.singletonList(getUser1());
@@ -661,7 +668,7 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public List<User> select(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "SELECT u.user_id, u.login_id, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id IN(?, ?, ?) LIMIT ?, ?",
+                        "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id IN(?, ?, ?) LIMIT ?, ?",
                         Arrays.asList("u.user_id", 1, "u.user_id", 2, "u.user_id", 3, "$start", 0, "$limit", 3),
                         sqlParams);
                 return Arrays.asList(getUser1(), getUser2());
@@ -672,7 +679,7 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public List<User> select(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "SELECT u.user_id, u.login_id, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id = ? LIMIT ?, ?",
+                        "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id = ? LIMIT ?, ?",
                         Arrays.asList("u.user_id", 1, "$start", 0, "$limit", 1),
                         sqlParams);
                 return Collections.singletonList(getUser1());
@@ -687,7 +694,7 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public List select(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "SELECT u.user_id, u.login_id, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id = ? LIMIT ?, ?",
+                        "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id = ? LIMIT ?, ?",
                         Arrays.asList("u.user_id", 1, "$start", 0, "$limit", 1),
                         sqlParams);
                 return Collections.singletonList(getUser1());
@@ -716,7 +723,7 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public List<User> select(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "SELECT u.user_id, u.login_id, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id IN(?, ?) LIMIT ?, ?", 
+                        "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id IN(?, ?) LIMIT ?, ?",
                         Arrays.asList("u.user_id", 1, "u.user_id", 2, "$start", 0, "$limit", 2), 
                         sqlParams);
                 return Collections.emptyList();
@@ -836,7 +843,7 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public List<User> select(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "SELECT u.user_id, u.login_id, u.email, u.password, u.mobile_phone, u.type FROM user u ORDER BY u.user_id DESC LIMIT ?, ?",
+                        "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u ORDER BY u.user_id DESC LIMIT ?, ?",
                         Arrays.asList("$start", 0, "$limit", 10),
                         sqlParams
                 );
@@ -882,7 +889,7 @@ public class MapperDaoUtilsTest extends CommonTest {
             @Override
             public List<User> select(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams) {
                 assertParamsEquals(
-                        "SELECT u.user_id, u.login_id, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.type = ? LIMIT ?, ?",
+                        "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.type = ? LIMIT ?, ?",
                         Arrays.asList("u.type", 1, "$start", 0, "$limit", 2),
                         sqlParams
                 );
@@ -1062,6 +1069,7 @@ public class MapperDaoUtilsTest extends CommonTest {
         assertNotNull(user);
         assertEquals(expectedUser.getUserId(), user.getUserId());
         assertEquals(expectedUser.getLoginId(), user.getLoginId());
+        assertEquals(expectedUser.getName(), user.getName());
         assertEquals(expectedUser.getEmail(), user.getEmail());
         assertEquals(expectedUser.getPassword(), user.getPassword());
         assertEquals(expectedUser.getMobilePhone(), user.getMobilePhone());
@@ -1081,6 +1089,7 @@ public class MapperDaoUtilsTest extends CommonTest {
         User user = new User();
         user.setUserId(1);
         user.setLoginId("dev1");
+        user.setName("dev1");
         user.setEmail("dev1@ibit.tech");
         user.setPassword("12345678");
         user.setMobilePhone("188");
@@ -1092,6 +1101,7 @@ public class MapperDaoUtilsTest extends CommonTest {
         User user = new User();
         user.setUserId(2);
         user.setLoginId("dev2");
+        user.setName("dev2");
         user.setEmail("dev2@ibit.tech");
         user.setPassword("12345678");
         user.setMobilePhone("100");

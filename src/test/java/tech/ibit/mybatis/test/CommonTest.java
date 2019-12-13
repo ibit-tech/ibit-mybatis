@@ -1,4 +1,4 @@
-package tech.ibit.mybatis;
+package tech.ibit.mybatis.test;
 
 import org.apache.commons.lang.ArrayUtils;
 import tech.ibit.sqlbuilder.KeyValuePair;

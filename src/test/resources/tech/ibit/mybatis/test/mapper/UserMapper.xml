@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.ibit.mybatis.test.mapper.UserMapper">
+    <resultMap id="resultMap" type="tech.ibit.mybatis.test.entity.User">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="login_id" jdbcType="VARCHAR" property="loginId"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+    </resultMap>
+
+
+    <resultMap id="typeTotalResultMap" type="tech.ibit.mybatis.test.entity.UserTypeTotal">
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="total" jdbcType="INTEGER" property="total"/>
+    </resultMap>
+</mapper>

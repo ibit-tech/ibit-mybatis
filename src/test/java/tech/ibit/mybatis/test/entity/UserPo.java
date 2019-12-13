@@ -1,4 +1,4 @@
-package tech.ibit.mybatis;
+package tech.ibit.mybatis.test.entity;
 
 import lombok.Data;
 import tech.ibit.sqlbuilder.annotation.DbColumn;
