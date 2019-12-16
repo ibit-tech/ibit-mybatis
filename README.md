@@ -29,20 +29,20 @@
 
 | 序号 | 方法 | 描述 |
 | -- | -- | -- |
-| 1 | select </br> selectPo（对象）</br> selectDistinct </br> selectDistinctPo（对象）| select 【distinct】语句 |
-| 2	 | count </br> countDistinct | select count 【distinct】语句 |
-| 3 | deleteFrom </br> deleteTableFrom（别名）| delete from语句 |
-| 4	 | update | update语句 |
-| 5 | insertInto </br> batchInsertInto（批量）| insert into语句 |
-| 6 | set </br> increaseSet（列自增）</br> decreaseSet（列自减）</br> |set语句 |
+| 1 | select </br> selectPo（对象）</br> selectDistinct </br> selectDistinctPo（对象）| `select [distinct]`语句 |
+| 2	 | count </br> countDistinct | `select count [distinct]`语句 |
+| 3 | deleteFrom </br> deleteTableFrom（别名）| `delete from`语句 |
+| 4	 | update | `update`语句 |
+| 5 | insertInto </br> batchInsertInto（批量）| `insert into`语句 |
+| 6 | set </br> increaseSet（列自增）</br> decreaseSet（列自减）</br> |`set`语句 |
 | 7 | values | `values`语句 |
 | 8 | from | `from`语句 |
-| 9 | joinOn </br> leftJoinOn </br> rightJoinOn </br> fullJoinOn </br> innerJoinOn </br>complexLeftJoinOn </br> complexRightJoinOn </br> complexFullJoinOn </br> complexInnerJoinOn | 【left|right|full|inner】join on语句 |
-| 10 | where </br> andWhere </br> orWhere | where语句 |
-| 11 | groupBy | group by语句 |
-| 12 | having </br> andHaving </br> orHaving | having语句 |
-| 13 | orderBy | order by语句 |
-| 14 | limit | limit语句 |
+| 9 | joinOn </br> leftJoinOn </br> rightJoinOn </br> fullJoinOn </br> innerJoinOn </br>complexLeftJoinOn </br> complexRightJoinOn </br> complexFullJoinOn </br> complexInnerJoinOn | `[left\|right\|full\|inner] join on`语句 |
+| 10 | where </br> andWhere </br> orWhere | `where`语句 |
+| 11 | groupBy | `group by`语句 |
+| 12 | having </br> andHaving </br> orHaving | `having`语句 |
+| 13 | orderBy | `order by`语句 |
+| 14 | limit | `limit`语句 |
 
 更加详细用法参考[sql-builder](https://github.com/ibit-tech/sql-builder)。
 
