@@ -9,22 +9,23 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import tech.ibit.mybatis.SqlBuilder;
 import tech.ibit.mybatis.test.dao.UserDao;
 import tech.ibit.mybatis.test.entity.User;
 import tech.ibit.mybatis.test.entity.UserPo;
 import tech.ibit.mybatis.test.entity.UserTypeTotal;
 import tech.ibit.mybatis.test.entity.property.UserProperties;
+import tech.ibit.mybatis.test.entity.type.UserType;
+import tech.ibit.mybatis.type.CommonEnum;
 import tech.ibit.sqlbuilder.exception.ColumnNullPointerException;
 import tech.ibit.sqlbuilder.exception.IdAutoIncreaseException;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * 单主键dao测试
@@ -45,6 +46,10 @@ public class SingleIdDaoTest {
     @Before
     public void setUp() {
         testUsers = new ArrayList<>();
+
+        SqlBuilder.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
+            put(CommonEnum.class, o -> ((CommonEnum) o).getValue());
+        }});
     }
 
     @After
@@ -65,7 +70,7 @@ public class SingleIdDaoTest {
         user.setEmail("dev1@ibit.tech");
         user.setPassword("password**");
         user.setMobilePhone("1098");
-        user.setType(1);
+        user.setType(UserType.u1);
         return user;
     }
 
@@ -184,13 +189,13 @@ public class SingleIdDaoTest {
         User user2 = insertUser();
 
         User userUpdate = new User();
-        userUpdate.setType(3);
+        userUpdate.setType(UserType.u3);
         userDao.updateByIds(userUpdate, Arrays.asList(user1.getUserId(), user2.getUserId()));
 
         user1 = userDao.getById(user1.getUserId());
         user2 = userDao.getById(user2.getUserId());
-        assertEquals(Integer.valueOf(3), user1.getType());
-        assertEquals(Integer.valueOf(3), user2.getType());
+        assertEquals(UserType.u3, user1.getType());
+        assertEquals(UserType.u3, user2.getType());
 
     }
 
@@ -201,15 +206,15 @@ public class SingleIdDaoTest {
         User user2 = insertUser();
 
         User userUpdate = new User();
-        userUpdate.setType(3);
+        userUpdate.setType(UserType.u3);
         userDao.updateByIds(userUpdate, Arrays.asList(UserProperties.loginId, UserProperties.type), Arrays.asList(user1.getUserId(), user2.getUserId()));
 
         user1 = userDao.getById(user1.getUserId());
         user2 = userDao.getById(user2.getUserId());
         assertNull(user1.getLoginId());
         assertNull(user2.getLoginId());
-        assertEquals(Integer.valueOf(3), user1.getType());
-        assertEquals(Integer.valueOf(3), user2.getType());
+        assertEquals(UserType.u3, user1.getType());
+        assertEquals(UserType.u3, user2.getType());
     }
 
 
@@ -220,7 +225,7 @@ public class SingleIdDaoTest {
         User user2 = insertUser();
 
         User userUpdate = new User();
-        userUpdate.setType(3);
+        userUpdate.setType(UserType.u3);
         thrown.expect(ColumnNullPointerException.class);
         thrown.expectMessage("Table(user)'s column(name) is null!");
         userDao.updateByIds(userUpdate,
@@ -275,12 +280,12 @@ public class SingleIdDaoTest {
         typeTotals = userDao.listTypeTotals();
         assertEquals(1, typeTotals.size());
         assertEquals(Integer.valueOf(1), typeTotals.get(0).getTotal());
-        assertEquals(Integer.valueOf(1), typeTotals.get(0).getType());
+        assertEquals(UserType.u1, typeTotals.get(0).getType());
 
         insertUser();
         typeTotals = userDao.listTypeTotals();
         assertEquals(1, typeTotals.size());
         assertEquals(Integer.valueOf(2), typeTotals.get(0).getTotal());
-        assertEquals(Integer.valueOf(1), typeTotals.get(0).getType());
+        assertEquals(UserType.u1, typeTotals.get(0).getType());
     }
 }

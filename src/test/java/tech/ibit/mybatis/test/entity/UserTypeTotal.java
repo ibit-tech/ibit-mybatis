@@ -1,6 +1,7 @@
 package tech.ibit.mybatis.test.entity;
 
 import lombok.Data;
+import tech.ibit.mybatis.test.entity.type.UserType;
 
 /**
  * 用户类型统计
@@ -14,7 +15,7 @@ public class UserTypeTotal {
     /**
      * 类型
      */
-    private Integer type;
+    private UserType type;
 
     /**
      * 总数

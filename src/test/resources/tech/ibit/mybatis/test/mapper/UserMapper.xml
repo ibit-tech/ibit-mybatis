@@ -8,12 +8,14 @@
         <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone"/>
-        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="type" jdbcType="INTEGER" property="type"
+                typeHandler="tech.ibit.mybatis.type.CommonEnumTypeHandler"/>
     </resultMap>
 
 
     <resultMap id="typeTotalResultMap" type="tech.ibit.mybatis.test.entity.UserTypeTotal">
-        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="type" jdbcType="INTEGER" property="type"
+                typeHandler="tech.ibit.mybatis.type.CommonEnumTypeHandler"/>
         <result column="total" jdbcType="INTEGER" property="total"/>
     </resultMap>
 </mapper>

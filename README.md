@@ -102,3 +102,58 @@ public ResultMapInterceptor getResultMapInterceptor() {
 }
 ```
 
+## 更新说明
+
+### 1.1 更新内容
+
+ * 支持通用枚举类型（CommonEnum，枚举-Integer转换）
+ * 如果需要自定义的枚举类型，则
+ 
+### 增加类
+
+```
+
+/**
+ * 定义通用枚举类
+ */ 
+public interface CommonEnum {
+
+    /**
+     * 获取枚举值
+     *
+     * @return 枚举值
+     */
+    int getValue();
+    
+    // 省略其他方法
+}
+
+/**
+ * 通用枚举类处理器
+ */
+public class CommonEnumTypeHandler<E extends CommonEnum> extends BaseTypeHandler<E> {
+   // 省略方法
+}
+
+```
+
+### 用法
+
+#### mapper中，字段增加handler
+
+```
+<result column="type" jdbcType="INTEGER" property="type"
+          typeHandler="tech.ibit.mybatis.type.CommonEnumTypeHandler"/>
+```
+
+#### SqlBuilder，定义类型转换
+
+```
+// 测试设置枚举类型
+SqlBuilder.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
+    put(tech.ibit.mybatis.type.CommonEnum.class, o -> ((tech.ibit.mybatis.type.CommonEnum) o).getValue());
+}});
+```
+
+
+

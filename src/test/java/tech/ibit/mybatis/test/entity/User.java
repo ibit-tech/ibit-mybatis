@@ -1,6 +1,7 @@
 package tech.ibit.mybatis.test.entity;
 
 import lombok.Data;
+import tech.ibit.mybatis.test.entity.type.UserType;
 import tech.ibit.sqlbuilder.annotation.DbColumn;
 import tech.ibit.sqlbuilder.annotation.DbId;
 import tech.ibit.sqlbuilder.annotation.DbTable;
@@ -61,6 +62,6 @@ public class User {
      * INT(10, 0)
      */
     @DbColumn(name = "type")
-    private Integer type;
+    private UserType type;
 
 }

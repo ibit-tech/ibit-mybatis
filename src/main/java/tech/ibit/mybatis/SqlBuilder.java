@@ -1,10 +1,13 @@
 package tech.ibit.mybatis;
 
+import lombok.Getter;
+import lombok.Setter;
 import tech.ibit.sqlbuilder.KeyValuePair;
 import tech.ibit.sqlbuilder.SqlParams;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Mybatis SQL构造器
@@ -18,6 +21,11 @@ public class SqlBuilder {
     public static final String RESULT_MAP = "resultMap";
     public static final String KEY = "key";
     public static final String KEY_VALUE = "key.value";
+
+    @Setter
+    @Getter
+    private static Map<Class, Function<Object, Object>> valueFormatter;
+
 
     /**
      * 执行方法
@@ -41,7 +49,7 @@ public class SqlBuilder {
                 // 将"?"转为mybatis支持的参数方式
                 String paramKey = getParamKey(counter);
                 finalSql.append("#{").append(paramKey).append("}");
-                paramMap.put(paramKey, params.get(counter).getValue());
+                paramMap.put(paramKey, getValue(params.get(counter).getValue()));
                 counter++;
             } else {
                 finalSql.append(c);
@@ -58,5 +66,25 @@ public class SqlBuilder {
      */
     private String getParamKey(int index) {
         return SQL_PARAMS + index;
+    }
+
+    /**
+     * 获取值
+     *
+     * @param value 对象
+     * @return 转换后的值
+     */
+    private Object getValue(Object value) {
+        if (null == value) {
+            return null;
+        }
+        if (null != valueFormatter && !valueFormatter.isEmpty()) {
+            for (Map.Entry<Class, Function<Object, Object>> entry : valueFormatter.entrySet()) {
+                if (entry.getKey().isAssignableFrom(value.getClass())) {
+                    return entry.getValue().apply(value);
+                }
+            }
+        }
+        return value;
     }
 }
