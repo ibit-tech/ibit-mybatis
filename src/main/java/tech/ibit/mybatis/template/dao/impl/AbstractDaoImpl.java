@@ -7,7 +7,7 @@ import tech.ibit.mybatis.template.mapper.Mapper;
 /**
  * 抽象DAO实现类
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 abstract class AbstractDaoImpl<P> {
 

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * MapperDAO工具类
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 @UtilityClass
 public class MapperDaoUtils {

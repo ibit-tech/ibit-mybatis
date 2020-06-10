@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Dao for user
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 @Repository
 public class UserDaoImpl extends SingleIdDaoImpl<User, Integer> implements UserDao {

@@ -7,7 +7,7 @@ import tech.ibit.mybatis.test.entity.Organization;
 /**
  * Mapper for organization
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 public interface OrganizationMapper extends Mapper<Organization> {
 

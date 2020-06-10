@@ -6,7 +6,7 @@ import tech.ibit.sqlbuilder.Table;
 /**
  * Table for user
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 public interface UserProperties {
 

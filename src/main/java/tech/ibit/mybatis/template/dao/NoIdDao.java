@@ -4,7 +4,7 @@ package tech.ibit.mybatis.template.dao;
  * 没有主键的表的DAO
  *
  * @param <P> 实体类型
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 public interface NoIdDao<P> {
 

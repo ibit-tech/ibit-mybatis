@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Dao for user_login_record
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 @Repository
 public class UserLoginRecordDaoImpl extends NoIdDaoImpl<UserLoginRecord> implements UserLoginRecordDao {

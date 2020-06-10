@@ -3,7 +3,7 @@ package tech.ibit.mybatis.exception;
 /**
  * 拆分的表不存在
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 public class ShardingTableNotFoundException extends RuntimeException {
 

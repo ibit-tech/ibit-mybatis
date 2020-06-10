@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @param <P> 实体类型
  * @param <K> 主键类型
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 public abstract class MultipleIdDaoImpl<P, K extends MultiId> extends AbstractDaoImpl<P> implements MultipleIdDao<P, K> {
 

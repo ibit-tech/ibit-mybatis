@@ -12,7 +12,7 @@ import tech.ibit.mybatis.test.mapper.OrganizationMapper;
 /**
  * Dao for organization
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 @Repository
 public class OrganizationDaoImpl

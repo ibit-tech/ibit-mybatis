@@ -19,7 +19,7 @@ import java.util.Properties;
 /**
  * ResultMap拦截器（支持参数中指定ResultMap)
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 @Intercepts({
         @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),

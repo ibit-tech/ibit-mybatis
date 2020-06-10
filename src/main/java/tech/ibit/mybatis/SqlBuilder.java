@@ -12,7 +12,7 @@ import java.util.function.Function;
 /**
  * Mybatis SQL构造器
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 public class SqlBuilder {
 

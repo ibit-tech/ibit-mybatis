@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Entity for user_login_record
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 @Data
 @DbTable(name = "user_login_record", alias = "ulr")

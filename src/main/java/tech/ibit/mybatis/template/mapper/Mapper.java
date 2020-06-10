@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * 抽象Mapper接口（定义基础增、删、改、查）
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 public interface Mapper<T> {
 

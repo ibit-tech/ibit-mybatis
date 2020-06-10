@@ -3,7 +3,7 @@ package tech.ibit.mybatis;
 /**
  * 定义分页常量
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 public interface PageConstant {
 

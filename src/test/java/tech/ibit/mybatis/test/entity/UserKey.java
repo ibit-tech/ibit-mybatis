@@ -9,7 +9,7 @@ import tech.ibit.sqlbuilder.annotation.DbTable;
 /**
  * User主键
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 @AllArgsConstructor
 @NoArgsConstructor

@@ -7,7 +7,7 @@ import tech.ibit.sqlbuilder.Table;
 /**
  * Table for user_login_record
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 public interface UserLoginRecordProperties {
 

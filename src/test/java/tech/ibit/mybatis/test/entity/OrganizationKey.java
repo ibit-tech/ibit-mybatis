@@ -11,7 +11,7 @@ import tech.ibit.sqlbuilder.annotation.DbTable;
 /**
  * Entity for organization
  *
- * @author IBIT TECH
+ * @author IBIT程序猿
  */
 @Data
 @NoArgsConstructor
