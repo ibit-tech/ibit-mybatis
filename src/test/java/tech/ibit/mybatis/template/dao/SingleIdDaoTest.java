@@ -17,8 +17,7 @@ import tech.ibit.mybatis.test.entity.UserTypeTotal;
 import tech.ibit.mybatis.test.entity.property.UserProperties;
 import tech.ibit.mybatis.test.entity.type.UserType;
 import tech.ibit.mybatis.type.CommonEnum;
-import tech.ibit.sqlbuilder.exception.ColumnNullPointerException;
-import tech.ibit.sqlbuilder.exception.IdAutoIncreaseException;
+import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
 import java.util.*;
@@ -30,7 +29,7 @@ import static org.junit.Assert.assertNull;
 /**
  * 单主键dao测试
  *
- * @author IBIT-TECH
+ * @author IBIT程序猿
  * mailto: ibit_tech@aliyun.com
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -92,7 +91,7 @@ public class SingleIdDaoTest {
     public void insertException() {
         User user = getUser();
         user.setUserId(1);
-        thrown.expect(IdAutoIncreaseException.class);
+        thrown.expect(SqlException.class);
         thrown.expectMessage("Table(user)'s id(user_id) cannot be inserted!");
         userDao.insert(user);
     }
@@ -102,7 +101,7 @@ public class SingleIdDaoTest {
     public void insertException2() {
         User user = getUser();
         user.setName(null);
-        thrown.expect(ColumnNullPointerException.class);
+        thrown.expect(SqlException.class);
         thrown.expectMessage("Table(user)'s column(name) is null!");
         userDao.insert(user);
     }
@@ -110,7 +109,7 @@ public class SingleIdDaoTest {
 
     @Test
     public void deleteById() {
-        int result = userDao.deleteById(-1);
+        int result = userDao.deleteById(100);
         assertEquals(0, result);
 
         User user = insertUser();
@@ -178,7 +177,7 @@ public class SingleIdDaoTest {
     public void updateByIdException1() {
         User user = insertUser();
         user.setName(null);
-        thrown.expect(ColumnNullPointerException.class);
+        thrown.expect(SqlException.class);
         thrown.expectMessage("Table(user)'s column(name) is null!");
         userDao.updateById(user, Collections.singletonList(UserProperties.name));
     }
@@ -226,7 +225,7 @@ public class SingleIdDaoTest {
 
         User userUpdate = new User();
         userUpdate.setType(UserType.u3);
-        thrown.expect(ColumnNullPointerException.class);
+        thrown.expect(SqlException.class);
         thrown.expectMessage("Table(user)'s column(name) is null!");
         userDao.updateByIds(userUpdate,
                 Arrays.asList(UserProperties.name, UserProperties.loginId, UserProperties.type),

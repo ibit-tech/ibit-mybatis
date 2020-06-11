@@ -5,7 +5,7 @@ import tech.ibit.mybatis.MapperDaoUtils;
 import tech.ibit.mybatis.template.dao.MultipleIdDao;
 import tech.ibit.sqlbuilder.Column;
 import tech.ibit.sqlbuilder.MultiId;
-import tech.ibit.sqlbuilder.exception.ColumnValueNotFoundException;
+import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
 import java.util.Collections;
@@ -53,7 +53,7 @@ public abstract class MultipleIdDaoImpl<P, K extends MultiId> extends AbstractDa
     public int updateById(P po) {
         try {
             return MapperDaoUtils.updateById(getMapper(), po);
-        } catch (ColumnValueNotFoundException e) {
+        } catch (SqlException e) {
             return 0;
         }
     }

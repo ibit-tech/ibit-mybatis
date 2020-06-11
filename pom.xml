@@ -6,7 +6,7 @@
 
     <groupId>tech.ibit</groupId>
     <artifactId>ibit-mybatis</artifactId>
-    <version>1.1</version>
+    <version>2.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,7 +16,7 @@
         <javadoc.skip>false</javadoc.skip>
         <common-lang.version>2.6</common-lang.version>
         <lombok.version>1.16.20</lombok.version>
-        <sql-builder.version>1.1</sql-builder.version>
+        <sql-builder.version>2.0-SNAPSHOT</sql-builder.version>
         <structlog4j.version>1.3</structlog4j.version>
         <mybatis.version>3.4.4</mybatis.version>
 

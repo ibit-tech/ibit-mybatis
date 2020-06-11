@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * 通用枚举类定义（如果需要将类型转换为枚举类的字段，枚举类都要继承此类）
  *
- * @author IBIT-TECH
+ * @author IBIT程序猿
  */
 public interface CommonEnum {
 

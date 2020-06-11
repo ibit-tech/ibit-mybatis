@@ -6,7 +6,7 @@ import tech.ibit.mybatis.test.entity.type.UserType;
 /**
  * 用户类型统计
  *
- * @author IBIT-TECH
+ * @author IBIT程序猿
  * mailto: ibit_tech@aliyun.com
  */
 @Data

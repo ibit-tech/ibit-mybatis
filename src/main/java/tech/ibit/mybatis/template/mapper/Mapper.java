@@ -4,7 +4,7 @@ package tech.ibit.mybatis.template.mapper;
 import org.apache.ibatis.annotations.*;
 import tech.ibit.mybatis.SqlBuilder;
 import tech.ibit.sqlbuilder.KeyValuePair;
-import tech.ibit.sqlbuilder.SqlParams;
+import tech.ibit.sqlbuilder.PrepareStatement;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public interface Mapper<T> {
      * @return 结果对象列表
      */
     @SelectProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    <P> List<P> selectWithResultMap(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams,
+    <P> List<P> selectWithResultMap(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams,
                                     @Param(SqlBuilder.RESULT_MAP) String resultMap);
 
     /**
@@ -36,7 +36,7 @@ public interface Mapper<T> {
      */
     @ResultMap(SqlBuilder.RESULT_MAP)
     @SelectProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    List<T> select(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams);
+    List<T> select(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 基本类型查询
@@ -46,7 +46,7 @@ public interface Mapper<T> {
      * @return 结果列表
      */
     @SelectProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    <P> List<P> selectDefault(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams);
+    <P> List<P> selectDefault(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 计数
@@ -56,7 +56,7 @@ public interface Mapper<T> {
      */
     @ResultType(value = int.class)
     @SelectProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    int count(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams);
+    int count(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 更新
@@ -66,7 +66,7 @@ public interface Mapper<T> {
      */
     @ResultType(int.class)
     @UpdateProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    int update(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams);
+    int update(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 插入并生成主键
@@ -78,7 +78,7 @@ public interface Mapper<T> {
     @ResultType(int.class)
     @InsertProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
     @Options(useGeneratedKeys = true, keyProperty = SqlBuilder.KEY_VALUE)
-    int insertWithGenerateKeys(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams,
+    int insertWithGenerateKeys(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams,
                                @Param(SqlBuilder.KEY) KeyValuePair key);
 
     /**
@@ -89,6 +89,6 @@ public interface Mapper<T> {
      */
     @ResultType(int.class)
     @InsertProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    int insert(@Param(SqlBuilder.SQL_PARAMS) SqlParams sqlParams);
+    int insert(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
 
 }

@@ -2,12 +2,11 @@ package tech.ibit.mybatis;
 
 import org.junit.Test;
 import tech.ibit.mybatis.test.CommonTest;
+import tech.ibit.mybatis.test.entity.property.UserProperties;
 import tech.ibit.mybatis.test.entity.type.UserType;
-import tech.ibit.sqlbuilder.SqlParams;
+import tech.ibit.sqlbuilder.PrepareStatement;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +15,7 @@ import static org.junit.Assert.assertNull;
 /**
  * SQLBuilder测试用例
  *
- * @author IBIT-TECH
+ * @author IBIT程序猿
  * mailto: ibit_tech@aliyun.com
  */
 public class SqlBuilderTest extends CommonTest {
@@ -26,27 +25,17 @@ public class SqlBuilderTest extends CommonTest {
     @Test
     public void execute() {
 
-        SqlParams sqlParams = new SqlParams(
+        PrepareStatement sqlParams = new PrepareStatement(
                 "SELECT u.user_id, u.name, u.email, u.type FROM user u WHERE u.user_id in(?, ?, ?)",
-                getKeyValuePairs("u.user_id", 1, "u.user_id", 2, "u.user_id", 3)
+                Arrays.asList(
+                        UserProperties.userId.value(1),
+                        UserProperties.userId.value(2),
+                        UserProperties.userId.value(3)
+                )
         );
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put(SqlBuilder.SQL_PARAMS, sqlParams);
         String sql = sqlBuilder.execute(paramMap);
-        assertEquals("SELECT u.user_id, u.name, u.email, u.type FROM user u WHERE u.user_id in(#{sqlParams0}, #{sqlParams1}, #{sqlParams2})", sql);
-        assertEquals(1, paramMap.get("sqlParams0"));
-        assertEquals(2, paramMap.get("sqlParams1"));
-        assertEquals(3, paramMap.get("sqlParams2"));
-
-
-        paramMap.clear();
-        sqlParams = new SqlParams(
-                "SELECT u.user_id, u.name, u.email, u.type FROM user u WHERE u.user_id in(?, ?, ?)",
-                getKeyValuePairs(null, 1, null, 2, null, 3)
-        );
-        paramMap = new HashMap<>();
-        paramMap.put(SqlBuilder.SQL_PARAMS, sqlParams);
-        sql = sqlBuilder.execute(paramMap);
         assertEquals("SELECT u.user_id, u.name, u.email, u.type FROM user u WHERE u.user_id in(#{sqlParams0}, #{sqlParams1}, #{sqlParams2})", sql);
         assertEquals(1, paramMap.get("sqlParams0"));
         assertEquals(2, paramMap.get("sqlParams1"));
@@ -61,12 +50,13 @@ public class SqlBuilderTest extends CommonTest {
             put(tech.ibit.mybatis.type.CommonEnum.class, o -> ((tech.ibit.mybatis.type.CommonEnum) o).getValue());
         }});
 
-        Map<String, Object> paramMap = new HashMap<>();
-        SqlParams sqlParams = new SqlParams(
+        PrepareStatement sqlParams = new PrepareStatement(
                 "SELECT u.user_id, u.name, u.email, u.type FROM user u WHERE u.type = ?",
-                getKeyValuePairs("u.type", (UserType) null)
+                Collections.singletonList(
+                        UserProperties.type.value(null)
+                )
         );
-        paramMap = new HashMap<>();
+        Map<String, Object> paramMap = new HashMap<>();
         paramMap.put(SqlBuilder.SQL_PARAMS, sqlParams);
         String sql = sqlBuilder.execute(paramMap);
         assertEquals("SELECT u.user_id, u.name, u.email, u.type FROM user u WHERE u.type = #{sqlParams0}", sql);
@@ -74,9 +64,11 @@ public class SqlBuilderTest extends CommonTest {
 
 
         paramMap.clear();
-        sqlParams = new SqlParams(
+        sqlParams = new PrepareStatement(
                 "SELECT u.user_id, u.name, u.email, u.type FROM user u WHERE u.type = ?",
-                getKeyValuePairs("u.type", UserType.u1)
+                Collections.singletonList(
+                        UserProperties.type.value(UserType.u1)
+                )
         );
         paramMap = new HashMap<>();
         paramMap.put(SqlBuilder.SQL_PARAMS, sqlParams);

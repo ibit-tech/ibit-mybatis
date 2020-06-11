@@ -2,8 +2,8 @@ package tech.ibit.mybatis;
 
 import lombok.Getter;
 import lombok.Setter;
-import tech.ibit.sqlbuilder.KeyValuePair;
-import tech.ibit.sqlbuilder.SqlParams;
+import tech.ibit.sqlbuilder.ColumnValue;
+import tech.ibit.sqlbuilder.PrepareStatement;
 
 import java.util.List;
 import java.util.Map;
@@ -35,10 +35,10 @@ public class SqlBuilder {
      */
     public String execute(Map<String, Object> paramMap) {
 
-        SqlParams sqlParams = (SqlParams) paramMap.get(SQL_PARAMS);
-        String sql = sqlParams.getSql();
+        PrepareStatement sqlParams = (PrepareStatement) paramMap.get(SQL_PARAMS);
+        String sql = sqlParams.getPrepareSql();
 
-        List<KeyValuePair> params = sqlParams.getParamDetails();
+        List<ColumnValue> params = sqlParams.getValues();
 
         StringBuilder finalSql = new StringBuilder();
         int sqlLen = sql.length();

@@ -7,7 +7,7 @@ import tech.ibit.mybatis.type.CommonEnum;
 /**
  * 用户类型
  *
- * @author IBIT-TECH
+ * @author IBIT程序猿
  * mailto: ibit_tech@aliyun.com
  */
 @Getter

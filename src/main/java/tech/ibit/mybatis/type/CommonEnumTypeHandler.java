@@ -11,7 +11,7 @@ import java.sql.SQLException;
 /**
  * 通用枚举类处理器（在ResultMap定义映射枚举字段，typeHandler类型）
  *
- * @author IBIT-TECH
+ * @author IBIT程序猿
  */
 public class CommonEnumTypeHandler<E extends CommonEnum> extends BaseTypeHandler<E> {
 

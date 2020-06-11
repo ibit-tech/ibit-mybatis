@@ -14,8 +14,7 @@ import tech.ibit.mybatis.test.dao.OrganizationDao;
 import tech.ibit.mybatis.test.entity.Organization;
 import tech.ibit.mybatis.test.entity.OrganizationKey;
 import tech.ibit.mybatis.test.entity.property.OrganizationProperties;
-import tech.ibit.sqlbuilder.exception.ColumnNullPointerException;
-import tech.ibit.sqlbuilder.exception.IdNullPointerException;
+import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * 多主键dao测试
  *
- * @author IBIT-TECH
+ * @author IBIT程序猿
  * mailto: ibit_tech@aliyun.com
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -75,7 +74,7 @@ public class MultipleIdDaoTest {
     public void insertException() {
         Organization organization = getOrganization();
         organization.setCityCode(null);
-        thrown.expect(ColumnNullPointerException.class);
+        thrown.expect(SqlException.class);
         thrown.expectMessage("Table(organization)'s column(city_code) is null!");
         organizationDao.insert(organization);
     }
@@ -84,7 +83,7 @@ public class MultipleIdDaoTest {
     public void insertException2() {
         Organization organization = getOrganization();
         organization.setType(null);
-        thrown.expect(ColumnNullPointerException.class);
+        thrown.expect(SqlException.class);
         thrown.expectMessage("Table(organization)'s column(type) is null!");
         organizationDao.insert(organization);
     }
@@ -155,20 +154,6 @@ public class MultipleIdDaoTest {
         assertEquals(organization, organization1);
     }
 
-    @Test
-    public void updateByIdException1() {
-
-        Organization organization = insertOrganization();
-
-        Organization organizationUpdate = new Organization();
-        organizationUpdate.setCityCode(organization.getCityCode());
-        organizationUpdate.setName(organization.getName());
-
-        thrown.expect(RuntimeException.class);
-        thrown.expectMessage("Set cannot be empty when do updating!");
-        organizationDao.updateById(organizationUpdate);
-    }
-
 
     @Test
     public void updateByIdException2() {
@@ -179,7 +164,7 @@ public class MultipleIdDaoTest {
         organizationUpdate.setCityCode(organization.getCityCode());
         organizationUpdate.setName(null);
 
-        thrown.expect(IdNullPointerException.class);
+        thrown.expect(SqlException.class);
         organizationDao.updateById(organizationUpdate, Collections.singletonList(OrganizationProperties.name));
     }
 
@@ -193,7 +178,7 @@ public class MultipleIdDaoTest {
         organizationUpdate.setCityCode(organization.getCityCode());
         organizationUpdate.setName(organization.getName());
 
-        thrown.expect(ColumnNullPointerException.class);
+        thrown.expect(SqlException.class);
         thrown.expectMessage("Table(organization)'s column(type) is null!");
         organizationDao.updateById(organizationUpdate, Collections.singletonList(OrganizationProperties.type));
     }

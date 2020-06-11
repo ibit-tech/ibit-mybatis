@@ -8,8 +8,9 @@ import tech.ibit.mybatis.test.dao.UserLoginRecordDao;
 import tech.ibit.mybatis.test.entity.UserLoginRecord;
 import tech.ibit.mybatis.test.entity.property.UserLoginRecordProperties;
 import tech.ibit.mybatis.test.mapper.UserLoginRecordMapper;
-import tech.ibit.sqlbuilder.CriteriaItemMaker;
-import tech.ibit.sqlbuilder.Sql;
+import tech.ibit.sqlbuilder.SqlFactory;
+import tech.ibit.sqlbuilder.sql.DeleteSql;
+import tech.ibit.sqlbuilder.sql.SearchSql;
 
 import java.util.List;
 
@@ -41,10 +42,10 @@ public class UserLoginRecordDaoImpl extends NoIdDaoImpl<UserLoginRecord> impleme
      */
     @Override
     public int deleteAll() {
-        Sql sql = new Sql()
+        DeleteSql sql = SqlFactory.createDelete()
                 .deleteFrom(UserLoginRecordProperties.TABLE)
-                .andWhere(CriteriaItemMaker.greaterThan(UserLoginRecordProperties.userId, 0));
-        return mapper.update(sql.getSqlParams());
+                .andWhere(UserLoginRecordProperties.userId.gt(0));
+        return mapper.update(sql.getPrepareStatement());
     }
 
     /**
@@ -54,10 +55,10 @@ public class UserLoginRecordDaoImpl extends NoIdDaoImpl<UserLoginRecord> impleme
      */
     @Override
     public List<UserLoginRecord> listAll() {
-        Sql sql = new Sql()
-                .selectPo(getPoClazz())
+        SearchSql sql = SqlFactory.createSearch()
+                .columnPo(getPoClazz())
                 .from(UserLoginRecordProperties.TABLE);
-        return mapper.select(sql.getSqlParams());
+        return mapper.select(sql.getPrepareStatement());
     }
 
 }

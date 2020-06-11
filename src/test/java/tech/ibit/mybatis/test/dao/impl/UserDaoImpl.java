@@ -12,8 +12,8 @@ import tech.ibit.mybatis.test.entity.UserTypeTotal;
 import tech.ibit.mybatis.test.entity.property.UserProperties;
 import tech.ibit.mybatis.test.mapper.UserMapper;
 import tech.ibit.sqlbuilder.OrderBy;
-import tech.ibit.sqlbuilder.Sql;
-import tech.ibit.sqlbuilder.aggregate.CountColumn;
+import tech.ibit.sqlbuilder.SqlFactory;
+import tech.ibit.sqlbuilder.sql.SearchSql;
 
 import java.util.List;
 
@@ -47,11 +47,11 @@ public class UserDaoImpl extends SingleIdDaoImpl<User, Integer> implements UserD
      */
     @Override
     public List<Integer> listUserIds() {
-        Sql sql = new Sql()
-                .select(UserProperties.userId)
+        SearchSql sql = SqlFactory.createSearch()
+                .column(UserProperties.userId)
                 .from(UserProperties.TABLE)
                 .orderBy(new OrderBy(UserProperties.userId));
-        return mapper.selectDefault(sql.getSqlParams());
+        return mapper.selectDefault(sql.getPrepareStatement());
     }
 
     /**
@@ -72,13 +72,13 @@ public class UserDaoImpl extends SingleIdDaoImpl<User, Integer> implements UserD
      */
     @Override
     public List<UserTypeTotal> listTypeTotals() {
-        Sql sql = new Sql()
-                .select(UserProperties.type)
-                .select(new CountColumn(null, "total"))
+        SearchSql sql = SqlFactory.createSearch()
+                .column(UserProperties.type)
+                .column(UserProperties.type.count("total"))
                 .from(UserProperties.TABLE)
                 .groupBy(UserProperties.type)
                 .orderBy(new OrderBy(UserProperties.type));
-        return mapper.selectWithResultMap(sql.getSqlParams(), TYPE_TOTAL_RESULT_MAP);
+        return mapper.selectWithResultMap(sql.getPrepareStatement(), TYPE_TOTAL_RESULT_MAP);
     }
 
 

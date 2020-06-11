@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import tech.ibit.mybatis.test.dao.UserLoginRecordDao;
 import tech.ibit.mybatis.test.entity.UserLoginRecord;
-import tech.ibit.sqlbuilder.exception.ColumnNullPointerException;
+import tech.ibit.sqlbuilder.exception.SqlException;
 
 import java.util.Date;
 import java.util.List;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * 无主键dao测试
  *
- * @author IBIT-TECH
+ * @author IBIT程序猿
  * mailto: ibit_tech@aliyun.com
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -59,7 +59,7 @@ public class NoIdDaoTest {
     @Test
     public void insertException() {
         userLoginRecord.setLoginTime(null);
-        thrown.expect(ColumnNullPointerException.class);
+        thrown.expect(SqlException.class);
         thrown.expectMessage("Table(user_login_record)'s column(login_time) is null!");
         userLoginRecordDao.insert(userLoginRecord);
     }

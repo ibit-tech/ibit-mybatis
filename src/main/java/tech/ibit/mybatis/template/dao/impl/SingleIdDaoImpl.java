@@ -4,7 +4,7 @@ package tech.ibit.mybatis.template.dao.impl;
 import tech.ibit.mybatis.MapperDaoUtils;
 import tech.ibit.mybatis.template.dao.SingleIdDao;
 import tech.ibit.sqlbuilder.Column;
-import tech.ibit.sqlbuilder.exception.ColumnValueNotFoundException;
+import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
 import java.util.Collection;
@@ -52,7 +52,7 @@ public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implement
     public int updateById(P po) {
         try {
             return MapperDaoUtils.updateById(getMapper(), po);
-        } catch (ColumnValueNotFoundException e) {
+        } catch (SqlException e) {
             return 0;
         }
     }
