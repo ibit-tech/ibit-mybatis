@@ -1,4 +1,4 @@
-package tech.ibit.mybatis;
+package tech.ibit.mybatis.template.provider;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,13 +14,28 @@ import java.util.function.Function;
  *
  * @author IBIT程序猿
  */
-public class SqlBuilder {
+public class SqlProvider {
 
-    public static final String SQL_PARAMS = "sqlParams";
+    /**
+     * 参数sqlParams
+     */
+    public static final String PARAM_SQL_PARAMS = "sqlParams";
+
+    /**
+     * 参数key
+     */
+    public static final String PARAM_KEY = "key";
+
+    /**
+     * 参数key.value
+     */
+    public static final String PARAM_KEY_VALUE = "key.value";
+
+    /**
+     * 参数execute
+     */
     public static final String METHOD_EXECUTE = "execute";
-    public static final String RESULT_MAP = "resultMap";
-    public static final String KEY = "key";
-    public static final String KEY_VALUE = "key.value";
+
 
     @Setter
     @Getter
@@ -34,8 +49,7 @@ public class SqlBuilder {
      * @return 执行的sql
      */
     public String execute(Map<String, Object> paramMap) {
-
-        PrepareStatement sqlParams = (PrepareStatement) paramMap.get(SQL_PARAMS);
+        PrepareStatement sqlParams = (PrepareStatement) paramMap.get(PARAM_SQL_PARAMS);
         String sql = sqlParams.getPrepareSql();
 
         List<ColumnValue> params = sqlParams.getValues();
@@ -65,7 +79,7 @@ public class SqlBuilder {
      * @return 参数键
      */
     private String getParamKey(int index) {
-        return SQL_PARAMS + index;
+        return PARAM_SQL_PARAMS + index;
     }
 
     /**

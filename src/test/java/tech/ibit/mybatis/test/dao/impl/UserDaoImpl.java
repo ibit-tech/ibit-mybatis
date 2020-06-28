@@ -8,7 +8,6 @@ import tech.ibit.mybatis.template.mapper.Mapper;
 import tech.ibit.mybatis.test.dao.UserDao;
 import tech.ibit.mybatis.test.entity.User;
 import tech.ibit.mybatis.test.entity.UserPo;
-import tech.ibit.mybatis.test.entity.UserTypeTotal;
 import tech.ibit.mybatis.test.entity.property.UserProperties;
 import tech.ibit.mybatis.test.mapper.UserMapper;
 import tech.ibit.sqlbuilder.OrderBy;
@@ -38,8 +37,6 @@ public class UserDaoImpl extends SingleIdDaoImpl<User, Integer> implements UserD
         return User.class;
     }
 
-    private static final String TYPE_TOTAL_RESULT_MAP = "typeTotalResultMap";
-
     /**
      * 列举用户id
      *
@@ -63,22 +60,6 @@ public class UserDaoImpl extends SingleIdDaoImpl<User, Integer> implements UserD
     @Override
     public UserPo getPoById(Integer userId) {
         return MapperDaoUtils.getPoById(mapper, UserPo.class, userId);
-    }
-
-    /**
-     * 按照用户类型统计数量
-     *
-     * @return 用户类型统计
-     */
-    @Override
-    public List<UserTypeTotal> listTypeTotals() {
-        SearchSql sql = SqlFactory.createSearch()
-                .column(UserProperties.type)
-                .column(UserProperties.type.count("total"))
-                .from(UserProperties.TABLE)
-                .groupBy(UserProperties.type)
-                .orderBy(new OrderBy(UserProperties.type));
-        return mapper.selectWithResultMap(sql.getPrepareStatement(), TYPE_TOTAL_RESULT_MAP);
     }
 
 

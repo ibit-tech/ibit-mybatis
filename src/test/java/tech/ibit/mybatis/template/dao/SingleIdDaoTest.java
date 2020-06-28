@@ -9,11 +9,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import tech.ibit.mybatis.SqlBuilder;
+import tech.ibit.mybatis.template.provider.SqlProvider;
 import tech.ibit.mybatis.test.dao.UserDao;
 import tech.ibit.mybatis.test.entity.User;
 import tech.ibit.mybatis.test.entity.UserPo;
-import tech.ibit.mybatis.test.entity.UserTypeTotal;
 import tech.ibit.mybatis.test.entity.property.UserProperties;
 import tech.ibit.mybatis.test.entity.type.UserType;
 import tech.ibit.mybatis.type.CommonEnum;
@@ -46,7 +45,7 @@ public class SingleIdDaoTest {
     public void setUp() {
         testUsers = new ArrayList<>();
 
-        SqlBuilder.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
+        SqlProvider.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
             put(CommonEnum.class, o -> ((CommonEnum) o).getValue());
         }});
     }
@@ -60,7 +59,6 @@ public class SingleIdDaoTest {
 
     @Autowired
     private UserDao userDao;
-
 
     private User getUser() {
         User user = new User();
@@ -268,23 +266,5 @@ public class SingleIdDaoTest {
         assertEquals(user.getMobilePhone(), userPo.getMobilePhone());
         assertEquals(user.getType(), userPo.getType());
 
-    }
-
-    @Test
-    public void listTypeTotals() {
-        List<UserTypeTotal> typeTotals = userDao.listTypeTotals();
-        assertEquals(0, typeTotals.size());
-
-        insertUser();
-        typeTotals = userDao.listTypeTotals();
-        assertEquals(1, typeTotals.size());
-        assertEquals(Integer.valueOf(1), typeTotals.get(0).getTotal());
-        assertEquals(UserType.u1, typeTotals.get(0).getType());
-
-        insertUser();
-        typeTotals = userDao.listTypeTotals();
-        assertEquals(1, typeTotals.size());
-        assertEquals(Integer.valueOf(2), typeTotals.get(0).getTotal());
-        assertEquals(UserType.u1, typeTotals.get(0).getType());
     }
 }

@@ -13,13 +13,14 @@ import java.util.List;
  * mailto: ibit_tech@aliyun.com
  */
 public class TestMapper<T> implements Mapper<T> {
+
     @Override
-    public <P> List<P> selectWithResultMap(PrepareStatement sqlParams, String resultMap) {
+    public List<T> select(PrepareStatement sqlParams) {
         return null;
     }
 
     @Override
-    public List<T> select(PrepareStatement sqlParams) {
+    public T selectOne(PrepareStatement sqlParams) {
         return null;
     }
 

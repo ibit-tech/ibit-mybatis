@@ -12,3 +12,9 @@ spring:
   h2:
     console:
       enabled: true
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+    default-enum-type-handler: tech.ibit.mybatis.type.CommonEnumTypeHandler

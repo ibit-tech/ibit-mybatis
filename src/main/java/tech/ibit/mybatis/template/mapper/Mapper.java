@@ -2,7 +2,7 @@ package tech.ibit.mybatis.template.mapper;
 
 
 import org.apache.ibatis.annotations.*;
-import tech.ibit.mybatis.SqlBuilder;
+import tech.ibit.mybatis.template.provider.SqlProvider;
 import tech.ibit.sqlbuilder.KeyValuePair;
 import tech.ibit.sqlbuilder.PrepareStatement;
 
@@ -15,28 +15,23 @@ import java.util.List;
  */
 public interface Mapper<T> {
 
-
     /**
-     * 指定ResultMap查询
-     *
-     * @param sqlParams SQL语句-参数对象
-     * @param resultMap ResultMap名称
-     * @param <P>       实体类类型
-     * @return 结果对象列表
-     */
-    @SelectProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    <P> List<P> selectWithResultMap(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams,
-                                    @Param(SqlBuilder.RESULT_MAP) String resultMap);
-
-    /**
-     * 使用XML中默认的ResultMap查询（返回系统生成的实体类）
+     * 查询列表
      *
      * @param sqlParams SQL语句-参数对象
      * @return 结果对象列表
      */
-    @ResultMap(SqlBuilder.RESULT_MAP)
-    @SelectProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    List<T> select(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
+    @SelectProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
+    List<T> select(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
+
+    /**
+     * 查询单个对象
+     *
+     * @param sqlParams SQL语句-参数对象
+     * @return 结果对象
+     */
+    @SelectProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
+    T selectOne(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 基本类型查询
@@ -45,8 +40,8 @@ public interface Mapper<T> {
      * @param <P>       基本类型
      * @return 结果列表
      */
-    @SelectProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    <P> List<P> selectDefault(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
+    @SelectProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
+    <P> List<P> selectDefault(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 计数
@@ -54,9 +49,8 @@ public interface Mapper<T> {
      * @param sqlParams SQL语句-参数对象
      * @return 计数结果
      */
-    @ResultType(value = int.class)
-    @SelectProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    int count(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
+    @SelectProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
+    int count(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 更新
@@ -64,9 +58,8 @@ public interface Mapper<T> {
      * @param sqlParams SQL语句-参数对象
      * @return 更新条数
      */
-    @ResultType(int.class)
-    @UpdateProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    int update(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
+    @UpdateProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
+    int update(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 插入并生成主键
@@ -75,11 +68,10 @@ public interface Mapper<T> {
      * @param key       接受主键的生成结果的key对象
      * @return 插入条数（0或1）
      */
-    @ResultType(int.class)
-    @InsertProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    @Options(useGeneratedKeys = true, keyProperty = SqlBuilder.KEY_VALUE)
-    int insertWithGenerateKeys(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams,
-                               @Param(SqlBuilder.KEY) KeyValuePair key);
+    @InsertProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
+    @Options(useGeneratedKeys = true, keyProperty = SqlProvider.PARAM_KEY_VALUE)
+    int insertWithGenerateKeys(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams,
+                               @Param(SqlProvider.PARAM_KEY) KeyValuePair key);
 
     /**
      * 插入
@@ -87,8 +79,7 @@ public interface Mapper<T> {
      * @param sqlParams SQL语句-参数对象
      * @return 插入条数（0或1）
      */
-    @ResultType(int.class)
-    @InsertProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    int insert(@Param(SqlBuilder.SQL_PARAMS) PrepareStatement sqlParams);
+    @InsertProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
+    int insert(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
 }

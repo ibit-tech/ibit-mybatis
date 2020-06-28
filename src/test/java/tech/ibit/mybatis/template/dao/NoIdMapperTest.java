@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
-public class NoIdDaoTest {
+public class NoIdMapperTest {
 
     @Autowired
     private UserLoginRecordDao userLoginRecordDao;

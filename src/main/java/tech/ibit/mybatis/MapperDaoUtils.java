@@ -3,6 +3,7 @@ package tech.ibit.mybatis;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.StringUtils;
 import tech.ibit.mybatis.template.mapper.Mapper;
+import tech.ibit.mybatis.template.provider.SqlProvider;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.converter.EntityConverter;
 import tech.ibit.sqlbuilder.sql.support.WhereSupport;
@@ -44,7 +45,7 @@ public class MapperDaoUtils {
         if (null == idSetterMethod) {
             return mapper.insert(sqlParams);
         }
-        KeyValuePair key = new KeyValuePair(SqlBuilder.KEY, null);
+        KeyValuePair key = new KeyValuePair(SqlProvider.PARAM_KEY, null);
         //write auto increase key
         int result = mapper.insertWithGenerateKeys(sqlParams, key);
         if (result == 0) {
@@ -322,7 +323,7 @@ public class MapperDaoUtils {
     public <T> T getById(Mapper<T> mapper, Class<T> clazz, Object id) {
         PrepareStatement sqlParams = DaoUtils.getById(clazz, id);
         doLog(sqlParams);
-        return executeQueryOne(mapper, sqlParams);
+        return mapper.selectOne(sqlParams);
     }
 
     /**
@@ -352,7 +353,7 @@ public class MapperDaoUtils {
     public <T> T getByMultiId(Mapper<T> mapper, Class<T> clazz, MultiId id) {
         PrepareStatement sqlParams = DaoUtils.getByMultiId(clazz, id);
         doLog(sqlParams);
-        return executeQueryOne(mapper, sqlParams);
+        return mapper.selectOne(sqlParams);
     }
 
     /**
@@ -417,7 +418,8 @@ public class MapperDaoUtils {
     public <T, P> P getPoByMultiId(Mapper<T> mapper, Class<P> clazz, MultiId id) {
         PrepareStatement sqlParams = DaoUtils.getByMultiId(clazz, id);
         doLog(sqlParams);
-        return executeQueryOne(mapper, clazz, sqlParams);
+        T entity = mapper.selectOne(sqlParams);
+        return null == entity ? null : EntityConverter.copyColumns(entity, clazz);
     }
 
     /**
@@ -480,62 +482,33 @@ public class MapperDaoUtils {
         return mapper.select(sqlParams);
     }
 
-    /**
-     * 执行查询
-     *
-     * @param mapper    实体对应的mapper
-     * @param sqlParams Sql参数
-     * @param resultMap 指定resultMap
-     * @param <P>       持久化对象类类型
-     * @return 实体列表
-     */
-    @SuppressWarnings("unchecked")
-    public <P> List<P> executeQuery(Mapper mapper, PrepareStatement sqlParams, String resultMap) {
-        doLog(sqlParams);
-        return (List<P>) mapper.selectWithResultMap(sqlParams, resultMap);
-    }
+//    /**
+//     * 查找单个实体
+//     *
+//     * @param mapper    实体对应的mapper
+//     * @param sqlParams Sql参数
+//     * @param <T>       持久化对象类类型
+//     * @return 实体
+//     */
+//    public <T> T executeQueryOne(Mapper<T> mapper, PrepareStatement sqlParams) {
+//        List<T> result = executeQuery(mapper, sqlParams);
+//        return result.isEmpty() ? null : result.get(0);
+//    }
 
-    /**
-     * 查找单个实体
-     *
-     * @param mapper    实体对应的mapper
-     * @param sqlParams Sql参数
-     * @param <T>       持久化对象类类型
-     * @return 实体
-     */
-    public <T> T executeQueryOne(Mapper<T> mapper, PrepareStatement sqlParams) {
-        List<T> result = executeQuery(mapper, sqlParams);
-        return result.isEmpty() ? null : result.get(0);
-    }
-
-    /**
-     * 查找单个实体
-     *
-     * @param mapper    实体对应的mapper
-     * @param sqlParams Sql参数
-     * @param resultMap 指定resultMap
-     * @param <P>       持久化对象类类型
-     * @return 实体
-     */
-    public <P> P executeQueryOne(Mapper mapper, PrepareStatement sqlParams, String resultMap) {
-        List<P> result = executeQuery(mapper, sqlParams, resultMap);
-        return result.isEmpty() ? null : result.get(0);
-    }
-
-    /**
-     * 获取单个持久化对象
-     *
-     * @param mapper    实体对应的mapper
-     * @param poClass   持久化对象类
-     * @param sqlParams Sql参数
-     * @param <T>       实体类类型
-     * @param <P>       持久化对象类类型
-     * @return 持久化对象
-     */
-    public <T, P> P executeQueryOne(Mapper<T> mapper, Class<P> poClass, PrepareStatement sqlParams) {
-        List<P> result = executeQuery(mapper, poClass, sqlParams);
-        return result.isEmpty() ? null : result.get(0);
-    }
+//    /**
+//     * 获取单个持久化对象
+//     *
+//     * @param mapper    实体对应的mapper
+//     * @param poClass   持久化对象类
+//     * @param sqlParams Sql参数
+//     * @param <T>       实体类类型
+//     * @param <P>       持久化对象类类型
+//     * @return 持久化对象
+//     */
+//    public <T, P> P executeQueryOne(Mapper<T> mapper, Class<P> poClass, PrepareStatement sqlParams) {
+//        List<P> result = executeQuery(mapper, poClass, sqlParams);
+//        return result.isEmpty() ? null : result.get(0);
+//    }
 
     private <T> void updateAutoIncreaseId(T entity, AutoIncrementIdSetterMethod idSetterMethod, Number key)
             throws InvocationTargetException, IllegalAccessException {
