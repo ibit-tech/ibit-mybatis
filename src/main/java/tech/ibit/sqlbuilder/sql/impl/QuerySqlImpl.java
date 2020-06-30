@@ -10,6 +10,7 @@ import tech.ibit.sqlbuilder.sql.QuerySql;
 import tech.ibit.sqlbuilder.sql.field.BooleanField;
 import tech.ibit.sqlbuilder.sql.field.LimitField;
 import tech.ibit.sqlbuilder.sql.field.ListField;
+import tech.ibit.sqlbuilder.sql.support.statement.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,16 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class QuerySqlImpl<T> extends SqlLogImpl implements QuerySql<T> {
+public class QuerySqlImpl<T> extends SqlLogImpl
+        implements QuerySql<T>,
+        DefaultColumnSupport<QuerySql<T>>,
+        DefaultFromSupport<QuerySql<T>>,
+        DefaultJoinOnSupport<QuerySql<T>>,
+        DefaultWhereSupport<QuerySql<T>>,
+        DefaultGroupBySupport<QuerySql<T>>,
+        DefaultHavingSupport<QuerySql<T>>,
+        DefaultOrderBySupport<QuerySql<T>>,
+        DefaultLimitSupport<QuerySql<T>> {
 
 
     /**

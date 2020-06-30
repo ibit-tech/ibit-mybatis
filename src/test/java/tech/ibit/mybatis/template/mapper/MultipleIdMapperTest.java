@@ -37,7 +37,7 @@ public class MultipleIdMapperTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    
+
     @Autowired
     private OrganizationMapper organizationMapper;
 
@@ -182,7 +182,6 @@ public class MultipleIdMapperTest {
         thrown.expectMessage("Table(organization)'s column(type) is null!");
         organizationMapper.updateByIdWithColumns(organizationUpdate, Collections.singletonList(OrganizationProperties.type));
     }
-
 
 
     @Test

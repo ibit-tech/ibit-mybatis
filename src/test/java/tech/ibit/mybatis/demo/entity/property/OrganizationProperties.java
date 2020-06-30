@@ -11,7 +11,7 @@ import tech.ibit.sqlbuilder.Table;
 public interface OrganizationProperties {
 
     /**
-     * 
+     *
      */
     Table TABLE = new Table("organization", "o");
 

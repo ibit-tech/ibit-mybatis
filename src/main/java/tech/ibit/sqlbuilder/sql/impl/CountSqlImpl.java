@@ -9,6 +9,7 @@ import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.CountSql;
 import tech.ibit.sqlbuilder.sql.field.BooleanField;
 import tech.ibit.sqlbuilder.sql.field.ListField;
+import tech.ibit.sqlbuilder.sql.support.statement.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +23,14 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class CountSqlImpl<T> extends SqlLogImpl implements CountSql<T> {
+public class CountSqlImpl<T> extends SqlLogImpl
+        implements CountSql<T>,
+        DefaultColumnSupport<CountSql<T>>,
+        DefaultFromSupport<CountSql<T>>,
+        DefaultJoinOnSupport<CountSql<T>>,
+        DefaultWhereSupport<CountSql<T>>,
+        DefaultGroupBySupport<CountSql<T>>,
+        DefaultHavingSupport<CountSql<T>> {
 
 
     /**

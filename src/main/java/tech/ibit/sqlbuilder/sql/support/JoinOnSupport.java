@@ -1,8 +1,10 @@
 package tech.ibit.sqlbuilder.sql.support;
 
-import tech.ibit.sqlbuilder.*;
+import tech.ibit.sqlbuilder.Column;
+import tech.ibit.sqlbuilder.CriteriaItem;
+import tech.ibit.sqlbuilder.JoinOn;
+import tech.ibit.sqlbuilder.Table;
 import tech.ibit.sqlbuilder.sql.field.ListField;
-import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface JoinOnSupport<T> extends SqlSupport<T>, PrepareStatementSupport {
+public interface JoinOnSupport<T> extends SqlSupport<T> {
 
     /**
      * Join on
@@ -156,21 +158,6 @@ public interface JoinOnSupport<T> extends SqlSupport<T>, PrepareStatementSupport
     default T complexInnerJoinOn(Table table, List<CriteriaItem> criteriaItems) {
         joinOn(JoinOn.inner(table, null, criteriaItems));
         return getSql();
-    }
-
-    /**
-     * 获取预查询SQL对象
-     *
-     * @param useAlias 是否使用别名
-     * @return 预查询SQL对象
-     */
-    default PrepareStatement getJoinOnPrepareStatement(boolean useAlias) {
-        List<JoinOn> joinOns = getJoinOn().getItems();
-        if (CollectionUtils.isEmpty(joinOns)) {
-            return PrepareStatement.empty();
-        }
-
-        return getPrepareStatement(" ", joinOns, " ", useAlias);
     }
 
 }

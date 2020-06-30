@@ -5,6 +5,8 @@ import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.sql.InsertSql;
 import tech.ibit.sqlbuilder.sql.field.ListField;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultInsertTableSupport;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultValuesSupport;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +19,9 @@ import java.util.List;
  * @version 2.0
  */
 @Getter
-public class InsertSqlImpl extends SqlLogImpl implements InsertSql {
+public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
+        DefaultInsertTableSupport<InsertSql>,
+        DefaultValuesSupport<InsertSql> {
 
     /**
      * from

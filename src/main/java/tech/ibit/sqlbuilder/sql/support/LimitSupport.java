@@ -1,12 +1,6 @@
 package tech.ibit.sqlbuilder.sql.support;
 
-import tech.ibit.sqlbuilder.ColumnValue;
-import tech.ibit.sqlbuilder.PrepareStatement;
-import tech.ibit.sqlbuilder.SimpleNameColumn;
 import tech.ibit.sqlbuilder.sql.field.LimitField;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Limit Support
@@ -45,28 +39,5 @@ public interface LimitSupport<T> extends SqlSupport<T> {
         getLimit().limit(limit);
         return getSql();
     }
-
-
-    /**
-     * 获取预查询SQL对象
-     *
-     * @return 预查询SQL对象
-     */
-    default PrepareStatement getLimitPrepareStatement() {
-        LimitField limitField = getLimit();
-        int limit = limitField.getLimit();
-        if (limit < 0) {
-            return PrepareStatement.empty();
-        }
-
-        int start = limitField.getStart();
-
-        String prepareSql = " LIMIT ?, ?";
-        List<ColumnValue> values = Arrays.asList(
-                new ColumnValue(new SimpleNameColumn("$start"), start),
-                new ColumnValue(new SimpleNameColumn("$limit"), limit));
-        return new PrepareStatement(prepareSql, values);
-    }
-
 
 }

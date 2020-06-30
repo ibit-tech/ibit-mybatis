@@ -1,11 +1,8 @@
 package tech.ibit.sqlbuilder.sql.support;
 
 import tech.ibit.sqlbuilder.IOrderBy;
-import tech.ibit.sqlbuilder.PrepareStatement;
 import tech.ibit.sqlbuilder.sql.field.ListField;
-import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,7 +11,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface OrderBySupport<T> extends SqlSupport<T>, PrepareStatementSupport {
+public interface OrderBySupport<T> extends SqlSupport<T> {
 
     /**
      * Order by
@@ -47,20 +44,4 @@ public interface OrderBySupport<T> extends SqlSupport<T>, PrepareStatementSuppor
         getOrderBy().addItems(orderBys);
         return getSql();
     }
-
-    /**
-     * 获取预查询SQL对象
-     *
-     * @param useAlias 是否使用别名
-     * @return 预查询SQL对象
-     */
-    default PrepareStatement getOrderByPrepareStatement(boolean useAlias) {
-        List<IOrderBy> orderBys = getOrderBy().getItems();
-        if (CollectionUtils.isEmpty(orderBys)) {
-            return new PrepareStatement("", Collections.emptyList());
-        }
-        return getPrepareStatement(" ORDER BY ", orderBys, ", ", useAlias);
-    }
-
-
 }

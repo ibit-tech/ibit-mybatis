@@ -1,4 +1,4 @@
-package tech.ibit.sqlbuilder.sql.support;
+package tech.ibit.sqlbuilder.sql.support.statement;
 
 import tech.ibit.sqlbuilder.ColumnValue;
 import tech.ibit.sqlbuilder.Criteria;
@@ -13,7 +13,7 @@ import java.util.Optional;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface CriteriaSupport {
+public interface DefaultCriteriaSupport {
 
     /**
      * 扩展prepareSql和values

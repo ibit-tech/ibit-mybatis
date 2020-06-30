@@ -6,6 +6,10 @@ import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.DeleteSql;
 import tech.ibit.sqlbuilder.sql.field.ListField;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultDeleteSupport;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultFromSupport;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultJoinOnSupport;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultWhereSupport;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +22,11 @@ import java.util.List;
  * @version 2.0
  */
 @Getter
-public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql {
+public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
+        DefaultDeleteSupport<DeleteSql>,
+        DefaultFromSupport<DeleteSql>,
+        DefaultJoinOnSupport<DeleteSql>,
+        DefaultWhereSupport<DeleteSql> {
 
     /**
      * 删除项

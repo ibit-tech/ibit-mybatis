@@ -6,6 +6,10 @@ import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.UpdateSql;
 import tech.ibit.sqlbuilder.sql.field.ListField;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultJoinOnSupport;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultSetSupport;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultUpdateTableSupport;
+import tech.ibit.sqlbuilder.sql.support.statement.DefaultWhereSupport;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +22,11 @@ import java.util.List;
  * @version 2.0
  */
 @Getter
-public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql {
+public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
+        DefaultUpdateTableSupport<UpdateSql>,
+        DefaultJoinOnSupport<UpdateSql>,
+        DefaultSetSupport<UpdateSql>,
+        DefaultWhereSupport<UpdateSql> {
 
     /**
      * from

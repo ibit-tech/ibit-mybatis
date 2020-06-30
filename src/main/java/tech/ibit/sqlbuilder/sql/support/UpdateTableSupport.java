@@ -1,6 +1,5 @@
 package tech.ibit.sqlbuilder.sql.support;
 
-import tech.ibit.sqlbuilder.PrepareStatement;
 import tech.ibit.sqlbuilder.Table;
 import tech.ibit.sqlbuilder.sql.field.ListField;
 
@@ -12,7 +11,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface UpdateTableSupport<T> extends SqlSupport<T>, PrepareStatementSupport, TableSupport {
+public interface UpdateTableSupport<T> extends SqlSupport<T> {
 
     /**
      * 获取更新表
@@ -45,16 +44,5 @@ public interface UpdateTableSupport<T> extends SqlSupport<T>, PrepareStatementSu
         getUpdateTable().addItems(tables);
         return getSql();
     }
-
-    /**
-     * 获取预查询SQL对象
-     *
-     * @param useAlias 是否使用别名
-     * @return 预查询SQL对象
-     */
-    default PrepareStatement getUpdatePrepareStatement(boolean useAlias) {
-        return getTablePrepareStatement(getUpdateTable(), "UPDATE ", useAlias);
-    }
-
 
 }

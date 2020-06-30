@@ -1,10 +1,8 @@
 package tech.ibit.sqlbuilder.sql.support;
 
 import tech.ibit.sqlbuilder.IColumn;
-import tech.ibit.sqlbuilder.PrepareStatement;
 import tech.ibit.sqlbuilder.converter.EntityConverter;
 import tech.ibit.sqlbuilder.sql.field.ListField;
-import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
 import java.util.List;
 
@@ -14,7 +12,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface ColumnSupport<P> extends SqlSupport<P>, PrepareStatementSupport {
+public interface ColumnSupport<T> extends SqlSupport<T> {
 
     /**
      * 获取列
@@ -30,7 +28,7 @@ public interface ColumnSupport<P> extends SqlSupport<P>, PrepareStatementSupport
      * @return SQL对象
      * @see IColumn
      */
-    default P column(List<? extends IColumn> columns) {
+    default T column(List<? extends IColumn> columns) {
         getColumn().addItems(columns);
         return getSql();
     }
@@ -42,7 +40,7 @@ public interface ColumnSupport<P> extends SqlSupport<P>, PrepareStatementSupport
      * @return SQL对象
      * @see IColumn
      */
-    default P column(IColumn column) {
+    default T column(IColumn column) {
         getColumn().addItem(column);
         return getSql();
     }
@@ -53,27 +51,9 @@ public interface ColumnSupport<P> extends SqlSupport<P>, PrepareStatementSupport
      * @param poClass 实体类
      * @return SQL对象
      */
-    default P columnPo(Class poClass) {
+    default T columnPo(Class poClass) {
         getColumn().addItems(EntityConverter.getColumns(poClass));
         return getSql();
     }
-
-
-    /**
-     * 获取预查询SQL对象
-     *
-     * @param useAlias 是否使用别名
-     * @return 预查询SQL对象
-     */
-    default PrepareStatement getColumnPrepareStatement(boolean useAlias) {
-        List<IColumn> columns = getColumn().getItems();
-        if (CollectionUtils.isEmpty(columns)) {
-            return PrepareStatement.empty();
-        }
-
-        return getPrepareStatement("", columns
-                , (IColumn column) -> column.getSelectColumnName(useAlias), null, ", ");
-    }
-
 
 }

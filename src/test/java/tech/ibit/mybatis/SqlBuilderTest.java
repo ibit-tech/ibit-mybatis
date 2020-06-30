@@ -1,10 +1,10 @@
 package tech.ibit.mybatis;
 
 import org.junit.Test;
-import tech.ibit.mybatis.template.provider.SqlBuilder;
 import tech.ibit.mybatis.demo.CommonTest;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.demo.entity.type.UserType;
+import tech.ibit.mybatis.template.provider.SqlBuilder;
 import tech.ibit.sqlbuilder.PrepareStatement;
 
 import java.util.*;

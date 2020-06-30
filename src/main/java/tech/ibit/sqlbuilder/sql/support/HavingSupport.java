@@ -1,13 +1,9 @@
 package tech.ibit.sqlbuilder.sql.support;
 
-import tech.ibit.sqlbuilder.ColumnValue;
 import tech.ibit.sqlbuilder.Criteria;
 import tech.ibit.sqlbuilder.CriteriaItem;
-import tech.ibit.sqlbuilder.PrepareStatement;
 import tech.ibit.sqlbuilder.sql.field.ListField;
-import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +12,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface HavingSupport<T> extends SqlSupport<T>, CriteriaSupport {
+public interface HavingSupport<T> extends SqlSupport<T> {
 
     /**
      * Having
@@ -92,28 +88,5 @@ public interface HavingSupport<T> extends SqlSupport<T>, CriteriaSupport {
         having(Criteria.or(havings));
         return getSql();
     }
-
-
-    /**
-     * 获取预查询SQL对象
-     *
-     * @param useAlias 是否使用别名
-     * @return 预查询SQL对象
-     */
-    default PrepareStatement getHavingPrepareStatement(boolean useAlias) {
-        List<Criteria> criterion = getHaving().getItems();
-        if (CollectionUtils.isEmpty(criterion)) {
-            return PrepareStatement.empty();
-        }
-
-        StringBuilder prepareSql = new StringBuilder();
-        List<ColumnValue> values = new ArrayList<>();
-        prepareSql.append(" HAVING ");
-
-        append(criterion, useAlias, prepareSql, values);
-
-        return new PrepareStatement(prepareSql.toString(), values);
-    }
-
 
 }

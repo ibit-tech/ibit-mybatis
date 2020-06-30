@@ -1,4 +1,4 @@
-package tech.ibit.sqlbuilder.sql.support;
+package tech.ibit.sqlbuilder.sql.support.statement;
 
 import tech.ibit.sqlbuilder.ColumnValue;
 import tech.ibit.sqlbuilder.PrepareStatement;
@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface PrepareStatementSupport {
+public interface DefaultPrepareStatementSupport {
 
 
     /**
@@ -128,5 +128,29 @@ public interface PrepareStatementSupport {
     default PrepareStatement getPrepareStatement(String hook
             , List<? extends PrepareStatementSupplier> clauses, String separator, boolean useAlias) {
         return getPrepareStatement(hook, clauses, separator, "", useAlias);
+    }
+
+    /**
+     * 扩展目标sql和values
+     *
+     * @param prepareStatement 预查询sql对象
+     * @param targetPrepareSql 目标sql
+     * @param targetValues     目标值
+     */
+    default void append(PrepareStatement prepareStatement, StringBuilder targetPrepareSql, List<ColumnValue> targetValues) {
+        targetPrepareSql.append(prepareStatement.getPrepareSql());
+        targetValues.addAll(prepareStatement.getValues());
+    }
+
+
+    /**
+     * 扩展目标sql和values
+     *
+     * @param prepareStatements 预查询sql对象列表
+     * @param targetPrepareSql  目标sql
+     * @param targetValues      目标值
+     */
+    default void append(List<PrepareStatement> prepareStatements, StringBuilder targetPrepareSql, List<ColumnValue> targetValues) {
+        prepareStatements.forEach(prepareStatement -> append(prepareStatement, targetPrepareSql, targetValues));
     }
 }

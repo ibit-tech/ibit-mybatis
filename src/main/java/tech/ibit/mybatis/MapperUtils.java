@@ -6,7 +6,6 @@ import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.mybatis.template.provider.SqlBuilder;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.converter.EntityConverter;
-import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.InsertSql;
 import tech.ibit.sqlbuilder.sql.QuerySql;
 import tech.ibit.sqlbuilder.sql.support.WhereSupport;

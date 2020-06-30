@@ -1,4 +1,4 @@
-package tech.ibit.sqlbuilder.sql.support;
+package tech.ibit.sqlbuilder.sql.support.statement;
 
 import tech.ibit.sqlbuilder.PrepareStatement;
 import tech.ibit.sqlbuilder.Table;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface TableSupport extends PrepareStatementSupport {
+public interface DefaultTableSupport extends DefaultPrepareStatementSupport {
 
     /**
      * 获取预查询SQL对象

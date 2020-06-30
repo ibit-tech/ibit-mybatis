@@ -2,9 +2,9 @@ package tech.ibit.mybatis.demo.ext.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import tech.ibit.mybatis.demo.ext.dao.UserLoginRecordExtDao;
 import tech.ibit.mybatis.demo.entity.UserLoginRecord;
 import tech.ibit.mybatis.demo.entity.property.UserLoginRecordProperties;
+import tech.ibit.mybatis.demo.ext.dao.UserLoginRecordExtDao;
 import tech.ibit.mybatis.demo.mapper.UserLoginRecordMapper;
 import tech.ibit.sqlbuilder.SqlFactory;
 
