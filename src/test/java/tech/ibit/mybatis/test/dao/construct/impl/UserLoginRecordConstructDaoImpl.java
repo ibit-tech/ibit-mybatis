@@ -1,10 +1,8 @@
-package tech.ibit.mybatis.test.dao.impl;
+package tech.ibit.mybatis.test.dao.construct.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import tech.ibit.mybatis.template.dao.impl.NoIdDaoImpl;
-import tech.ibit.mybatis.template.mapper.Mapper;
-import tech.ibit.mybatis.test.dao.UserLoginRecordDao;
+import tech.ibit.mybatis.test.dao.construct.UserLoginRecordConstructDao;
 import tech.ibit.mybatis.test.entity.UserLoginRecord;
 import tech.ibit.mybatis.test.entity.property.UserLoginRecordProperties;
 import tech.ibit.mybatis.test.mapper.UserLoginRecordMapper;
@@ -20,20 +18,10 @@ import java.util.List;
  * @author IBIT程序猿
  */
 @Repository
-public class UserLoginRecordDaoImpl extends NoIdDaoImpl<UserLoginRecord> implements UserLoginRecordDao {
+public class UserLoginRecordConstructDaoImpl implements UserLoginRecordConstructDao {
 
     @Autowired
     private UserLoginRecordMapper mapper;
-
-    @Override
-    public Mapper<UserLoginRecord> getMapper() {
-        return mapper;
-    }
-
-    @Override
-    public Class<UserLoginRecord> getPoClazz() {
-        return UserLoginRecord.class;
-    }
 
     /**
      * 删除所有记录
@@ -45,7 +33,7 @@ public class UserLoginRecordDaoImpl extends NoIdDaoImpl<UserLoginRecord> impleme
         DeleteSql sql = SqlFactory.createDelete()
                 .deleteFrom(UserLoginRecordProperties.TABLE)
                 .andWhere(UserLoginRecordProperties.userId.gt(0));
-        return mapper.update(sql.getPrepareStatement());
+        return mapper.rawUpdate(sql.getPrepareStatement());
     }
 
     /**
@@ -56,9 +44,9 @@ public class UserLoginRecordDaoImpl extends NoIdDaoImpl<UserLoginRecord> impleme
     @Override
     public List<UserLoginRecord> listAll() {
         SearchSql sql = SqlFactory.createSearch()
-                .columnPo(getPoClazz())
+                .columnPo(mapper.getPoClazz())
                 .from(UserLoginRecordProperties.TABLE);
-        return mapper.select(sql.getPrepareStatement());
+        return mapper.rawSelect(sql.getPrepareStatement());
     }
 
 }

@@ -29,10 +29,10 @@
 
 | 序号 | 方法 | 描述 |
 | -- | -- | -- |
-| 1 | select </br> selectPo（对象）</br> selectDistinct </br> selectDistinctPo（对象）| `select [distinct]`语句 |
-| 2	 | count </br> countDistinct | `select count [distinct]`语句 |
+| 1 | rawSelect </br> selectPo（对象）</br> selectDistinct </br> selectDistinctPo（对象）| `rawSelect [distinct]`语句 |
+| 2	 | count </br> countDistinct | `rawSelect count [distinct]`语句 |
 | 3 | deleteFrom </br> deleteTableFrom（别名）| `delete from`语句 |
-| 4	 | update | `update`语句 |
+| 4	 | rawUpdate | `rawUpdate`语句 |
 | 5 | insertInto </br> batchInsertInto（批量）| `insert into`语句 |
 | 6 | set </br> increaseSet（列自增）</br> decreaseSet（列自减）</br> |`set`语句 |
 | 7 | values | `values`语句 |
@@ -56,7 +56,7 @@
  
 #### 定义Mapper
 
-Mapper为数据访问层，默认基于注解实现了insert（增加），update（更新/删除），select（查询），count（计数）和实体映射到xml的ResultMap。接收参数为`sql-builder`生成的SqlParams参数。Mapper对于原生的基于xml、注解的数据访问方式是兼容的。 
+Mapper为数据访问层，默认基于注解实现了insert（增加），rawUpdate（更新/删除），rawSelect（查询），count（计数）和实体映射到xml的ResultMap。接收参数为`sql-builder`生成的SqlParams参数。Mapper对于原生的基于xml、注解的数据访问方式是兼容的。 
 
 #### 定义Dao
 

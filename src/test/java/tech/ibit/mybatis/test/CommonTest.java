@@ -4,7 +4,6 @@ import tech.ibit.sqlbuilder.ColumnValue;
 import tech.ibit.sqlbuilder.PrepareStatement;
 import tech.ibit.sqlbuilder.SimpleNameColumn;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -25,17 +24,6 @@ public class CommonTest {
      */
     public void assertPrepareStatementEquals(String sql, List<ColumnValue> values, PrepareStatement sqlParams) {
         assertEquals(new PrepareStatement(sql, values).toString(), sqlParams.toString());
-    }
-
-
-    /**
-     * 断言参数相等
-     *
-     * @param sql       sql
-     * @param sqlParams sql参数对象
-     */
-    public void assertPrepareStatementEquals(String sql, PrepareStatement sqlParams) {
-        assertEquals(new PrepareStatement(sql, Collections.emptyList()).toString(), sqlParams.toString());
     }
 
     /**

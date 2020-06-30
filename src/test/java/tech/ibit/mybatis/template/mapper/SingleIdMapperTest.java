@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.template.dao;
+package tech.ibit.mybatis.template.mapper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -9,12 +9,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import tech.ibit.mybatis.template.provider.SqlProvider;
-import tech.ibit.mybatis.test.dao.UserDao;
+import tech.ibit.mybatis.template.provider.SqlBuilder;
+import tech.ibit.mybatis.test.dao.construct.UserConstructDao;
 import tech.ibit.mybatis.test.entity.User;
 import tech.ibit.mybatis.test.entity.UserPo;
 import tech.ibit.mybatis.test.entity.property.UserProperties;
 import tech.ibit.mybatis.test.entity.type.UserType;
+import tech.ibit.mybatis.test.mapper.UserMapper;
 import tech.ibit.mybatis.type.CommonEnum;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
@@ -33,7 +34,7 @@ import static org.junit.Assert.assertNull;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
-public class SingleIdDaoTest {
+public class SingleIdMapperTest {
 
 
     @Rule
@@ -45,7 +46,7 @@ public class SingleIdDaoTest {
     public void setUp() {
         testUsers = new ArrayList<>();
 
-        SqlProvider.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
+        SqlBuilder.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
             put(CommonEnum.class, o -> ((CommonEnum) o).getValue());
         }});
     }
@@ -53,12 +54,15 @@ public class SingleIdDaoTest {
     @After
     public void tearDown() {
         if (CollectionUtils.isNotEmpty(testUsers)) {
-            testUsers.forEach(testUser -> userDao.deleteById(testUser.getUserId()));
+            testUsers.forEach(testUser -> userMapper.deleteById(testUser.getUserId()));
         }
     }
 
     @Autowired
-    private UserDao userDao;
+    private UserConstructDao userExtMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     private User getUser() {
         User user = new User();
@@ -73,7 +77,7 @@ public class SingleIdDaoTest {
 
     private User insertUser() {
         User user = getUser();
-        userDao.insert(user);
+        userMapper.insert(user);
         testUsers.add(user);
         return user;
     }
@@ -81,7 +85,7 @@ public class SingleIdDaoTest {
     @Test
     public void insert() {
         User user = insertUser();
-        assertEquals(user, userDao.getById(user.getUserId()));
+        assertEquals(user, userMapper.getById(user.getUserId()));
     }
 
 
@@ -91,7 +95,7 @@ public class SingleIdDaoTest {
         user.setUserId(1);
         thrown.expect(SqlException.class);
         thrown.expectMessage("Table(user)'s id(user_id) cannot be inserted!");
-        userDao.insert(user);
+        userMapper.insert(user);
     }
 
 
@@ -101,28 +105,28 @@ public class SingleIdDaoTest {
         user.setName(null);
         thrown.expect(SqlException.class);
         thrown.expectMessage("Table(user)'s column(name) is null!");
-        userDao.insert(user);
+        userMapper.insert(user);
     }
 
 
     @Test
     public void deleteById() {
-        int result = userDao.deleteById(100);
+        int result = userMapper.deleteById(100);
         assertEquals(0, result);
 
         User user = insertUser();
-        result = userDao.deleteById(user.getUserId());
+        result = userMapper.deleteById(user.getUserId());
         assertEquals(1, result);
     }
 
     @Test
     public void deleteByIds() {
-        int result = userDao.deleteByIds(Arrays.asList(-1, -2));
+        int result = userMapper.deleteByIds(Arrays.asList(-1, -2));
         assertEquals(0, result);
 
         User user1 = insertUser();
         User user2 = insertUser();
-        result = userDao.deleteByIds(Arrays.asList(user1.getUserId(), user2.getUserId()));
+        result = userMapper.deleteByIds(Arrays.asList(user1.getUserId(), user2.getUserId()));
         assertEquals(2, result);
     }
 
@@ -133,16 +137,16 @@ public class SingleIdDaoTest {
         User userUpdate = new User();
         userUpdate.setUserId(user.getUserId());
         userUpdate.setName("dev-haha");
-        userDao.updateById(userUpdate);
+        userMapper.updateById(userUpdate);
 
-        user = userDao.getById(user.getUserId());
+        user = userMapper.getById(user.getUserId());
         assertEquals("dev-haha", user.getName());
 
 
         userUpdate = user;
         userUpdate.setMobilePhone("109");
-        userDao.updateById(userUpdate);
-        user = userDao.getById(userUpdate.getUserId());
+        userMapper.updateById(userUpdate);
+        user = userMapper.getById(userUpdate.getUserId());
         assertEquals("109", user.getMobilePhone());
 
     }
@@ -157,16 +161,16 @@ public class SingleIdDaoTest {
 
         user.setMobilePhone(mobilePhone + "0");
         user.setEmail(email + "0");
-        userDao.updateById(user, Collections.singletonList(UserProperties.mobilePhone));
-        user = userDao.getById(userId);
+        userMapper.updateByIdWithColumns(user, Collections.singletonList(UserProperties.mobilePhone));
+        user = userMapper.getById(userId);
         assertEquals(email, user.getEmail());
         assertEquals(mobilePhone + "0", user.getMobilePhone());
 
         User userUpdate = new User();
         userUpdate.setUserId(userId);
         userUpdate.setEmail(email + "0");
-        userDao.updateById(userUpdate, Arrays.asList(UserProperties.loginId, UserProperties.email));
-        user = userDao.getById(userId);
+        userMapper.updateByIdWithColumns(userUpdate, Arrays.asList(UserProperties.loginId, UserProperties.email));
+        user = userMapper.getById(userId);
         assertNull(user.getLoginId());
         assertEquals(email + "0", user.getEmail());
     }
@@ -177,7 +181,7 @@ public class SingleIdDaoTest {
         user.setName(null);
         thrown.expect(SqlException.class);
         thrown.expectMessage("Table(user)'s column(name) is null!");
-        userDao.updateById(user, Collections.singletonList(UserProperties.name));
+        userMapper.updateByIdWithColumns(user, Collections.singletonList(UserProperties.name));
     }
 
     @Test
@@ -187,10 +191,10 @@ public class SingleIdDaoTest {
 
         User userUpdate = new User();
         userUpdate.setType(UserType.u3);
-        userDao.updateByIds(userUpdate, Arrays.asList(user1.getUserId(), user2.getUserId()));
+        userMapper.updateByIds(userUpdate, Arrays.asList(user1.getUserId(), user2.getUserId()));
 
-        user1 = userDao.getById(user1.getUserId());
-        user2 = userDao.getById(user2.getUserId());
+        user1 = userMapper.getById(user1.getUserId());
+        user2 = userMapper.getById(user2.getUserId());
         assertEquals(UserType.u3, user1.getType());
         assertEquals(UserType.u3, user2.getType());
 
@@ -204,10 +208,10 @@ public class SingleIdDaoTest {
 
         User userUpdate = new User();
         userUpdate.setType(UserType.u3);
-        userDao.updateByIds(userUpdate, Arrays.asList(UserProperties.loginId, UserProperties.type), Arrays.asList(user1.getUserId(), user2.getUserId()));
+        userMapper.updateByIdsWithColumns(userUpdate, Arrays.asList(UserProperties.loginId, UserProperties.type), Arrays.asList(user1.getUserId(), user2.getUserId()));
 
-        user1 = userDao.getById(user1.getUserId());
-        user2 = userDao.getById(user2.getUserId());
+        user1 = userMapper.getById(user1.getUserId());
+        user2 = userMapper.getById(user2.getUserId());
         assertNull(user1.getLoginId());
         assertNull(user2.getLoginId());
         assertEquals(UserType.u3, user1.getType());
@@ -225,7 +229,7 @@ public class SingleIdDaoTest {
         userUpdate.setType(UserType.u3);
         thrown.expect(SqlException.class);
         thrown.expectMessage("Table(user)'s column(name) is null!");
-        userDao.updateByIds(userUpdate,
+        userMapper.updateByIdsWithColumns(userUpdate,
                 Arrays.asList(UserProperties.name, UserProperties.loginId, UserProperties.type),
                 Arrays.asList(user1.getUserId(), user2.getUserId()));
     }
@@ -233,7 +237,7 @@ public class SingleIdDaoTest {
     @Test
     public void getById() {
         User user = insertUser();
-        User user1 = userDao.getById(user.getUserId());
+        User user1 = userMapper.getById(user.getUserId());
         assertEquals(user, user1);
     }
 
@@ -242,7 +246,7 @@ public class SingleIdDaoTest {
         User user0 = insertUser();
         User user1 = insertUser();
 
-        List<User> users = userDao.getByIds(Arrays.asList(user0.getUserId(), user1.getUserId()));
+        List<User> users = userMapper.getByIds(Arrays.asList(user0.getUserId(), user1.getUserId()));
         assertEquals(user0, users.get(0));
         assertEquals(user1, users.get(1));
     }
@@ -251,7 +255,7 @@ public class SingleIdDaoTest {
     public void listUserIds() {
         User user0 = insertUser();
         User user1 = insertUser();
-        List<Integer> userIds = userDao.listUserIds();
+        List<Integer> userIds = userExtMapper.listUserIds();
         assertEquals(user0.getUserId(), userIds.get(0));
         assertEquals(user1.getUserId(), userIds.get(1));
     }
@@ -259,7 +263,7 @@ public class SingleIdDaoTest {
     @Test
     public void getPoById() {
         User user = insertUser();
-        UserPo userPo = userDao.getPoById(user.getUserId());
+        UserPo userPo = userExtMapper.getPoById(user.getUserId());
         assertEquals(user.getUserId(), userPo.getUserId());
         assertEquals(user.getLoginId(), userPo.getLoginId());
         assertEquals(user.getEmail(), userPo.getEmail());

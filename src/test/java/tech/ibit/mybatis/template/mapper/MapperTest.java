@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import tech.ibit.mybatis.template.provider.SqlProvider;
+import tech.ibit.mybatis.template.provider.SqlBuilder;
 import tech.ibit.mybatis.test.entity.User;
 import tech.ibit.mybatis.test.entity.property.UserProperties;
 import tech.ibit.mybatis.test.entity.type.UserType;
@@ -37,7 +37,7 @@ public class MapperTest {
     public void testSelect() {
         String sql = "select * from user";
         PrepareStatement statement = new PrepareStatement(sql, Collections.emptyList());
-        List<User> user = mapper.select(statement);
+        List<User> user = mapper.rawSelect(statement);
         System.out.println(user);
     }
 
@@ -45,7 +45,7 @@ public class MapperTest {
     public void testSelectOne() {
         String sql = "select * from user where user_id = ?";
         PrepareStatement statement = new PrepareStatement(sql, Collections.singletonList(UserProperties.userId.value(1)));
-        User user = mapper.selectOne(statement);
+        User user = mapper.rawSelectOne(statement);
         System.out.println(user);
     }
 
@@ -61,11 +61,25 @@ public class MapperTest {
                 UserProperties.type.value(UserType.u2)
         );
         PrepareStatement statement = new PrepareStatement(sql,values);
-        KeyValuePair key = new KeyValuePair(SqlProvider.PARAM_KEY, null);
-        int result = mapper.insertWithGenerateKeys(statement, key);
+        KeyValuePair key = new KeyValuePair(SqlBuilder.PARAM_KEY, null);
+        mapper.rawInsertWithGenerateKeys(statement, key);
         System.out.println(key.getValue());
 
         //'2', 'u2', 'u2', 'u2@ibit.tech', '12345678', '188', '2'
+    }
+
+    @Test
+    public void insert2() {
+        User user = new User();
+        user.setLoginId("u4");
+        user.setName("u4");
+        user.setEmail("u4@ibit.tech");
+        user.setPassword("12345678");
+        user.setMobilePhone("101");
+        user.setType(UserType.u1);
+
+        mapper.insert(user);
+        System.out.println(user);
     }
 
 

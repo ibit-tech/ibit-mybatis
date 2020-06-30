@@ -1,6 +1,6 @@
 package tech.ibit.mybatis;
 
-import tech.ibit.mybatis.template.mapper.Mapper;
+import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.sqlbuilder.KeyValuePair;
 import tech.ibit.sqlbuilder.PrepareStatement;
 
@@ -12,40 +12,40 @@ import java.util.List;
  * @author IBIT程序猿
  * mailto: ibit_tech@aliyun.com
  */
-public class TestMapper<T> implements Mapper<T> {
+public class TestMapper<T> implements RawMapper<T> {
 
     @Override
-    public List<T> select(PrepareStatement sqlParams) {
+    public List<T> rawSelect(PrepareStatement sqlParams) {
         return null;
     }
 
     @Override
-    public T selectOne(PrepareStatement sqlParams) {
+    public T rawSelectOne(PrepareStatement sqlParams) {
         return null;
     }
 
     @Override
-    public int count(PrepareStatement sqlParams) {
+    public int rawCount(PrepareStatement sqlParams) {
         return 0;
     }
 
     @Override
-    public int update(PrepareStatement sqlParams) {
+    public int rawUpdate(PrepareStatement sqlParams) {
         return 0;
     }
 
     @Override
-    public int insertWithGenerateKeys(PrepareStatement sqlParams, KeyValuePair key) {
+    public int rawInsertWithGenerateKeys(PrepareStatement sqlParams, KeyValuePair key) {
         return 0;
     }
 
     @Override
-    public int insert(PrepareStatement sqlParams) {
+    public int rawInsert(PrepareStatement sqlParams) {
         return 0;
     }
 
     @Override
-    public <P> List<P> selectDefault(PrepareStatement sqlParams) {
+    public <P> List<P> rawSelectDefault(PrepareStatement sqlParams) {
         return null;
     }
 }

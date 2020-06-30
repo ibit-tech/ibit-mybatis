@@ -2,8 +2,8 @@ package tech.ibit.mybatis;
 
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang.StringUtils;
-import tech.ibit.mybatis.template.mapper.Mapper;
-import tech.ibit.mybatis.template.provider.SqlProvider;
+import tech.ibit.mybatis.template.mapper.RawMapper;
+import tech.ibit.mybatis.template.provider.SqlBuilder;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.converter.EntityConverter;
 import tech.ibit.sqlbuilder.sql.support.WhereSupport;
@@ -37,24 +37,24 @@ public class MapperDaoUtils {
      * @param <T>    实体类类型
      * @return 插入条数
      */
-    public <T> int insert(Mapper mapper, T entity) {
+    public <T> int insert(RawMapper mapper, T entity) {
         PrepareStatement sqlParams = DaoUtils.insertInto(entity);
         doLog(sqlParams);
         AutoIncrementIdSetterMethod idSetterMethod =
                 EntityConverter.getAutoIncrementIdSetterMethod(entity.getClass());
         if (null == idSetterMethod) {
-            return mapper.insert(sqlParams);
+            return mapper.rawInsert(sqlParams);
         }
-        KeyValuePair key = new KeyValuePair(SqlProvider.PARAM_KEY, null);
+        KeyValuePair key = new KeyValuePair(SqlBuilder.PARAM_KEY, null);
         //write auto increase key
-        int result = mapper.insertWithGenerateKeys(sqlParams, key);
+        int result = mapper.rawInsertWithGenerateKeys(sqlParams, key);
         if (result == 0) {
             return result;
         }
         try {
             updateAutoIncreaseId(entity, idSetterMethod, (Number) key.getValue());
         } catch (InvocationTargetException | IllegalAccessException e) {
-            logger.warn("Error update id", e);
+            logger.warn("Error rawUpdate id", e);
             return 0;
         }
         return result;
@@ -69,10 +69,10 @@ public class MapperDaoUtils {
      * @param <T>    主题类类型
      * @return 删除条数
      */
-    public <T> int deleteById(Mapper mapper, Class<T> clazz, Object id) {
+    public <T> int deleteById(RawMapper mapper, Class<T> clazz, Object id) {
         PrepareStatement sqlParams = DaoUtils.deleteById(clazz, id);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
     /**
@@ -84,10 +84,10 @@ public class MapperDaoUtils {
      * @param <T>    主题类类型
      * @return 删除条数
      */
-    public <T> int deleteByIds(Mapper mapper, Class<T> clazz, Collection<?> ids) {
+    public <T> int deleteByIds(RawMapper mapper, Class<T> clazz, Collection<?> ids) {
         PrepareStatement sqlParams = DaoUtils.deleteByIds(clazz, ids);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
     /**
@@ -97,10 +97,10 @@ public class MapperDaoUtils {
      * @param id     主键对象
      * @return 删除条数
      */
-    public int deleteByMultiId(Mapper mapper, MultiId id) {
+    public int deleteByMultiId(RawMapper mapper, MultiId id) {
         PrepareStatement sqlParams = DaoUtils.deleteByMultiId(id);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
     /**
@@ -110,10 +110,10 @@ public class MapperDaoUtils {
      * @param ids    主键对象
      * @return 删除条数
      */
-    public int deleteByMultiIds(Mapper mapper, List<? extends MultiId> ids) {
+    public int deleteByMultiIds(RawMapper mapper, List<? extends MultiId> ids) {
         PrepareStatement sqlParams = DaoUtils.deleteByMultiIds(ids);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
     /**
@@ -123,10 +123,10 @@ public class MapperDaoUtils {
      * @param entity 实体对象
      * @return 更新条数
      */
-    public int updateById(Mapper mapper, Object entity) {
+    public int updateById(RawMapper mapper, Object entity) {
         PrepareStatement sqlParams = DaoUtils.updateById(entity);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
 
@@ -138,10 +138,10 @@ public class MapperDaoUtils {
      * @param columns 更新字段列表
      * @return 更新条数
      */
-    public int updateById(Mapper mapper, Object entity, List<Column> columns) {
+    public int updateById(RawMapper mapper, Object entity, List<Column> columns) {
         PrepareStatement sqlParams = DaoUtils.updateById(entity, columns);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
 
@@ -151,7 +151,7 @@ public class MapperDaoUtils {
      * @param mapper   实体对应mapper
      * @param entities 实体对象列表
      */
-    public void batchUpdateById(Mapper mapper, List<?> entities) {
+    public void batchUpdateById(RawMapper mapper, List<?> entities) {
         if (CollectionUtils.isEmpty(entities)) {
             return;
         }
@@ -162,7 +162,7 @@ public class MapperDaoUtils {
                     .map(DaoUtils::updateById).collect(Collectors.toList());
             PrepareStatement sqlParams = merge(sqlParamsList);
             doLog(sqlParams);
-            mapper.update(sqlParams);
+            mapper.rawUpdate(sqlParams);
         }
 
     }
@@ -174,7 +174,7 @@ public class MapperDaoUtils {
      * @param entities 实体对象列表
      * @param columns  更新列
      */
-    public void batchUpdateById(Mapper mapper, List<?> entities, List<Column> columns) {
+    public void batchUpdateById(RawMapper mapper, List<?> entities, List<Column> columns) {
         if (CollectionUtils.isEmpty(entities)) {
             return;
         }
@@ -185,7 +185,7 @@ public class MapperDaoUtils {
                     .map(entity -> DaoUtils.updateById(entity, columns)).collect(Collectors.toList());
             PrepareStatement sqlParams = merge(sqlParamsList);
             doLog(sqlParams);
-            mapper.update(sqlParams);
+            mapper.rawUpdate(sqlParams);
         }
 
     }
@@ -197,7 +197,7 @@ public class MapperDaoUtils {
      * @param entities      实体对象列表
      * @param ignoreColumns 忽略的列
      */
-    public void batchUpdateByIdAndIgnoreColumns(Mapper mapper, List<?> entities, List<Column> ignoreColumns) {
+    public void batchUpdateByIdAndIgnoreColumns(RawMapper mapper, List<?> entities, List<Column> ignoreColumns) {
         if (CollectionUtils.isEmpty(entities)) {
             return;
         }
@@ -233,7 +233,7 @@ public class MapperDaoUtils {
      * @param ignoreColumns 忽略的列
      * @return 更新条数
      */
-    public int updateByIdAndIgnoreColumns(Mapper mapper, Object entity, List<Column> ignoreColumns) {
+    public int updateByIdAndIgnoreColumns(RawMapper mapper, Object entity, List<Column> ignoreColumns) {
         List<Column> columns = EntityConverter.getUpdateColumns(entity.getClass(), ignoreColumns);
         return updateById(mapper, entity, columns);
     }
@@ -247,7 +247,7 @@ public class MapperDaoUtils {
      * @param ids           主键列表
      * @return 更新条数
      */
-    public int updateByIdAndIgnoreColumns(Mapper mapper, Object entity, List<Column> ignoreColumns, Collection<?> ids) {
+    public int updateByIdAndIgnoreColumns(RawMapper mapper, Object entity, List<Column> ignoreColumns, Collection<?> ids) {
         List<Column> columns = EntityConverter.getUpdateColumns(entity.getClass(), ignoreColumns);
         return updateByIds(mapper, entity, columns, ids);
     }
@@ -260,10 +260,10 @@ public class MapperDaoUtils {
      * @param ids    主键列表
      * @return 更新条数
      */
-    public int updateByIds(Mapper mapper, Object entity, Collection<?> ids) {
+    public int updateByIds(RawMapper mapper, Object entity, Collection<?> ids) {
         PrepareStatement sqlParams = DaoUtils.updateByIds(entity, ids);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
     /**
@@ -275,10 +275,10 @@ public class MapperDaoUtils {
      * @param columns 更新列
      * @return 更新条数
      */
-    public int updateByIds(Mapper mapper, Object entity, List<Column> columns, Collection<?> ids) {
+    public int updateByIds(RawMapper mapper, Object entity, List<Column> columns, Collection<?> ids) {
         PrepareStatement sqlParams = DaoUtils.updateByIds(entity, columns, ids);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
 
@@ -290,10 +290,10 @@ public class MapperDaoUtils {
      * @param ids    主键列表
      * @return 更新条数
      */
-    public int updateByMultiIds(Mapper mapper, Object entity, List<? extends MultiId> ids) {
+    public int updateByMultiIds(RawMapper mapper, Object entity, List<? extends MultiId> ids) {
         PrepareStatement sqlParams = DaoUtils.updateByMultiIds(entity, ids);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
     /**
@@ -305,10 +305,10 @@ public class MapperDaoUtils {
      * @param columns 更新列
      * @return 更新条数
      */
-    public int updateByMultiIds(Mapper mapper, Object entity, List<Column> columns, List<? extends MultiId> ids) {
+    public int updateByMultiIds(RawMapper mapper, Object entity, List<Column> columns, List<? extends MultiId> ids) {
         PrepareStatement sqlParams = DaoUtils.updateByMultiIds(entity, columns, ids);
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
     /**
@@ -320,10 +320,10 @@ public class MapperDaoUtils {
      * @param <T>    实体类类型
      * @return 实体
      */
-    public <T> T getById(Mapper<T> mapper, Class<T> clazz, Object id) {
+    public <T> T getById(RawMapper<T> mapper, Class<T> clazz, Object id) {
         PrepareStatement sqlParams = DaoUtils.getById(clazz, id);
         doLog(sqlParams);
-        return mapper.selectOne(sqlParams);
+        return mapper.rawSelectOne(sqlParams);
     }
 
     /**
@@ -335,7 +335,7 @@ public class MapperDaoUtils {
      * @param <T>    实体类类型
      * @return 实体列表
      */
-    public <T> List<T> getByIds(Mapper<T> mapper, Class<T> clazz, Collection<?> ids) {
+    public <T> List<T> getByIds(RawMapper<T> mapper, Class<T> clazz, Collection<?> ids) {
         PrepareStatement sqlParams = DaoUtils.getByIds(clazz, ids);
         doLog(sqlParams);
         return executeQuery(mapper, sqlParams);
@@ -350,10 +350,10 @@ public class MapperDaoUtils {
      * @param <T>    实体类类型
      * @return 实体
      */
-    public <T> T getByMultiId(Mapper<T> mapper, Class<T> clazz, MultiId id) {
+    public <T> T getByMultiId(RawMapper<T> mapper, Class<T> clazz, MultiId id) {
         PrepareStatement sqlParams = DaoUtils.getByMultiId(clazz, id);
         doLog(sqlParams);
-        return mapper.selectOne(sqlParams);
+        return mapper.rawSelectOne(sqlParams);
     }
 
     /**
@@ -365,7 +365,7 @@ public class MapperDaoUtils {
      * @param <T>    实体类类型
      * @return 实体列表
      */
-    public <T> List<T> getByMultiIds(Mapper<T> mapper, Class<T> clazz, List<? extends MultiId> ids) {
+    public <T> List<T> getByMultiIds(RawMapper<T> mapper, Class<T> clazz, List<? extends MultiId> ids) {
         PrepareStatement sqlParams = DaoUtils.getByMultiIds(clazz, ids);
         doLog(sqlParams);
         return executeQuery(mapper, sqlParams);
@@ -382,7 +382,7 @@ public class MapperDaoUtils {
      * @param <P>    持久化对象类类型
      * @return 持久化对象
      */
-    public <T, P> P getPoById(Mapper<T> mapper, Class<P> clazz, Object id) {
+    public <T, P> P getPoById(RawMapper<T> mapper, Class<P> clazz, Object id) {
         PrepareStatement sqlParams = DaoUtils.getById(clazz, id);
         doLog(sqlParams);
         List<P> result = executeQuery(mapper, clazz, sqlParams);
@@ -399,7 +399,7 @@ public class MapperDaoUtils {
      * @param <P>    持久化对象类类型
      * @return 持久化对象列表
      */
-    public <T, P> List<P> getPoByIds(Mapper<T> mapper, Class<P> clazz, Collection<?> ids) {
+    public <T, P> List<P> getPoByIds(RawMapper<T> mapper, Class<P> clazz, Collection<?> ids) {
         PrepareStatement sqlParams = DaoUtils.getByIds(clazz, ids);
         doLog(sqlParams);
         return executeQuery(mapper, clazz, sqlParams);
@@ -415,10 +415,10 @@ public class MapperDaoUtils {
      * @param <P>    持久化对象类类型
      * @return 持久化对象
      */
-    public <T, P> P getPoByMultiId(Mapper<T> mapper, Class<P> clazz, MultiId id) {
+    public <T, P> P getPoByMultiId(RawMapper<T> mapper, Class<P> clazz, MultiId id) {
         PrepareStatement sqlParams = DaoUtils.getByMultiId(clazz, id);
         doLog(sqlParams);
-        T entity = mapper.selectOne(sqlParams);
+        T entity = mapper.rawSelectOne(sqlParams);
         return null == entity ? null : EntityConverter.copyColumns(entity, clazz);
     }
 
@@ -432,7 +432,7 @@ public class MapperDaoUtils {
      * @param <P>    持久化对象类类型
      * @return 持久化对象列表
      */
-    public <T, P> List<P> getPoByMultiIds(Mapper<T> mapper, Class<P> clazz, List<? extends MultiId> ids) {
+    public <T, P> List<P> getPoByMultiIds(RawMapper<T> mapper, Class<P> clazz, List<? extends MultiId> ids) {
         PrepareStatement sqlParams = DaoUtils.getByMultiIds(clazz, ids);
         doLog(sqlParams);
         return executeQuery(mapper, clazz, sqlParams);
@@ -445,9 +445,9 @@ public class MapperDaoUtils {
      * @param sqlParams Sql参数对象
      * @return 更新条数
      */
-    public int executeUpdate(Mapper mapper, PrepareStatement sqlParams) {
+    public int executeUpdate(RawMapper mapper, PrepareStatement sqlParams) {
         doLog(sqlParams);
-        return mapper.update(sqlParams);
+        return mapper.rawUpdate(sqlParams);
     }
 
 
@@ -462,9 +462,9 @@ public class MapperDaoUtils {
      * @return 持久化对象列表
      */
     @SuppressWarnings("unchecked")
-    public <T, P> List<P> executeQuery(Mapper<T> mapper, Class<P> poClass, PrepareStatement sqlParams) {
+    public <T, P> List<P> executeQuery(RawMapper<T> mapper, Class<P> poClass, PrepareStatement sqlParams) {
         doLog(sqlParams);
-        return EntityConverter.copyColumns(mapper.select(sqlParams), poClass);
+        return EntityConverter.copyColumns(mapper.rawSelect(sqlParams), poClass);
     }
 
 
@@ -477,38 +477,38 @@ public class MapperDaoUtils {
      * @return 实体列表
      */
     @SuppressWarnings("unchecked")
-    public <T> List<T> executeQuery(Mapper<T> mapper, PrepareStatement sqlParams) {
+    public <T> List<T> executeQuery(RawMapper<T> mapper, PrepareStatement sqlParams) {
         doLog(sqlParams);
-        return mapper.select(sqlParams);
+        return mapper.rawSelect(sqlParams);
     }
 
-//    /**
-//     * 查找单个实体
-//     *
-//     * @param mapper    实体对应的mapper
-//     * @param sqlParams Sql参数
-//     * @param <T>       持久化对象类类型
-//     * @return 实体
-//     */
-//    public <T> T executeQueryOne(Mapper<T> mapper, PrepareStatement sqlParams) {
-//        List<T> result = executeQuery(mapper, sqlParams);
-//        return result.isEmpty() ? null : result.get(0);
-//    }
+    /**
+     * 查找单个实体
+     *
+     * @param mapper    实体对应的mapper
+     * @param sqlParams Sql参数
+     * @param <T>       持久化对象类类型
+     * @return 实体
+     */
+    public <T> T executeQueryOne(RawMapper<T> mapper, PrepareStatement sqlParams) {
+        List<T> result = executeQuery(mapper, sqlParams);
+        return result.isEmpty() ? null : result.get(0);
+    }
 
-//    /**
-//     * 获取单个持久化对象
-//     *
-//     * @param mapper    实体对应的mapper
-//     * @param poClass   持久化对象类
-//     * @param sqlParams Sql参数
-//     * @param <T>       实体类类型
-//     * @param <P>       持久化对象类类型
-//     * @return 持久化对象
-//     */
-//    public <T, P> P executeQueryOne(Mapper<T> mapper, Class<P> poClass, PrepareStatement sqlParams) {
-//        List<P> result = executeQuery(mapper, poClass, sqlParams);
-//        return result.isEmpty() ? null : result.get(0);
-//    }
+    /**
+     * 获取单个持久化对象
+     *
+     * @param mapper    实体对应的mapper
+     * @param poClass   持久化对象类
+     * @param sqlParams Sql参数
+     * @param <T>       实体类类型
+     * @param <P>       持久化对象类类型
+     * @return 持久化对象
+     */
+    public <T, P> P executeQueryOne(RawMapper<T> mapper, Class<P> poClass, PrepareStatement sqlParams) {
+        List<P> result = executeQuery(mapper, poClass, sqlParams);
+        return result.isEmpty() ? null : result.get(0);
+    }
 
     private <T> void updateAutoIncreaseId(T entity, AutoIncrementIdSetterMethod idSetterMethod, Number key)
             throws InvocationTargetException, IllegalAccessException {

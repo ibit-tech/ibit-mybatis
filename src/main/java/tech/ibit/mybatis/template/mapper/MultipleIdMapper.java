@@ -1,24 +1,24 @@
-package tech.ibit.mybatis.template.dao.impl;
+package tech.ibit.mybatis.template.mapper;
 
 
 import tech.ibit.mybatis.MapperDaoUtils;
-import tech.ibit.mybatis.template.dao.SingleIdDao;
 import tech.ibit.sqlbuilder.Column;
+import tech.ibit.sqlbuilder.MultiId;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * 单一主键的表的DAO实现
+ * 多个主键的表的DAO实现
  *
  * @param <P> 实体类型
  * @param <K> 主键类型
  * @author IBIT程序猿
  */
-public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implements SingleIdDao<P, K> {
+public interface MultipleIdMapper<P, K extends MultiId> extends NoIdMapper<P> {
+
 
     /**
      * 通过主键删除记录
@@ -26,9 +26,8 @@ public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implement
      * @param id 主键
      * @return 删除条数
      */
-    @Override
-    public int deleteById(K id) {
-        return null == id ? 0 : MapperDaoUtils.deleteById(getMapper(), getPoClazz(), id);
+    default int deleteById(K id) {
+        return null == id ? 0 : MapperDaoUtils.deleteByMultiId(this, id);
     }
 
     /**
@@ -37,9 +36,8 @@ public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implement
      * @param ids 主键列表
      * @return 删除条数
      */
-    @Override
-    public int deleteByIds(Collection<K> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.deleteByIds(getMapper(), getPoClazz(), ids);
+    default int deleteByIds(List<K> ids) {
+        return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.deleteByMultiIds(this, ids);
     }
 
     /**
@@ -48,10 +46,9 @@ public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implement
      * @param po 更新对象
      * @return 更新条数
      */
-    @Override
-    public int updateById(P po) {
+    default int updateById(P po) {
         try {
-            return MapperDaoUtils.updateById(getMapper(), po);
+            return MapperDaoUtils.updateById(this, po);
         } catch (SqlException e) {
             return 0;
         }
@@ -64,9 +61,8 @@ public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implement
      * @param columns 更新列
      * @return 更新条数
      */
-    @Override
-    public int updateById(P po, List<Column> columns) {
-        return MapperDaoUtils.updateById(getMapper(), po, columns);
+    default int updateByIdWithColumns(P po, List<Column> columns) {
+        return MapperDaoUtils.updateById(this, po, columns);
     }
 
     /**
@@ -76,9 +72,8 @@ public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implement
      * @param ids 主键列表
      * @return 更新条数
      */
-    @Override
-    public int updateByIds(P po, Collection<K> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByIds(getMapper(), po, ids);
+    default int updateByIds(P po, List<K> ids) {
+        return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByMultiIds(this, po, ids);
     }
 
     /**
@@ -89,9 +84,8 @@ public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implement
      * @param ids     主键列表
      * @return 更新条数
      */
-    @Override
-    public int updateByIds(P po, List<Column> columns, Collection<K> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByIds(getMapper(), po, columns, ids);
+    default int updateByIdsWithColumns(P po, List<Column> columns, List<K> ids) {
+        return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByMultiIds(this, po, columns, ids);
     }
 
     /**
@@ -100,9 +94,8 @@ public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implement
      * @param id 主键
      * @return 相应的对象
      */
-    @Override
-    public P getById(K id) {
-        return null == id ? null : MapperDaoUtils.getById(getMapper(), getPoClazz(), id);
+    default P getById(K id) {
+        return null == id ? null : MapperDaoUtils.getByMultiId(this, getPoClazz(), id);
     }
 
     /**
@@ -111,8 +104,7 @@ public abstract class SingleIdDaoImpl<P, K> extends AbstractDaoImpl<P> implement
      * @param ids 主键列表
      * @return 相应的对象列表
      */
-    @Override
-    public List<P> getByIds(Collection<K> ids) {
-        return CollectionUtils.isEmpty(ids) ? Collections.emptyList() : MapperDaoUtils.getByIds(getMapper(), getPoClazz(), ids);
+    default List<P> getByIds(List<K> ids) {
+        return CollectionUtils.isEmpty(ids) ? Collections.emptyList() : MapperDaoUtils.getByMultiIds(this, getPoClazz(), ids);
     }
 }

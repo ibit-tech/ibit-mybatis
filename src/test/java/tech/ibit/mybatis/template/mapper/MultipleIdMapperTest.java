@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.template.dao;
+package tech.ibit.mybatis.template.mapper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
-import tech.ibit.mybatis.test.dao.OrganizationDao;
 import tech.ibit.mybatis.test.entity.Organization;
 import tech.ibit.mybatis.test.entity.OrganizationKey;
 import tech.ibit.mybatis.test.entity.property.OrganizationProperties;
+import tech.ibit.mybatis.test.mapper.OrganizationMapper;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
@@ -32,14 +32,14 @@ import static org.junit.Assert.assertEquals;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
-public class MultipleIdDaoTest {
+public class MultipleIdMapperTest {
 
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
+    
     @Autowired
-    private OrganizationDao organizationDao;
+    private OrganizationMapper organizationMapper;
 
     private List<Organization> testOrganizations;
 
@@ -52,7 +52,7 @@ public class MultipleIdDaoTest {
     public void tearDown() {
         if (CollectionUtils.isNotEmpty(testOrganizations)) {
             testOrganizations.forEach(organization -> {
-                organizationDao.deleteById(new OrganizationKey(organization.getCityCode(), organization.getName()));
+                organizationMapper.deleteById(new OrganizationKey(organization.getCityCode(), organization.getName()));
             });
         }
     }
@@ -60,7 +60,7 @@ public class MultipleIdDaoTest {
     @Test
     public void insert() {
         Organization organization = insertOrganization();
-        assertEquals(organization, organizationDao.getById(new OrganizationKey(organization.getCityCode(), organization.getName())));
+        assertEquals(organization, organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName())));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class MultipleIdDaoTest {
         organization.setCityCode(null);
         thrown.expect(SqlException.class);
         thrown.expectMessage("Table(organization)'s column(city_code) is null!");
-        organizationDao.insert(organization);
+        organizationMapper.insert(organization);
     }
 
     @Test
@@ -85,29 +85,29 @@ public class MultipleIdDaoTest {
         organization.setType(null);
         thrown.expect(SqlException.class);
         thrown.expectMessage("Table(organization)'s column(type) is null!");
-        organizationDao.insert(organization);
+        organizationMapper.insert(organization);
     }
 
     @Test
     public void deleteById() {
-        int result = organizationDao.deleteById(new OrganizationKey("0000", ""));
+        int result = organizationMapper.deleteById(new OrganizationKey("0000", ""));
         assertEquals(0, result);
 
         Organization organization = insertOrganization();
-        result = organizationDao.deleteById(new OrganizationKey(organization.getCityCode(), organization.getName()));
+        result = organizationMapper.deleteById(new OrganizationKey(organization.getCityCode(), organization.getName()));
         assertEquals(1, result);
     }
 
     @Test
     public void deleteByIds() {
-        int result = organizationDao.deleteByIds(Arrays.asList(
+        int result = organizationMapper.deleteByIds(Arrays.asList(
                 new OrganizationKey("0000", "0001"),
                 new OrganizationKey("0000", "0002")
         ));
         assertEquals(0, result);
 
         Organization organization = insertOrganization();
-        result = organizationDao.deleteByIds(Arrays.asList(
+        result = organizationMapper.deleteByIds(Arrays.asList(
                 new OrganizationKey("0000", "0001"),
                 new OrganizationKey(organization.getCityCode(), organization.getName())
         ));
@@ -122,10 +122,10 @@ public class MultipleIdDaoTest {
         organizationUpdate.setCityCode(organization.getCityCode());
         organizationUpdate.setName(organization.getName());
         organizationUpdate.setPhone("1190");
-        organizationDao.updateById(organizationUpdate);
+        organizationMapper.updateById(organizationUpdate);
 
 
-        Organization organization1 = organizationDao.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
+        Organization organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
         organization.setPhone("1190");
         assertEquals(organization, organization1);
     }
@@ -140,16 +140,16 @@ public class MultipleIdDaoTest {
         organizationUpdate.setName(organization.getName());
         organizationUpdate.setType(3);
         organizationUpdate.setPhone("1190");
-        organizationDao.updateById(organizationUpdate, Collections.singletonList(OrganizationProperties.type));
+        organizationMapper.updateByIdWithColumns(organizationUpdate, Collections.singletonList(OrganizationProperties.type));
 
-        Organization organization1 = organizationDao.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
+        Organization organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
         organization.setType(3);
         assertEquals(organization, organization1);
 
         organizationUpdate.setPhone(null);
-        organizationDao.updateById(organizationUpdate, Arrays.asList(OrganizationProperties.phone, OrganizationProperties.type));
+        organizationMapper.updateByIdWithColumns(organizationUpdate, Arrays.asList(OrganizationProperties.phone, OrganizationProperties.type));
 
-        organization1 = organizationDao.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
+        organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
         organization.setPhone(""); // h2会将值为NULL的字符串转为""
         assertEquals(organization, organization1);
     }
@@ -165,7 +165,7 @@ public class MultipleIdDaoTest {
         organizationUpdate.setName(null);
 
         thrown.expect(SqlException.class);
-        organizationDao.updateById(organizationUpdate, Collections.singletonList(OrganizationProperties.name));
+        organizationMapper.updateByIdWithColumns(organizationUpdate, Collections.singletonList(OrganizationProperties.name));
     }
 
 
@@ -180,7 +180,7 @@ public class MultipleIdDaoTest {
 
         thrown.expect(SqlException.class);
         thrown.expectMessage("Table(organization)'s column(type) is null!");
-        organizationDao.updateById(organizationUpdate, Collections.singletonList(OrganizationProperties.type));
+        organizationMapper.updateByIdWithColumns(organizationUpdate, Collections.singletonList(OrganizationProperties.type));
     }
 
 
@@ -193,13 +193,13 @@ public class MultipleIdDaoTest {
 
         Organization organizationUpdate = new Organization();
         organizationUpdate.setType(3);
-        organizationDao.updateByIds(organizationUpdate,
+        organizationMapper.updateByIds(organizationUpdate,
                 Arrays.asList(
                         new OrganizationKey(organization0.getCityCode(), organization0.getName()),
                         new OrganizationKey(organization1.getCityCode(), organization1.getName()))
         );
 
-        List<Organization> organizations = organizationDao.getByIds(Arrays.asList(
+        List<Organization> organizations = organizationMapper.getByIds(Arrays.asList(
                 new OrganizationKey(organization0.getCityCode(), organization0.getName()),
                 new OrganizationKey(organization1.getCityCode(), organization1.getName())));
         organization0.setType(3);
@@ -216,13 +216,13 @@ public class MultipleIdDaoTest {
 
         Organization organizationUpdate = new Organization();
         organizationUpdate.setType(3);
-        organizationDao.updateByIds(organizationUpdate,
+        organizationMapper.updateByIdsWithColumns(organizationUpdate,
                 Collections.singletonList(OrganizationProperties.phone),
                 Arrays.asList(
                         new OrganizationKey(organization0.getCityCode(), organization0.getName()),
                         new OrganizationKey(organization1.getCityCode(), organization1.getName()))
         );
-        List<Organization> organizations = organizationDao.getByIds(Arrays.asList(
+        List<Organization> organizations = organizationMapper.getByIds(Arrays.asList(
                 new OrganizationKey(organization0.getCityCode(), organization0.getName()),
                 new OrganizationKey(organization1.getCityCode(), organization1.getName())));
         organization0.setPhone("");
@@ -234,7 +234,7 @@ public class MultipleIdDaoTest {
     @Test
     public void getById() {
         Organization organization = insertOrganization();
-        Organization organization1 = organizationDao.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
+        Organization organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
         assertEquals(organization, organization1);
     }
 
@@ -243,7 +243,7 @@ public class MultipleIdDaoTest {
         Organization organization0 = insertOrganization();
         Organization organization1 = insertOrganization1();
 
-        List<Organization> organizations = organizationDao.getByIds(
+        List<Organization> organizations = organizationMapper.getByIds(
                 Arrays.asList(
                         new OrganizationKey(organization0.getCityCode(), organization0.getName()),
                         new OrganizationKey(organization1.getCityCode(), organization1.getName())));
@@ -262,7 +262,7 @@ public class MultipleIdDaoTest {
 
     private Organization insertOrganization() {
         Organization organization = getOrganization();
-        organizationDao.insert(organization);
+        organizationMapper.insert(organization);
         testOrganizations.add(organization);
         return organization;
     }
@@ -278,7 +278,7 @@ public class MultipleIdDaoTest {
 
     private Organization insertOrganization1() {
         Organization organization = getOrganization1();
-        organizationDao.insert(organization);
+        organizationMapper.insert(organization);
         testOrganizations.add(organization);
         return organization;
     }

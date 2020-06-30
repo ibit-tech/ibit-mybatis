@@ -1,7 +1,5 @@
-package tech.ibit.mybatis.test.dao;
+package tech.ibit.mybatis.test.dao.construct;
 
-
-import tech.ibit.mybatis.template.dao.NoIdDao;
 import tech.ibit.mybatis.test.entity.UserLoginRecord;
 
 import java.util.List;
@@ -11,7 +9,7 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface UserLoginRecordDao extends NoIdDao<UserLoginRecord> {
+public interface UserLoginRecordConstructDao {
 
     /**
      * 删除所有记录

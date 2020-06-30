@@ -1,8 +1,6 @@
-package tech.ibit.mybatis.test.dao;
+package tech.ibit.mybatis.test.dao.construct;
 
 
-import tech.ibit.mybatis.template.dao.SingleIdDao;
-import tech.ibit.mybatis.test.entity.User;
 import tech.ibit.mybatis.test.entity.UserPo;
 
 import java.util.List;
@@ -12,7 +10,7 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface UserDao extends SingleIdDao<User, Integer> {
+public interface UserConstructDao {
 
     /**
      * 列举用户id
@@ -28,11 +26,4 @@ public interface UserDao extends SingleIdDao<User, Integer> {
      * @return 用户po
      */
     UserPo getPoById(Integer userId);
-
-//    /**
-//     * 按照用户类型统计数量
-//     *
-//     * @return 用户类型统计
-//     */
-//    List<UserTypeTotal> listTypeTotals();
 }

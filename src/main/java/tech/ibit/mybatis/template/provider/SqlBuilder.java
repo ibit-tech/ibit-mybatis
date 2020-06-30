@@ -14,7 +14,7 @@ import java.util.function.Function;
  *
  * @author IBIT程序猿
  */
-public class SqlProvider {
+public class SqlBuilder {
 
     /**
      * 参数sqlParams
