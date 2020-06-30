@@ -17,6 +17,8 @@ public class SqlFactory {
     /**
      * 创建搜索
      *
+     * @param <T>    模板类型
+     * @param mapper mapper对象
      * @return 搜索sql
      */
     public <T> QuerySql<T> createQuery(RawMapper<T> mapper) {
@@ -27,6 +29,8 @@ public class SqlFactory {
     /**
      * 创建计数
      *
+     * @param <T>    模板类型
+     * @param mapper mapper对象
      * @return 计数sql
      */
     public <T> CountSql<T> createCount(RawMapper<T> mapper) {
@@ -36,6 +40,7 @@ public class SqlFactory {
     /**
      * 创建删除
      *
+     * @param mapper mapper对象
      * @return 删除sql
      */
     public DeleteSql createDelete(RawMapper mapper) {
@@ -45,6 +50,7 @@ public class SqlFactory {
     /**
      * 创建插入
      *
+     * @param mapper mapper对象
      * @return 插入sql
      */
     public InsertSql createInsert(RawMapper mapper) {
@@ -54,6 +60,7 @@ public class SqlFactory {
     /**
      * 创建更新
      *
+     * @param mapper mapper对象
      * @return 更新sql
      */
     public UpdateSql createUpdate(RawMapper mapper) {

@@ -1,19 +1,17 @@
 package tech.ibit.mybatis.template.mapper;
 
 
-import tech.ibit.mybatis.MapperDaoUtils;
+import tech.ibit.mybatis.MapperUtils;
 import tech.ibit.sqlbuilder.Column;
 import tech.ibit.sqlbuilder.MultiId;
 import tech.ibit.sqlbuilder.exception.SqlException;
-import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
- * 多个主键的表的DAO实现
+ * 多个主键的表的 Mapper
  *
- * @param <P> 实体类型
+ * @param <T> 实体类型
  * @param <K> 主键类型
  * @author IBIT程序猿
  */
@@ -27,7 +25,7 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      * @return 删除条数
      */
     default int deleteById(K id) {
-        return null == id ? 0 : MapperDaoUtils.deleteByMultiId(this, id);
+        return MapperUtils.deleteByMultiId(this, id);
     }
 
     /**
@@ -37,7 +35,7 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      * @return 删除条数
      */
     default int deleteByIds(List<K> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.deleteByMultiIds(this, ids);
+        return MapperUtils.deleteByMultiIds(this, ids);
     }
 
     /**
@@ -48,7 +46,7 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      */
     default int updateById(T po) {
         try {
-            return MapperDaoUtils.updateById(this, po);
+            return MapperUtils.updateById(this, po);
         } catch (SqlException e) {
             return 0;
         }
@@ -62,7 +60,7 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      * @return 更新条数
      */
     default int updateByIdWithColumns(T po, List<Column> columns) {
-        return MapperDaoUtils.updateById(this, po, columns);
+        return MapperUtils.updateById(this, po, columns);
     }
 
     /**
@@ -73,7 +71,7 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      * @return 更新条数
      */
     default int updateByIds(T po, List<K> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByMultiIds(this, po, ids);
+        return MapperUtils.updateByMultiIds(this, po, ids);
     }
 
     /**
@@ -85,7 +83,7 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      * @return 更新条数
      */
     default int updateByIdsWithColumns(T po, List<Column> columns, List<K> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByMultiIds(this, po, columns, ids);
+        return MapperUtils.updateByMultiIds(this, po, columns, ids);
     }
 
     /**
@@ -95,7 +93,7 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      * @return 相应的对象
      */
     default T getById(K id) {
-        return null == id ? null : MapperDaoUtils.getByMultiId(this, getPoClazz(), id);
+        return MapperUtils.getByMultiId(this, getPoClazz(), id);
     }
 
     /**
@@ -105,6 +103,6 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      * @return 相应的对象列表
      */
     default List<T> getByIds(List<K> ids) {
-        return CollectionUtils.isEmpty(ids) ? Collections.emptyList() : MapperDaoUtils.getByMultiIds(this, getPoClazz(), ids);
+        return MapperUtils.getByMultiIds(this, getPoClazz(), ids);
     }
 }

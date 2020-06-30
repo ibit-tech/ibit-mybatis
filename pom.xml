@@ -110,7 +110,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!--spring test-->
+        <!--spring demo-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

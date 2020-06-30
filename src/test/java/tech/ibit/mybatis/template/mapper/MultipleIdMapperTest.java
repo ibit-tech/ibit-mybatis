@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
-import tech.ibit.mybatis.test.entity.Organization;
-import tech.ibit.mybatis.test.entity.OrganizationKey;
-import tech.ibit.mybatis.test.entity.property.OrganizationProperties;
-import tech.ibit.mybatis.test.mapper.OrganizationMapper;
+import tech.ibit.mybatis.demo.entity.Organization;
+import tech.ibit.mybatis.demo.entity.OrganizationKey;
+import tech.ibit.mybatis.demo.entity.property.OrganizationProperties;
+import tech.ibit.mybatis.demo.mapper.OrganizationMapper;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
 

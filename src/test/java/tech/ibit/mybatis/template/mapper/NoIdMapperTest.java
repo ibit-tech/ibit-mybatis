@@ -8,9 +8,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import tech.ibit.mybatis.test.dao.construct.UserLoginRecordConstructDao;
-import tech.ibit.mybatis.test.entity.UserLoginRecord;
-import tech.ibit.mybatis.test.mapper.UserLoginRecordMapper;
+import tech.ibit.mybatis.demo.ext.dao.UserLoginRecordExtDao;
+import tech.ibit.mybatis.demo.entity.UserLoginRecord;
+import tech.ibit.mybatis.demo.mapper.UserLoginRecordMapper;
 import tech.ibit.sqlbuilder.exception.SqlException;
 
 import java.util.Date;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 public class NoIdMapperTest {
 
     @Autowired
-    private UserLoginRecordConstructDao userLoginRecordConstructDao;
+    private UserLoginRecordExtDao userLoginRecordExtDao;
 
     private UserLoginRecord userLoginRecord;
 
@@ -46,7 +46,7 @@ public class NoIdMapperTest {
         userLoginRecord.setUserId(1);
         userLoginRecord.setLoginTime(new Date());
 
-        userLoginRecordConstructDao.deleteAll();
+        userLoginRecordExtDao.deleteAll();
     }
 
     @Test
@@ -54,7 +54,7 @@ public class NoIdMapperTest {
 
         userLoginRecordMapper.insert(userLoginRecord);
 
-        List<UserLoginRecord> allRecords = userLoginRecordConstructDao.listAll();
+        List<UserLoginRecord> allRecords = userLoginRecordExtDao.listAll();
         assertEquals(1, allRecords.size());
         assertEquals(userLoginRecord.getUserId(), allRecords.get(0).getUserId());
         assertEquals(userLoginRecord.getLoginTime(), allRecords.get(0).getLoginTime());
@@ -73,7 +73,7 @@ public class NoIdMapperTest {
         userLoginRecordMapper.insert(userLoginRecord);
         userLoginRecordMapper.insert(userLoginRecord);
 
-        int result = userLoginRecordConstructDao.deleteAll();
+        int result = userLoginRecordExtDao.deleteAll();
         assertEquals(2, result);
     }
 

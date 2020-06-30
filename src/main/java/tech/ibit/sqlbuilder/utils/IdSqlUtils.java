@@ -35,7 +35,8 @@ public class IdSqlUtils {
      * @param mapper   mapper对象
      * @param poClazz  返回实体类
      * @param idValues 主键值集合
-     * @param <T>      返回实体类类型
+     * @param <P>      返回实体类类型
+     * @param <T>      模板类型
      * @return SQL参数对象
      * @see QuerySql
      */
@@ -71,7 +72,8 @@ public class IdSqlUtils {
      * @param mapper   mapper对象
      * @param poClazz  返回实体类
      * @param idValues 主键值列表
-     * @param <T>      返回实体类类型
+     * @param <P>      返回实体类类型
+     * @param <T>      模板类型
      * @return SQL参数对象
      * @see QuerySql
      * @see MultiId
@@ -103,7 +105,8 @@ public class IdSqlUtils {
      * @param mapper  mapper对象
      * @param poClazz 返回实体类
      * @param idValue 主键值
-     * @param <T>     返回实体类类型
+     * @param <P>     返回实体类类型
+     * @param <T>     模板类型
      * @return SQL参数对象
      * @see QuerySql
      * @see MultiId

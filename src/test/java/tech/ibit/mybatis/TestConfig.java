@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 
 
-@MapperScan("tech.ibit.mybatis.test.mapper")
+@MapperScan(basePackages = {"tech.ibit.mybatis.demo.mapper", "tech.ibit.mybatis.demo.ext.mapper"})
 @SpringBootApplication
 @Configuration
 public class TestConfig {

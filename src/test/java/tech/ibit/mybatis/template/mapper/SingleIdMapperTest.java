@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import tech.ibit.mybatis.template.provider.SqlBuilder;
-import tech.ibit.mybatis.test.dao.construct.UserConstructDao;
-import tech.ibit.mybatis.test.entity.User;
-import tech.ibit.mybatis.test.entity.UserPo;
-import tech.ibit.mybatis.test.entity.property.UserProperties;
-import tech.ibit.mybatis.test.entity.type.UserType;
-import tech.ibit.mybatis.test.mapper.UserMapper;
+import tech.ibit.mybatis.demo.ext.dao.UserExtDao;
+import tech.ibit.mybatis.demo.entity.User;
+import tech.ibit.mybatis.demo.entity.UserPo;
+import tech.ibit.mybatis.demo.entity.property.UserProperties;
+import tech.ibit.mybatis.demo.entity.type.UserType;
+import tech.ibit.mybatis.demo.mapper.UserMapper;
 import tech.ibit.mybatis.type.CommonEnum;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.Page;
@@ -60,7 +60,7 @@ public class SingleIdMapperTest {
     }
 
     @Autowired
-    private UserConstructDao userExtMapper;
+    private UserExtDao userExtMapper;
 
     @Autowired
     private UserMapper userMapper;

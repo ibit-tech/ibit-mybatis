@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tech.ibit.mybatis.demo.ext.mapper.UserExtMapper">
+
+    <resultMap id="resultMap" type="tech.ibit.mybatis.demo.entity.User">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="login_id" jdbcType="VARCHAR" property="loginId"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone"/>
+        <result column="type" jdbcType="INTEGER" property="type"
+                typeHandler="tech.ibit.mybatis.type.CommonEnumTypeHandler"/>
+    </resultMap>
+
+    <sql id="columns">
+        user_id, name, login_id, email, password, mobile_phone, type
+    </sql>
+
+    <select id="listAllUsers" resultMap="resultMap">
+        select
+        <include refid="columns"/>
+        from user
+    </select>
+
+
+    <delete id="deleteAllUsers">
+        delete from user where user_id > 0
+    </delete>
+</mapper>

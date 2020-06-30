@@ -134,39 +134,39 @@ public class QuerySqlImpl<T> extends SqlLogImpl implements QuerySql<T> {
     }
 
     @Override
-    public Page<T> doQueryPage() {
+    public Page<T> executeQueryPage() {
         int total = toCountSql().doCount();
         if (total <= 0) {
             return new Page<>(limit.getStart(), limit.getLimit(), total, Collections.emptyList());
         }
-        List<T> results = doQuery();
+        List<T> results = executeQuery();
         return new Page<>(limit.getStart(), limit.getLimit(), total, results);
     }
 
     @Override
-    public List<T> doQuery() {
+    public List<T> executeQuery() {
         PrepareStatement statement = logAndGetPrepareStatement();
         return mapper.rawSelect(statement);
     }
 
     @Override
-    public T doQueryOne() {
+    public T executeQueryOne() {
         PrepareStatement statement = logAndGetPrepareStatement();
         return mapper.rawSelectOne(statement);
     }
 
     @Override
-    public <V> Page<V> doQueryDefaultPage() {
+    public <V> Page<V> executeQueryDefaultPage() {
         int total = toCountSql().doCount();
         if (total <= 0) {
             return new Page<>(limit.getStart(), limit.getLimit(), total, Collections.emptyList());
         }
-        List<V> results = doQueryDefault();
+        List<V> results = executeQueryDefault();
         return new Page<>(limit.getStart(), limit.getLimit(), total, results);
     }
 
     @Override
-    public <V> List<V> doQueryDefault() {
+    public <V> List<V> executeQueryDefault() {
         PrepareStatement statement = logAndGetPrepareStatement();
         return mapper.rawSelectDefault(statement);
     }

@@ -33,21 +33,21 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
      *
      * @return 查询结果
      */
-    Page<T> doQueryPage();
+    Page<T> executeQueryPage();
 
     /**
      * 查询
      *
      * @return 结果列表
      */
-    List<T> doQuery();
+    List<T> executeQuery();
 
     /**
      * 查询单个对象
      *
      * @return 结果对象
      */
-    T doQueryOne();
+    T executeQueryOne();
 
     /**
      * 查询基本类型（包含分页信息）
@@ -55,7 +55,7 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
      * @param <V> 基本类型
      * @return 结果列表
      */
-    <V> Page<V> doQueryDefaultPage();
+    <V> Page<V> executeQueryDefaultPage();
 
     /**
      * 查询基本类型
@@ -63,6 +63,6 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
      * @param <V> 基本类型
      * @return 结果列表
      */
-    <V> List<V> doQueryDefault();
+    <V> List<V> executeQueryDefault();
 
 }

@@ -1,9 +1,9 @@
 package tech.ibit.mybatis.template.mapper;
 
-import tech.ibit.mybatis.MapperDaoUtils;
+import tech.ibit.mybatis.MapperUtils;
 
 /**
- * Insert Mapper
+ * 无主键的表的 Mapper
  *
  * @author IBIT程序猿
  */
@@ -16,7 +16,7 @@ public interface NoIdMapper<T> extends RawMapper<T> {
      * @return 插入条数
      */
     default int insert(T po) {
-        return MapperDaoUtils.insert(this, po);
+        return MapperUtils.insert(this, po);
     }
 
     /**
