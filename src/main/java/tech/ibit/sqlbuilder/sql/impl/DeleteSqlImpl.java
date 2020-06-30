@@ -104,7 +104,7 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
 
 
     @Override
-    public int doDelete() {
+    public int executeDelete() {
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
         return mapper.rawUpdate(statement);

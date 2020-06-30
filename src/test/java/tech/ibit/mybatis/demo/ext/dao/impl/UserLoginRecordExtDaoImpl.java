@@ -30,7 +30,7 @@ public class UserLoginRecordExtDaoImpl implements UserLoginRecordExtDao {
     public int deleteAll() {
         return SqlFactory.createDelete(mapper)
                 .deleteFrom(UserLoginRecordProperties.TABLE)
-                .andWhere(UserLoginRecordProperties.userId.gt(0)).doDelete();
+                .andWhere(UserLoginRecordProperties.userId.gt(0)).executeDelete();
     }
 
     /**

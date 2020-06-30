@@ -20,7 +20,7 @@ public interface InsertSql extends InsertTableSupport<InsertSql>,
      *
      * @return 插入条数
      */
-    int doInsert();
+    int executeInsert();
 
 
     /**
@@ -29,6 +29,6 @@ public interface InsertSql extends InsertTableSupport<InsertSql>,
      * @param key 生成主键接收对象
      * @return 插入条数
      */
-    int doInsertWithGenerateKeys(KeyValuePair key);
+    int executeInsertWithGenerateKeys(KeyValuePair key);
 
 }

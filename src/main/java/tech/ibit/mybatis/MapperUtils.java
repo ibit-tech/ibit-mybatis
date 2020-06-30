@@ -44,11 +44,11 @@ public class MapperUtils {
         AutoIncrementIdSetterMethod idSetterMethod =
                 EntityConverter.getAutoIncrementIdSetterMethod(entity.getClass());
         if (null == idSetterMethod) {
-            return sql.doInsert();
+            return sql.executeInsert();
         }
         KeyValuePair key = new KeyValuePair(SqlBuilder.PARAM_KEY, null);
         //write auto increase key
-        int result = sql.doInsertWithGenerateKeys(key);
+        int result = sql.executeInsertWithGenerateKeys(key);
         if (result == 0) {
             return result;
         }
@@ -71,7 +71,7 @@ public class MapperUtils {
      * @return 删除条数
      */
     public <T> int deleteById(RawMapper mapper, Class<T> clazz, Object id) {
-        return null == id ? 0 : IdSqlUtils.deleteById(mapper, clazz, id).doDelete();
+        return null == id ? 0 : IdSqlUtils.deleteById(mapper, clazz, id).executeDelete();
     }
 
     /**
@@ -84,7 +84,7 @@ public class MapperUtils {
      * @return 删除条数
      */
     public <T> int deleteByIds(RawMapper mapper, Class<T> clazz, Collection<?> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.deleteByIds(mapper, clazz, ids).doDelete();
+        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.deleteByIds(mapper, clazz, ids).executeDelete();
     }
 
     /**
@@ -95,7 +95,7 @@ public class MapperUtils {
      * @return 删除条数
      */
     public int deleteByMultiId(RawMapper mapper, MultiId id) {
-        return null == id ? 0 : IdSqlUtils.deleteByMultiId(mapper, id).doDelete();
+        return null == id ? 0 : IdSqlUtils.deleteByMultiId(mapper, id).executeDelete();
     }
 
     /**
@@ -106,7 +106,7 @@ public class MapperUtils {
      * @return 删除条数
      */
     public int deleteByMultiIds(RawMapper mapper, List<? extends MultiId> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.deleteByMultiIds(mapper, ids).doDelete();
+        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.deleteByMultiIds(mapper, ids).executeDelete();
     }
 
     /**
@@ -117,7 +117,7 @@ public class MapperUtils {
      * @return 更新条数
      */
     public int updateById(RawMapper mapper, Object entity) {
-        return IdSqlUtils.updateById(mapper, entity).doUpdate();
+        return IdSqlUtils.updateById(mapper, entity).executeUpdate();
     }
 
 
@@ -130,7 +130,7 @@ public class MapperUtils {
      * @return 更新条数
      */
     public int updateById(RawMapper mapper, Object entity, List<Column> columns) {
-        return IdSqlUtils.updateById(mapper, entity, columns).doUpdate();
+        return IdSqlUtils.updateById(mapper, entity, columns).executeUpdate();
     }
 
 
@@ -250,7 +250,7 @@ public class MapperUtils {
      * @return 更新条数
      */
     public int updateByIds(RawMapper mapper, Object entity, Collection<?> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByIds(mapper, entity, ids).doUpdate();
+        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByIds(mapper, entity, ids).executeUpdate();
     }
 
     /**
@@ -263,7 +263,7 @@ public class MapperUtils {
      * @return 更新条数
      */
     public int updateByIds(RawMapper mapper, Object entity, List<Column> columns, Collection<?> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByIds(mapper, entity, columns, ids).doUpdate();
+        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByIds(mapper, entity, columns, ids).executeUpdate();
     }
 
 
@@ -276,7 +276,7 @@ public class MapperUtils {
      * @return 更新条数
      */
     public int updateByMultiIds(RawMapper mapper, Object entity, List<? extends MultiId> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByMultiIds(mapper, entity, ids).doUpdate();
+        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByMultiIds(mapper, entity, ids).executeUpdate();
     }
 
     /**
@@ -289,7 +289,7 @@ public class MapperUtils {
      * @return 更新条数
      */
     public int updateByMultiIds(RawMapper mapper, Object entity, List<Column> columns, List<? extends MultiId> ids) {
-        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByMultiIds(mapper, entity, columns, ids).doUpdate();
+        return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByMultiIds(mapper, entity, columns, ids).executeUpdate();
     }
 
     /**

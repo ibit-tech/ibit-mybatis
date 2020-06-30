@@ -47,5 +47,5 @@ public interface DeleteSql extends DeleteSupport<DeleteSql>,
      *
      * @return 删除条数
      */
-    int doDelete();
+    int executeDelete();
 }

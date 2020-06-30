@@ -93,7 +93,7 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
     }
 
     @Override
-    public int doUpdate() {
+    public int executeUpdate() {
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
         return mapper.rawUpdate(statement);

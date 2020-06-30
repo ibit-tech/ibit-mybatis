@@ -145,7 +145,7 @@ public class QuerySqlImpl<T> extends SqlLogImpl
 
     @Override
     public Page<T> executeQueryPage() {
-        int total = toCountSql().doCount();
+        int total = toCountSql().executeCount();
         if (total <= 0) {
             return new Page<>(limit.getStart(), limit.getLimit(), total, Collections.emptyList());
         }
@@ -167,7 +167,7 @@ public class QuerySqlImpl<T> extends SqlLogImpl
 
     @Override
     public <V> Page<V> executeQueryDefaultPage() {
-        int total = toCountSql().doCount();
+        int total = toCountSql().executeCount();
         if (total <= 0) {
             return new Page<>(limit.getStart(), limit.getLimit(), total, Collections.emptyList());
         }

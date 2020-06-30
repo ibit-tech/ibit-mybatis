@@ -77,14 +77,14 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
 
 
     @Override
-    public int doInsert() {
+    public int executeInsert() {
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
         return mapper.rawInsert(getPrepareStatement());
     }
 
     @Override
-    public int doInsertWithGenerateKeys(KeyValuePair key) {
+    public int executeInsertWithGenerateKeys(KeyValuePair key) {
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
         return mapper.rawInsertWithGenerateKeys(statement, key);

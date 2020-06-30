@@ -19,5 +19,5 @@ public interface UpdateSql extends UpdateTableSupport<UpdateSql>,
      *
      * @return 更新条数
      */
-    int doUpdate();
+    int executeUpdate();
 }

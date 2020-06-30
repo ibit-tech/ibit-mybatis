@@ -22,6 +22,6 @@ public interface CountSql<T> extends ColumnSupport<CountSql<T>>,
      *
      * @return 计算结果
      */
-    int doCount();
+    int executeCount();
 
 }

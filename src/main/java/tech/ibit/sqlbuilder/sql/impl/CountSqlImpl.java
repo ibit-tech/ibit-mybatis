@@ -124,7 +124,7 @@ public class CountSqlImpl<T> extends SqlLogImpl
     }
 
     @Override
-    public int doCount() {
+    public int executeCount() {
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
         return mapper.rawCount(statement);
