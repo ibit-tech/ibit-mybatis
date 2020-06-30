@@ -18,13 +18,6 @@ public interface CountSql<T> extends ColumnSupport<CountSql<T>>,
         UseAliasSupport {
 
     /**
-     * 转换为 QuerySql
-     *
-     * @return SearchSql对象
-     */
-    QuerySql<T> toSearchSql();
-
-    /**
      * 计数
      *
      * @return 计算结果

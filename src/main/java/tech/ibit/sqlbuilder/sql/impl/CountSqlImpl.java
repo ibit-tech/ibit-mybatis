@@ -7,7 +7,6 @@ import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.CountSql;
-import tech.ibit.sqlbuilder.sql.QuerySql;
 import tech.ibit.sqlbuilder.sql.field.BooleanField;
 import tech.ibit.sqlbuilder.sql.field.ListField;
 
@@ -114,20 +113,6 @@ public class CountSqlImpl<T> extends SqlLogImpl implements CountSql<T> {
                 ), prepareSql, values
         );
         return new PrepareStatement(prepareSql.toString(), values);
-    }
-
-
-    @Override
-    public QuerySql<T> toSearchSql() {
-        QuerySqlImpl<T> searchSql = new QuerySqlImpl<>(mapper);
-        searchSql.setDistinct(distinct);
-        searchSql.setFrom(from);
-        searchSql.setJoinOn(joinOn);
-        searchSql.setWhere(where);
-        searchSql.setGroupBy(groupBy);
-        searchSql.setHaving(having);
-        searchSql.setColumn(column);
-        return searchSql;
     }
 
     @Override
