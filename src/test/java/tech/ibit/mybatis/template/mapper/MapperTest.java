@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import tech.ibit.mybatis.template.provider.SqlBuilder;
 import tech.ibit.mybatis.test.entity.User;
@@ -26,7 +25,6 @@ import java.util.List;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
-@Sql("classpath:/db/init.sql")
 public class MapperTest {
 
 
@@ -60,10 +58,12 @@ public class MapperTest {
                 UserProperties.mobilePhone.value("100"),
                 UserProperties.type.value(UserType.u2)
         );
-        PrepareStatement statement = new PrepareStatement(sql,values);
+        PrepareStatement statement = new PrepareStatement(sql, values);
         KeyValuePair key = new KeyValuePair(SqlBuilder.PARAM_KEY, null);
         mapper.rawInsertWithGenerateKeys(statement, key);
         System.out.println(key.getValue());
+
+        mapper.deleteById(((Long) key.getValue()).intValue());
 
         //'2', 'u2', 'u2', 'u2@ibit.tech', '12345678', '188', '2'
     }
@@ -80,6 +80,8 @@ public class MapperTest {
 
         mapper.insert(user);
         System.out.println(user);
+
+        mapper.deleteById(user.getUserId());
     }
 
 

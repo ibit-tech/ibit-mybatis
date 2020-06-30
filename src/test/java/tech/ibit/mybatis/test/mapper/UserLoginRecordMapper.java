@@ -10,4 +10,8 @@ import tech.ibit.mybatis.test.entity.UserLoginRecord;
  */
 public interface UserLoginRecordMapper extends NoIdMapper<UserLoginRecord> {
 
+    @Override
+    default Class<UserLoginRecord> getPoClazz() {
+        return UserLoginRecord.class;
+    }
 }

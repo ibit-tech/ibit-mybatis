@@ -1,2 +1,0 @@
-insert into user(login_id, name, email, password, mobile_phone, type) values('u1', 'u1', 'u1@ibit.tech', '12345678', '188', '1');
-insert into user(login_id, name, email, password, mobile_phone, type) values('u2', 'u2', 'u2@ibit.tech', '12345678', '188', '2');

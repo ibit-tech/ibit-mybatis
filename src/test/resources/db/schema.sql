@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS user (
+DROP TABLE IF EXISTS  user;
+CREATE TABLE user (
 	user_id int(11) NOT NULL AUTO_INCREMENT COMMENT '用户id',
 	login_id varchar(32) COMMENT '登录id',
 	name varchar(64) COMMENT '名称',
@@ -9,7 +10,8 @@ CREATE TABLE IF NOT EXISTS user (
 	PRIMARY KEY (user_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS organization (
+DROP TABLE IF EXISTS  organization;
+CREATE TABLE organization (
 	city_code varchar(16) NOT NULL COMMENT '城市编码',
 	name varchar(32) NOT NULL COMMENT '组织名称',
 	type int(1) NOT NULL COMMENT '组织类型',
@@ -17,8 +19,8 @@ CREATE TABLE IF NOT EXISTS organization (
 	PRIMARY KEY (city_code, name)
 ) ENGINE=InnoDB;
 
-
-CREATE TABLE IF NOT EXISTS user_login_record (
+DROP TABLE IF EXISTS user_login_record;
+CREATE TABLE user_login_record (
 	user_id varchar(16) NOT NULL COMMENT '用户id',
 	login_time timestamp NOT NULL COMMENT '组织名称'
 ) ENGINE=InnoDB;

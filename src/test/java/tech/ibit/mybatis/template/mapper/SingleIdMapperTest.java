@@ -56,6 +56,8 @@ public class SingleIdMapperTest {
         if (CollectionUtils.isNotEmpty(testUsers)) {
             testUsers.forEach(testUser -> userMapper.deleteById(testUser.getUserId()));
         }
+
+        System.out.println(userExtMapper.listUserIds());
     }
 
     @Autowired
