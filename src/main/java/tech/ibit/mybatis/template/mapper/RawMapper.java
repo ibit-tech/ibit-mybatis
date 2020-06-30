@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.*;
 import tech.ibit.mybatis.template.provider.SqlBuilder;
 import tech.ibit.sqlbuilder.KeyValuePair;
 import tech.ibit.sqlbuilder.PrepareStatement;
+import tech.ibit.sqlbuilder.sql.*;
+import tech.ibit.sqlbuilder.sql.impl.*;
 
 import java.util.List;
 
@@ -37,11 +39,11 @@ public interface RawMapper<T> {
      * 基本类型查询
      *
      * @param sqlParams SQL语句-参数对象
-     * @param <P>       基本类型
+     * @param <V>       基本类型
      * @return 结果列表
      */
     @SelectProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
-    <P> List<P> rawSelectDefault(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
+    <V> List<V> rawSelectDefault(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 计数
@@ -81,5 +83,50 @@ public interface RawMapper<T> {
      */
     @InsertProvider(type = SqlBuilder.class, method = SqlBuilder.METHOD_EXECUTE)
     int rawInsert(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
+
+    /**
+     * 创建搜索
+     *
+     * @return 搜索sql
+     */
+    default QuerySql<T> createQuery() {
+        return new QuerySqlImpl<>(this);
+    }
+
+    /**
+     * 创建计数
+     *
+     * @return 计数sql
+     */
+    default CountSql<T> createCount() {
+        return new CountSqlImpl<>(this);
+    }
+
+    /**
+     * 创建删除
+     *
+     * @return 删除sql
+     */
+    default DeleteSql createDelete() {
+        return new DeleteSqlImpl(this);
+    }
+
+    /**
+     * 创建插入
+     *
+     * @return 插入sql
+     */
+    default InsertSql createInsert() {
+        return new InsertSqlImpl(this);
+    }
+
+    /**
+     * 创建更新
+     *
+     * @return 更新sql
+     */
+    default UpdateSql createUpdate() {
+        return new UpdateSqlImpl(this);
+    }
 
 }

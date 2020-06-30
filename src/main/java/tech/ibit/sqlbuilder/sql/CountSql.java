@@ -8,20 +8,27 @@ import tech.ibit.sqlbuilder.sql.support.*;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface CountSql extends ColumnSupport<CountSql>,
-        DistinctSupport<CountSql>,
-        FromSupport<CountSql>,
-        GroupBySupport<CountSql>,
-        HavingSupport<CountSql>,
-        JoinOnSupport<CountSql>,
-        WhereSupport<CountSql>,
+public interface CountSql<T> extends ColumnSupport<CountSql<T>>,
+        DistinctSupport<CountSql<T>>,
+        FromSupport<CountSql<T>>,
+        GroupBySupport<CountSql<T>>,
+        HavingSupport<CountSql<T>>,
+        JoinOnSupport<CountSql<T>>,
+        WhereSupport<CountSql<T>>,
         UseAliasSupport {
 
     /**
-     * 转换为 SearchSql
+     * 转换为 QuerySql
      *
      * @return SearchSql对象
      */
-    SearchSql toSearchSql();
+    QuerySql<T> toSearchSql();
+
+    /**
+     * 计数
+     *
+     * @return 计算结果
+     */
+    int doCount();
 
 }

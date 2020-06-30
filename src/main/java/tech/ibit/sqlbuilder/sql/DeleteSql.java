@@ -41,4 +41,11 @@ public interface DeleteSql extends DeleteSupport<DeleteSql>,
         from(tables);
         return getSql();
     }
+
+    /**
+     * 执行删除
+     *
+     * @return 删除条数
+     */
+    int doDelete();
 }

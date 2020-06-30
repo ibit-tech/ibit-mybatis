@@ -3,6 +3,7 @@ package tech.ibit.sqlbuilder.utils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.converter.ColumnSetValue;
 import tech.ibit.sqlbuilder.converter.EntityConverter;
@@ -10,7 +11,8 @@ import tech.ibit.sqlbuilder.converter.TableColumnInfo;
 import tech.ibit.sqlbuilder.converter.TableColumnSetValues;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.DeleteSql;
-import tech.ibit.sqlbuilder.sql.SearchSql;
+import tech.ibit.sqlbuilder.sql.InsertSql;
+import tech.ibit.sqlbuilder.sql.QuerySql;
 import tech.ibit.sqlbuilder.sql.UpdateSql;
 import tech.ibit.sqlbuilder.sql.support.SetSupport;
 import tech.ibit.sqlbuilder.sql.support.WhereSupport;
@@ -19,24 +21,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * DAO工具类
+ * Id 相关的 sql 工具类
  *
  * @author IBIT程序猿
  * @version 1.0
  */
 @UtilityClass
-public class DaoUtils {
+public class IdSqlUtils {
 
     /**
      * 构造通过主键查询对象的SQL参数对象（单列作为主键）
      *
+     * @param mapper   mapper对象
      * @param poClazz  返回实体类
      * @param idValues 主键值集合
-     * @param <P>      返回实体类类型
+     * @param <T>      返回实体类类型
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see QuerySql
      */
-    public <P> PrepareStatement getByIds(Class<P> poClazz, Collection<?> idValues) {
+    public <T, P> QuerySql<T> getByIds(RawMapper<T> mapper, Class<P> poClazz, Collection<?> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
@@ -44,33 +47,36 @@ public class DaoUtils {
         if (table.getIds().size() > 1) {
             throw SqlException.multiIdNotSupported(table.getTable().getName());
         }
-        return getById(table, idValues);
+        return getById(mapper, table, idValues);
     }
 
     /**
      * 构造通过主键查询对象的SQL参数对象（单列作为主键）
      *
+     * @param mapper  mapper对象
      * @param poClazz 返回实体类
      * @param idValue 主键值
+     * @param <T>     模板类型
      * @param <P>     返回实体类类型
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see QuerySql
      */
-    public <P> PrepareStatement getById(Class<P> poClazz, Object idValue) {
-        return getByIds(poClazz, null == idValue ? null : Collections.singletonList(idValue));
+    public <T, P> QuerySql<T> getById(RawMapper<T> mapper, Class<P> poClazz, Object idValue) {
+        return getByIds(mapper, poClazz, null == idValue ? null : Collections.singletonList(idValue));
     }
 
     /**
      * 构造通过主键查询对象的SQL参数对象（多列作为主键）
      *
+     * @param mapper   mapper对象
      * @param poClazz  返回实体类
      * @param idValues 主键值列表
-     * @param <P>      返回实体类类型
+     * @param <T>      返回实体类类型
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see QuerySql
      * @see MultiId
      */
-    public <P> PrepareStatement getByMultiIds(Class<P> poClazz, List<? extends MultiId> idValues) {
+    public <T, P> QuerySql<T> getByMultiIds(RawMapper<T> mapper, Class<P> poClazz, List<? extends MultiId> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
@@ -79,43 +85,45 @@ public class DaoUtils {
         List<TableColumnSetValues> columnValuesList = EntityConverter
                 .getTableColumnValuesList(new ArrayList<>(idValues), ids);
         if (1 == ids.size()) {
-            return getById(tableColumnInfo, getIdValues(ids.get(0), columnValuesList));
+            return getById(mapper, tableColumnInfo, getIdValues(ids.get(0), columnValuesList));
         }
 
-        SearchSql sql = SqlFactory
-                .createSearch()
+        QuerySql<T> sql = SqlFactory
+                .createQuery(mapper)
                 .column(tableColumnInfo.getColumns())
                 .from(tableColumnInfo.getTable());
         appendWhereSql(columnValuesList, sql);
         sql.limit(idValues.size());
-        return sql.getPrepareStatement();
+        return sql;
     }
 
     /**
      * 构造通过主键查询对象的SQL参数对象（多列作为主键）
      *
+     * @param mapper  mapper对象
      * @param poClazz 返回实体类
      * @param idValue 主键值
-     * @param <P>     返回实体类类型
+     * @param <T>     返回实体类类型
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see QuerySql
      * @see MultiId
      */
-    public <P> PrepareStatement getByMultiId(Class<P> poClazz, MultiId idValue) {
-        return getByMultiIds(poClazz, null == idValue ? null : Collections.singletonList(idValue));
+    public <T, P> QuerySql<T> getByMultiId(RawMapper<T> mapper, Class<P> poClazz, MultiId idValue) {
+        return getByMultiIds(mapper, poClazz, null == idValue ? null : Collections.singletonList(idValue));
     }
 
 
     /**
      * 构造通过主键删除对象的SQL对象参数（单列作为主键）
      *
+     * @param mapper   mapper对象
      * @param poClazz  返回实体类类
      * @param idValues 主键值列表
-     * @param <P>      返回实体类类型
+     * @param <T>      返回实体类类型
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see DeleteSql
      */
-    public <P> PrepareStatement deleteByIds(Class<P> poClazz, Collection<?> idValues) {
+    public <T> DeleteSql deleteByIds(RawMapper mapper, Class<T> poClazz, Collection<?> idValues) {
 
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
@@ -128,34 +136,35 @@ public class DaoUtils {
 
         Column id = tableIdInfo.getIds().get(0);
         return SqlFactory
-                .createDelete()
+                .createDelete(mapper)
                 .deleteFrom(tableIdInfo.getTable())
-                .andWhere(id.in(idValues))
-                .getPrepareStatement();
+                .andWhere(id.in(idValues));
     }
 
     /**
      * 构造通过主键删除对象的SQL对象参数（单列作为主键）
      *
+     * @param mapper  mapper对象
      * @param poClazz 返回实体类类
      * @param idValue 主键值
-     * @param <P>     返回实体类类型
+     * @param <T>     返回实体类类型
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see DeleteSql
      */
-    public <P> PrepareStatement deleteById(Class<P> poClazz, Object idValue) {
-        return deleteByIds(poClazz, null == idValue ? null : Collections.singletonList(idValue));
+    public <T> DeleteSql deleteById(RawMapper mapper, Class<T> poClazz, Object idValue) {
+        return deleteByIds(mapper, poClazz, null == idValue ? null : Collections.singletonList(idValue));
     }
 
     /**
      * 构造通过主键删除对象的SQL对象参数（多列作为主键）
      *
+     * @param mapper   mapper对象
      * @param idValues 主键对象列表
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see DeleteSql
      * @see MultiId
      */
-    public PrepareStatement deleteByMultiIds(List<? extends MultiId> idValues) {
+    public DeleteSql deleteByMultiIds(RawMapper mapper, List<? extends MultiId> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
@@ -175,41 +184,42 @@ public class DaoUtils {
             List<Object> actualIdValues = getIdValues(idValueList);
 
             return SqlFactory
-                    .createDelete()
+                    .createDelete(mapper)
                     .deleteFrom(firstIdValues.getTable())
-                    .andWhere(id.in(actualIdValues))
-                    .getPrepareStatement();
+                    .andWhere(id.in(actualIdValues));
         }
 
         DeleteSql sql = SqlFactory
-                .createDelete()
+                .createDelete(mapper)
                 .deleteFrom(firstIdValues.getTable());
         appendWhereSql(idValueList, sql);
-        return sql.getPrepareStatement();
+        return sql;
     }
 
 
     /**
      * 构造通过主键删除对象的SQL对象参数（多列作为主键）
      *
+     * @param mapper  mapper对象
      * @param idValue 主键对象
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see DeleteSql
      * @see MultiId
      */
-    public PrepareStatement deleteByMultiId(MultiId idValue) {
-        return deleteByMultiIds(null == idValue ? null : Collections.singletonList(idValue));
+    public DeleteSql deleteByMultiId(RawMapper mapper, MultiId idValue) {
+        return deleteByMultiIds(mapper, null == idValue ? null : Collections.singletonList(idValue));
     }
 
 
     /**
      * 构造插入对象的SQL对象参数
      *
-     * @param po 插入对象
+     * @param mapper mapper对象
+     * @param po     插入对象
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see InsertSql
      */
-    public PrepareStatement insertInto(Object po) {
+    public InsertSql insertInto(RawMapper mapper, Object po) {
 
         // 逻辑，1）只插入非null字段，2）如果字段不允许为null，值为null报错，3）id不允许为null
         TableColumnSetValues entity = EntityConverter.getTableColumnValues(po, true);
@@ -222,10 +232,9 @@ public class DaoUtils {
         }
 
         return SqlFactory
-                .createInsert()
+                .createInsert(mapper)
                 .insert(entity.getTable())
-                .values(columnValues2Insert)
-                .getPrepareStatement();
+                .values(columnValues2Insert);
     }
 
 
@@ -272,40 +281,42 @@ public class DaoUtils {
      * 构造批量插入对象的SQL对象参数
      * SQL语法 : `INSERT INTO table(column1, column2, ...) values(?, ?, ...), (?, ?, ...)`
      *
+     * @param mapper  mapper对象
      * @param pos     返回实体类列表
      * @param columns 需要插入列
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see InsertSql
      */
-    public PrepareStatement batchInsertInto(List<?> pos, List<Column> columns) {
+    public InsertSql batchInsertInto(RawMapper mapper, List<?> pos, List<Column> columns) {
         BatchInsertItems batchInsertItems = getBatchInsertItems(pos, columns);
         return SqlFactory
-                .createInsert()
+                .createInsert(mapper)
                 .insert(batchInsertItems.getTable())
-                .values(batchInsertItems.getColumns(), batchInsertItems.getValues())
-                .getPrepareStatement();
+                .values(batchInsertItems.getColumns(), batchInsertItems.getValues());
     }
 
     /**
      * 构造通过主键更新对象的SQL参数对象（支持单列或多列主键）
      *
+     * @param mapper       mapper对象
      * @param updateObject 更新对象
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see UpdateSql
      */
-    public PrepareStatement updateById(Object updateObject) {
-        return updateById(updateObject, null);
+    public UpdateSql updateById(RawMapper mapper, Object updateObject) {
+        return updateById(mapper, updateObject, null);
     }
 
     /**
      * 构造通过主键更新对象指定列的SQL参数对象（支持单列或多列主键）
      *
+     * @param mapper        mapper对象
      * @param updateObject  更新对象
      * @param updateColumns 指定更新字段
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see UpdateSql
      */
-    public PrepareStatement updateById(Object updateObject, List<Column> updateColumns) {
+    public UpdateSql updateById(RawMapper mapper, Object updateObject, List<Column> updateColumns) {
         TableColumnInfo idEntity = getAndCheckTableIdInfo(updateObject.getClass());
         if (null != updateColumns) {
             if (updateColumns.isEmpty()) {
@@ -323,7 +334,7 @@ public class DaoUtils {
         checkIdNotNull(idEntity.getIds(), tableColumnValues.getColumnValues());
 
         UpdateSql sql = SqlFactory
-                .createUpdate()
+                .createUpdate(mapper)
                 .update(idEntity.getTable());
 
         for (ColumnSetValue cv : tableColumnValues.getColumnValues()) {
@@ -341,32 +352,34 @@ public class DaoUtils {
                 sql.set(column.set(value));
             }
         }
-        return sql.getPrepareStatement();
+        return sql;
     }
 
 
     /**
      * 构造通过主键批量更新对象的SQL参数对象（单列作为主键）
      *
+     * @param mapper       mapper对象
      * @param updateObject 更新对象
      * @param idValues     主键值列表
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see UpdateSql
      */
-    public PrepareStatement updateByIds(Object updateObject, Collection<?> idValues) {
-        return updateByIds(updateObject, null, idValues);
+    public UpdateSql updateByIds(RawMapper mapper, Object updateObject, Collection<?> idValues) {
+        return updateByIds(mapper, updateObject, null, idValues);
     }
 
     /**
      * 构造通过主键批量更新对象指定列的SQL参数对象（单列作为主键）
      *
+     * @param mapper        mapper对象
      * @param updateObject  更新对象
      * @param idValues      主键值列表
      * @param updateColumns 指定更新列
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see UpdateSql
      */
-    public PrepareStatement updateByIds(Object updateObject, List<Column> updateColumns, Collection<?> idValues) {
+    public UpdateSql updateByIds(RawMapper mapper, Object updateObject, List<Column> updateColumns, Collection<?> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
@@ -381,38 +394,40 @@ public class DaoUtils {
 
         Table table = idEntity.getTable();
         UpdateSql sql = SqlFactory
-                .createUpdate()
+                .createUpdate(mapper)
                 .update(table);
         addSetsSql(table, tableColumnValues, sql);
         sql.andWhere(idEntity.getIds().get(0).in(idValues));
-        return sql.getPrepareStatement();
+        return sql;
     }
 
     /**
      * 构造通过主键批量更新对象的SQL参数对象（多列作为主键）
      *
+     * @param mapper       mapper对象
      * @param updateObject 更新对象
      * @param idValues     主键对象列表
      * @return SQL参数对象
-     * @see PrepareStatement
+     * @see UpdateSql
      * @see MultiId
      */
-    public PrepareStatement updateByMultiIds(Object updateObject, List<? extends MultiId> idValues) {
-        return updateByMultiIds(updateObject, null, idValues);
+    public UpdateSql updateByMultiIds(RawMapper mapper, Object updateObject, List<? extends MultiId> idValues) {
+        return updateByMultiIds(mapper, updateObject, null, idValues);
     }
 
 
     /**
      * 构造通过主键批量更新对象指定列的SQL参数对象（多列作为主键）
      *
+     * @param mapper        mapper对象
      * @param updateObject  更新对象
      * @param idValues      主键值列表
      * @param updateColumns 指定更新列
      * @return Update相关SQLParams
-     * @see PrepareStatement
+     * @see UpdateSql
      * @see MultiId
      */
-    public PrepareStatement updateByMultiIds(Object updateObject, List<Column> updateColumns, List<? extends MultiId> idValues) {
+    public UpdateSql updateByMultiIds(RawMapper mapper, Object updateObject, List<Column> updateColumns, List<? extends MultiId> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
@@ -430,7 +445,7 @@ public class DaoUtils {
                 : EntityConverter.getTableColumnValues(updateObject, updateColumns);
 
         UpdateSql sql = SqlFactory
-                .createUpdate()
+                .createUpdate(mapper)
                 .update(table);
         addSetsSql(table, tableColumnValues, sql);
 
@@ -441,7 +456,7 @@ public class DaoUtils {
         } else {
             appendWhereSql(idValueList, sql);
         }
-        return sql.getPrepareStatement();
+        return sql;
     }
 
     /**
@@ -493,19 +508,19 @@ public class DaoUtils {
     /**
      * 构造通过单个主键构造函数
      *
+     * @param mapper   mapper对象
      * @param table    表
      * @param idValues 主键值列表
      * @return 预查询sql
      */
-    private PrepareStatement getById(TableColumnInfo table, Collection<?> idValues) {
+    private <T> QuerySql<T> getById(RawMapper<T> mapper, TableColumnInfo table, Collection<?> idValues) {
         Column id = table.getIds().get(0);
         return SqlFactory
-                .createSearch()
+                .createQuery(mapper)
                 .column(table.getColumns())
                 .from(table.getTable())
                 .andWhere(id.in(idValues))
-                .limit(idValues.size())
-                .getPrepareStatement();
+                .limit(idValues.size());
     }
 
     /**
@@ -567,10 +582,10 @@ public class DaoUtils {
      * 获取列信息并检查主键是否为空
      *
      * @param poClazz 实体类
-     * @param <P>     返回实体类类型
+     * @param <T>     返回实体类类型
      * @return 列信息
      */
-    private <P> TableColumnInfo getAndCheckTableIdInfo(Class<P> poClazz) {
+    private <T> TableColumnInfo getAndCheckTableIdInfo(Class<T> poClazz) {
         TableColumnInfo table = EntityConverter.getTableColumns(poClazz);
         if (CollectionUtils.isEmpty(table.getIds())) {
             throw SqlException.idNotFound(table.getTable().getName());

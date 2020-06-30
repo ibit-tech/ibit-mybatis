@@ -1,6 +1,7 @@
 package tech.ibit.sqlbuilder;
 
 import lombok.experimental.UtilityClass;
+import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.sqlbuilder.sql.*;
 import tech.ibit.sqlbuilder.sql.impl.*;
 
@@ -18,8 +19,8 @@ public class SqlFactory {
      *
      * @return 搜索sql
      */
-    public SearchSql createSearch() {
-        return new SearchSqlImpl();
+    public <T> QuerySql<T> createQuery(RawMapper<T> mapper) {
+        return new QuerySqlImpl<>(mapper);
     }
 
 
@@ -28,8 +29,8 @@ public class SqlFactory {
      *
      * @return 计数sql
      */
-    public CountSql createCount() {
-        return new CountSqlImpl();
+    public <T> CountSql<T> createCount(RawMapper<T> mapper) {
+        return new CountSqlImpl<>(mapper);
     }
 
     /**
@@ -37,8 +38,8 @@ public class SqlFactory {
      *
      * @return 删除sql
      */
-    public DeleteSql createDelete() {
-        return new DeleteSqlImpl();
+    public DeleteSql createDelete(RawMapper mapper) {
+        return new DeleteSqlImpl(mapper);
     }
 
     /**
@@ -46,8 +47,8 @@ public class SqlFactory {
      *
      * @return 插入sql
      */
-    public InsertSql createInsert() {
-        return new InsertSqlImpl();
+    public InsertSql createInsert(RawMapper mapper) {
+        return new InsertSqlImpl(mapper);
     }
 
     /**
@@ -55,8 +56,8 @@ public class SqlFactory {
      *
      * @return 更新sql
      */
-    public UpdateSql createUpdate() {
-        return new UpdateSqlImpl();
+    public UpdateSql createUpdate(RawMapper mapper) {
+        return new UpdateSqlImpl(mapper);
     }
 
 }

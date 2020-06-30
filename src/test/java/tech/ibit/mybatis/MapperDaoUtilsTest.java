@@ -16,7 +16,7 @@ import tech.ibit.sqlbuilder.PrepareStatement;
 import tech.ibit.sqlbuilder.SqlFactory;
 import tech.ibit.sqlbuilder.converter.EntityConverter;
 import tech.ibit.sqlbuilder.exception.SqlException;
-import tech.ibit.sqlbuilder.sql.SearchSql;
+import tech.ibit.sqlbuilder.sql.QuerySql;
 import tech.ibit.sqlbuilder.sql.UpdateSql;
 
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class MapperDaoUtilsTest extends CommonTest {
         MapperDaoUtils.insert(new TestMapper() {
             @Override
             public int rawInsertWithGenerateKeys(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams,
-                                              @Param(SqlBuilder.PARAM_KEY) KeyValuePair key) {
+                                                 @Param(SqlBuilder.PARAM_KEY) KeyValuePair key) {
                 assertPrepareStatementEquals(
                         "INSERT INTO user(login_id, name, email, password, mobile_phone, type) VALUES(?, ?, ?, ?, ?, ?)",
                         Arrays.asList(
@@ -1090,7 +1090,7 @@ public class MapperDaoUtilsTest extends CommonTest {
 
     @Test
     public void executeUpdate() {
-        UpdateSql sql = SqlFactory.createUpdate()
+        UpdateSql sql = SqlFactory.createUpdate(null)
                 .update(UserProperties.TABLE)
                 .set(UserProperties.name.set("小D"))
                 .andWhere(UserProperties.userId.eq(1));
@@ -1111,7 +1111,7 @@ public class MapperDaoUtilsTest extends CommonTest {
 
     @Test
     public void executeQuery() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .columnPo(User.class)
                 .from(UserProperties.TABLE)
                 .orderBy(new OrderBy(UserProperties.userId, true))
@@ -1139,7 +1139,7 @@ public class MapperDaoUtilsTest extends CommonTest {
 
     @Test
     public void executeQuery1() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .columnPo(UserPo.class)
                 .from(UserProperties.TABLE)
                 .orderBy(new OrderBy(UserProperties.userId, true))
@@ -1165,7 +1165,7 @@ public class MapperDaoUtilsTest extends CommonTest {
 
     @Test
     public void executeQueryOne() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .columnPo(User.class)
                 .from(UserProperties.TABLE)
                 .andWhere(UserProperties.userId.eq(1))
@@ -1190,7 +1190,7 @@ public class MapperDaoUtilsTest extends CommonTest {
 
     @Test
     public void executeQueryOne1() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .columnPo(User.class)
                 .from(UserProperties.TABLE)
                 .andWhere(UserProperties.userId.eq(1))
@@ -1217,7 +1217,7 @@ public class MapperDaoUtilsTest extends CommonTest {
     @Test
     public void addKeywords() {
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1235,7 +1235,7 @@ public class MapperDaoUtilsTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1256,7 +1256,7 @@ public class MapperDaoUtilsTest extends CommonTest {
 
     @Test
     public void addExactKeywords() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1275,7 +1275,7 @@ public class MapperDaoUtilsTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,

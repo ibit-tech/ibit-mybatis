@@ -20,7 +20,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void select() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -30,7 +30,7 @@ public class SqlTest extends CommonTest {
         assertPrepareStatementEquals("SELECT u.user_id, u.name FROM user u", sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId.sum("user_id_sum"),
@@ -43,7 +43,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId.sum("user_id_sum"),
@@ -54,7 +54,7 @@ public class SqlTest extends CommonTest {
                 "SELECT SUM(u.user_id) AS user_id_sum, AVG(u.user_id) AS user_id_avg FROM user u GROUP BY u.user_id",
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Collections.singletonList(
                                 UserProperties.userId.count("user_id_total")
@@ -67,7 +67,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void selectDistinct() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .distinct()
                 .column(UserProperties.email)
                 .from(UserProperties.TABLE);
@@ -78,7 +78,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void selectPo() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .columnPo(UserPo.class)
                 .from(UserProperties.TABLE);
         assertPrepareStatementEquals(
@@ -89,7 +89,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void selectDistinctPo() {
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .distinct()
                 .columnPo(UserPo.class)
                 .from(UserProperties.TABLE).limit(1000);
@@ -104,14 +104,14 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void count() {
-        CountSql sql = SqlFactory.createCount()
+        CountSql sql = SqlFactory.createCount(null)
                 .from(UserProperties.TABLE);
         assertPrepareStatementEquals("SELECT COUNT(*) FROM user u", sql.getPrepareStatement());
     }
 
     @Test
     public void countDistinct() {
-        CountSql sql = SqlFactory.createCount()
+        CountSql sql = SqlFactory.createCount(null)
                 .distinct()
                 .column(UserProperties.userId)
                 .from(UserProperties.TABLE);
@@ -119,7 +119,7 @@ public class SqlTest extends CommonTest {
                 "SELECT COUNT(DISTINCT u.user_id) FROM user u",
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createCount()
+        sql = SqlFactory.createCount(null)
                 .distinct()
                 .column(
                         Arrays.asList(
@@ -135,7 +135,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void deleteFrom() {
-        DeleteSql sql = SqlFactory.createDelete()
+        DeleteSql sql = SqlFactory.createDelete(null)
                 .deleteFrom(UserProperties.TABLE);
         thrown.expect(RuntimeException.class);
         thrown.expectMessage("Where cannot be empty when do deleting!");
@@ -144,7 +144,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void deleteFrom2() {
-        DeleteSql sql = SqlFactory.createDelete()
+        DeleteSql sql = SqlFactory.createDelete(null)
                 .deleteFrom(UserProperties.TABLE)
                 .andWhere(UserProperties.userId.eq(1));
         assertPrepareStatementEquals(
@@ -154,7 +154,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createDelete()
+        sql = SqlFactory.createDelete(null)
                 .delete(UserProperties.TABLE)
                 .from(UserProperties.TABLE)
                 .andWhere(UserProperties.userId.eq(1));
@@ -165,7 +165,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createDelete()
+        sql = SqlFactory.createDelete(null)
                 .deleteFrom(UserProperties.TABLE)
                 .andWhere(UserProperties.userId.eq(1))
                 .leftJoinOn(
@@ -182,7 +182,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createDelete()
+        sql = SqlFactory.createDelete(null)
                 .delete(UserProperties.TABLE)
                 .from(
                         Arrays.asList(
@@ -204,7 +204,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void update() {
         UpdateSql sql = SqlFactory
-                .createUpdate()
+                .createUpdate(null)
                 .update(UserProperties.TABLE)
                 .set(UserProperties.name.set("IBIT"));
         thrown.expect(RuntimeException.class);
@@ -215,7 +215,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void update2() {
         UpdateSql sql = SqlFactory
-                .createUpdate()
+                .createUpdate(null)
                 .update(UserProperties.TABLE)
                 .set(UserProperties.name.set("IBIT"))
                 .andWhere(UserProperties.userId.eq(1));
@@ -232,7 +232,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void insertInto() {
         InsertSql sql = SqlFactory
-                .createInsert()
+                .createInsert(null)
                 .insert(UserProperties.TABLE)
                 .values(
                         Arrays.asList(
@@ -255,7 +255,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void set() {
-        UpdateSql sql = SqlFactory.createUpdate()
+        UpdateSql sql = SqlFactory.createUpdate(null)
                 .update(UserProperties.TABLE)
                 .set(
                         Arrays.asList(
@@ -284,7 +284,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void from() {
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 ProjectProperties.projectId,
@@ -296,7 +296,7 @@ public class SqlTest extends CommonTest {
                 "SELECT p.project_id, p.name FROM project p",
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -316,7 +316,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void joinOn() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -339,7 +339,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void leftJoinOn() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -362,7 +362,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void rightJoinOn() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -385,7 +385,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void fullJoinOn() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -416,7 +416,7 @@ public class SqlTest extends CommonTest {
         Column parentRegionCode = new Column(parentRegion, "code");
         Column parentRegionName = new Column(parentRegion, "name");
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 parentRegionName,
@@ -440,7 +440,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void complexLeftJoinOn() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -459,7 +459,7 @@ public class SqlTest extends CommonTest {
                 "SELECT u.user_id, u.name, p.name FROM user u LEFT JOIN project p ON u.current_project_id = p.project_id",
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -485,7 +485,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void complexRightJoinOn() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -505,7 +505,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement()
         );
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -529,7 +529,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void complexFullJoinOn() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -547,7 +547,7 @@ public class SqlTest extends CommonTest {
                 "SELECT u.user_id, u.name, p.name FROM user u FULL JOIN project p ON u.current_project_id = p.project_id",
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -583,7 +583,7 @@ public class SqlTest extends CommonTest {
         Column parentRegionCode = new Column(parentRegion, "code");
         Column parentRegionName = new Column(parentRegion, "name");
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 parentRegionName,
@@ -602,7 +602,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 parentRegionName,
@@ -637,7 +637,7 @@ public class SqlTest extends CommonTest {
         CriteriaItem type1Item = UserProperties.type.eq(1);
         CriteriaItem type2Item = UserProperties.type.eq(2);
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -662,7 +662,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -686,7 +686,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -720,7 +720,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void andWhere() {
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -740,7 +740,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -767,7 +767,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -799,7 +799,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void orWhere() {
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -818,7 +818,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -844,7 +844,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -873,7 +873,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void orderBy() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -905,7 +905,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void customerOrderBy() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -943,7 +943,7 @@ public class SqlTest extends CommonTest {
         AggregateColumn minAge = UserProperties.age.min("min_age");
         AggregateColumn maxAge = UserProperties.age.max("max_age");
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,
@@ -974,7 +974,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void limit() {
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1005,7 +1005,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1039,7 +1039,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void increaseSet() {
-        UpdateSql sql = SqlFactory.createUpdate()
+        UpdateSql sql = SqlFactory.createUpdate(null)
                 .update(UserProperties.TABLE)
                 .set(UserProperties.loginTimes.increaseSet(2))
                 .andWhere(UserProperties.userId.eq(1));
@@ -1056,7 +1056,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void decreaseSet() {
 
-        UpdateSql sql = SqlFactory.createUpdate()
+        UpdateSql sql = SqlFactory.createUpdate(null)
                 .update(UserProperties.TABLE)
                 .set(UserProperties.loginTimes.decreaseSet(2))
                 .andWhere(UserProperties.userId.eq(1));
@@ -1072,7 +1072,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void flag() {
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1088,7 +1088,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1105,7 +1105,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1122,7 +1122,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1148,7 +1148,7 @@ public class SqlTest extends CommonTest {
         AggregateColumn minAge = UserProperties.age.min("min_age");
         AggregateColumn maxAge = UserProperties.age.max("max_age");
 
-        SearchSql sql = SqlFactory.createSearch()
+        QuerySql sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,
@@ -1168,7 +1168,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,
@@ -1188,7 +1188,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,
@@ -1212,7 +1212,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,
@@ -1239,7 +1239,7 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,
@@ -1265,7 +1265,7 @@ public class SqlTest extends CommonTest {
                 sql.getPrepareStatement());
 
 
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,
@@ -1293,7 +1293,7 @@ public class SqlTest extends CommonTest {
 
 
         // 复杂的Having语句
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,
@@ -1331,7 +1331,7 @@ public class SqlTest extends CommonTest {
 
 
         // 复杂的Having语句
-        sql = SqlFactory.createSearch()
+        sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.age.min("min_age"),

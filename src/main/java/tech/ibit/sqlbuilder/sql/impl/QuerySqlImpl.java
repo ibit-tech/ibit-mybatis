@@ -2,26 +2,29 @@ package tech.ibit.sqlbuilder.sql.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.sql.CountSql;
-import tech.ibit.sqlbuilder.sql.SearchSql;
+import tech.ibit.sqlbuilder.sql.Page;
+import tech.ibit.sqlbuilder.sql.QuerySql;
 import tech.ibit.sqlbuilder.sql.field.BooleanField;
 import tech.ibit.sqlbuilder.sql.field.LimitField;
 import tech.ibit.sqlbuilder.sql.field.ListField;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * SearchSqlImpl
+ * QuerySqlImpl
  *
  * @author IBIT程序猿
  * @version 2.0
  */
 @Getter
 @Setter
-public class SearchSqlImpl implements SearchSql {
+public class QuerySqlImpl<T> extends SqlLogImpl implements QuerySql<T> {
 
 
     /**
@@ -71,9 +74,17 @@ public class SearchSqlImpl implements SearchSql {
      */
     private ListField<IColumn> column = new ListField<>();
 
+    /**
+     * 基础mapper
+     */
+    private RawMapper<T> mapper;
+
+    public QuerySqlImpl(RawMapper<T> mapper) {
+        this.mapper = mapper;
+    }
 
     @Override
-    public SearchSql getSql() {
+    public QuerySql<T> getSql() {
         return this;
     }
 
@@ -110,8 +121,8 @@ public class SearchSqlImpl implements SearchSql {
     }
 
     @Override
-    public CountSql toCountSql() {
-        CountSqlImpl countSql = new CountSqlImpl();
+    public CountSql<T> toCountSql() {
+        CountSqlImpl<T> countSql = new CountSqlImpl<>(mapper);
         countSql.setDistinct(distinct);
         countSql.setFrom(from);
         countSql.setJoinOn(joinOn);
@@ -120,5 +131,49 @@ public class SearchSqlImpl implements SearchSql {
         countSql.setHaving(having);
         countSql.setColumn(column);
         return countSql;
+    }
+
+    @Override
+    public Page<T> doQueryPage() {
+        int total = toCountSql().doCount();
+        if (total <= 0) {
+            return new Page<>(limit.getStart(), limit.getLimit(), total, Collections.emptyList());
+        }
+        List<T> results = doQuery();
+        return new Page<>(limit.getStart(), limit.getLimit(), total, results);
+    }
+
+    @Override
+    public List<T> doQuery() {
+        PrepareStatement statement = logAndGetPrepareStatement();
+        return mapper.rawSelect(statement);
+    }
+
+    @Override
+    public T doQueryOne() {
+        PrepareStatement statement = logAndGetPrepareStatement();
+        return mapper.rawSelectOne(statement);
+    }
+
+    @Override
+    public <V> Page<V> doQueryDefaultPage() {
+        int total = toCountSql().doCount();
+        if (total <= 0) {
+            return new Page<>(limit.getStart(), limit.getLimit(), total, Collections.emptyList());
+        }
+        List<V> results = doQueryDefault();
+        return new Page<>(limit.getStart(), limit.getLimit(), total, results);
+    }
+
+    @Override
+    public <V> List<V> doQueryDefault() {
+        PrepareStatement statement = logAndGetPrepareStatement();
+        return mapper.rawSelectDefault(statement);
+    }
+
+    private PrepareStatement logAndGetPrepareStatement() {
+        PrepareStatement statement = getPrepareStatement();
+        doLog(statement);
+        return statement;
     }
 }

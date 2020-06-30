@@ -14,7 +14,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface ColumnSupport<T> extends SqlSupport<T>, PrepareStatementSupport {
+public interface ColumnSupport<P> extends SqlSupport<P>, PrepareStatementSupport {
 
     /**
      * 获取列
@@ -30,7 +30,7 @@ public interface ColumnSupport<T> extends SqlSupport<T>, PrepareStatementSupport
      * @return SQL对象
      * @see IColumn
      */
-    default T column(List<? extends IColumn> columns) {
+    default P column(List<? extends IColumn> columns) {
         getColumn().addItems(columns);
         return getSql();
     }
@@ -42,7 +42,7 @@ public interface ColumnSupport<T> extends SqlSupport<T>, PrepareStatementSupport
      * @return SQL对象
      * @see IColumn
      */
-    default T column(IColumn column) {
+    default P column(IColumn column) {
         getColumn().addItem(column);
         return getSql();
     }
@@ -53,7 +53,7 @@ public interface ColumnSupport<T> extends SqlSupport<T>, PrepareStatementSupport
      * @param poClass 实体类
      * @return SQL对象
      */
-    default T columnPo(Class poClass) {
+    default P columnPo(Class poClass) {
         getColumn().addItems(EntityConverter.getColumns(poClass));
         return getSql();
     }

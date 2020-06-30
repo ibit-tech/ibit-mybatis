@@ -3,10 +3,11 @@ package tech.ibit.sqlbuilder.sql.impl;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
+import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.CountSql;
-import tech.ibit.sqlbuilder.sql.SearchSql;
+import tech.ibit.sqlbuilder.sql.QuerySql;
 import tech.ibit.sqlbuilder.sql.field.BooleanField;
 import tech.ibit.sqlbuilder.sql.field.ListField;
 
@@ -22,7 +23,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class CountSqlImpl implements CountSql {
+public class CountSqlImpl<T> extends SqlLogImpl implements CountSql<T> {
 
 
     /**
@@ -62,8 +63,18 @@ public class CountSqlImpl implements CountSql {
     private ListField<IColumn> column = new ListField<>();
 
 
+    /**
+     * 基础mapper
+     */
+    private RawMapper<T> mapper;
+
+    public CountSqlImpl(RawMapper<T> mapper) {
+        this.mapper = mapper;
+    }
+
+
     @Override
-    public CountSql getSql() {
+    public CountSql<T> getSql() {
         return this;
     }
 
@@ -107,8 +118,8 @@ public class CountSqlImpl implements CountSql {
 
 
     @Override
-    public SearchSql toSearchSql() {
-        SearchSqlImpl searchSql = new SearchSqlImpl();
+    public QuerySql<T> toSearchSql() {
+        QuerySqlImpl<T> searchSql = new QuerySqlImpl<>(mapper);
         searchSql.setDistinct(distinct);
         searchSql.setFrom(from);
         searchSql.setJoinOn(joinOn);
@@ -117,5 +128,12 @@ public class CountSqlImpl implements CountSql {
         searchSql.setHaving(having);
         searchSql.setColumn(column);
         return searchSql;
+    }
+
+    @Override
+    public int doCount() {
+        PrepareStatement statement = getPrepareStatement();
+        doLog(statement);
+        return mapper.rawCount(statement);
     }
 }

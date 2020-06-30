@@ -1,6 +1,7 @@
 package tech.ibit.sqlbuilder.sql.impl;
 
 import lombok.Getter;
+import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.DeleteSql;
@@ -17,7 +18,7 @@ import java.util.List;
  * @version 2.0
  */
 @Getter
-public class DeleteSqlImpl implements DeleteSql {
+public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql {
 
     /**
      * 删除项
@@ -39,6 +40,15 @@ public class DeleteSqlImpl implements DeleteSql {
      */
     private ListField<Criteria> where = new ListField<>();
 
+
+    /**
+     * 基础mapper
+     */
+    private RawMapper mapper;
+
+    public DeleteSqlImpl(RawMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @Override
     public DeleteSql getSql() {
@@ -85,4 +95,10 @@ public class DeleteSqlImpl implements DeleteSql {
     }
 
 
+    @Override
+    public int doDelete() {
+        PrepareStatement statement = getPrepareStatement();
+        doLog(statement);
+        return mapper.rawUpdate(statement);
+    }
 }

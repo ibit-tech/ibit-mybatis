@@ -18,6 +18,7 @@ import tech.ibit.mybatis.test.entity.type.UserType;
 import tech.ibit.mybatis.test.mapper.UserMapper;
 import tech.ibit.mybatis.type.CommonEnum;
 import tech.ibit.sqlbuilder.exception.SqlException;
+import tech.ibit.sqlbuilder.sql.Page;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
 
 import java.util.*;
@@ -56,8 +57,6 @@ public class SingleIdMapperTest {
         if (CollectionUtils.isNotEmpty(testUsers)) {
             testUsers.forEach(testUser -> userMapper.deleteById(testUser.getUserId()));
         }
-
-        System.out.println(userExtMapper.listUserIds());
     }
 
     @Autowired
@@ -260,6 +259,16 @@ public class SingleIdMapperTest {
         List<Integer> userIds = userExtMapper.listUserIds();
         assertEquals(user0.getUserId(), userIds.get(0));
         assertEquals(user1.getUserId(), userIds.get(1));
+    }
+
+    @Test
+    public void listUserIdsWithTotal() {
+        User user0 = insertUser();
+        User user1 = insertUser();
+        Page<Integer> page = userExtMapper.listUserIdsWithTotal();
+        assertEquals(2, page.getTotal());
+        assertEquals(user0.getUserId(), page.getResults().get(0));
+        assertEquals(user1.getUserId(), page.getResults().get(1));
     }
 
     @Test

@@ -13,4 +13,11 @@ public interface UpdateSql extends UpdateTableSupport<UpdateSql>,
         SetSupport<UpdateSql>,
         WhereSupport<UpdateSql>,
         UseAliasSupport {
+
+    /**
+     * 执行更新
+     *
+     * @return 更新条数
+     */
+    int doUpdate();
 }

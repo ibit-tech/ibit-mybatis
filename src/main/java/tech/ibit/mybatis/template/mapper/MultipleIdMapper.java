@@ -17,7 +17,7 @@ import java.util.List;
  * @param <K> 主键类型
  * @author IBIT程序猿
  */
-public interface MultipleIdMapper<P, K extends MultiId> extends NoIdMapper<P> {
+public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
 
 
     /**
@@ -46,7 +46,7 @@ public interface MultipleIdMapper<P, K extends MultiId> extends NoIdMapper<P> {
      * @param po 更新对象
      * @return 更新条数
      */
-    default int updateById(P po) {
+    default int updateById(T po) {
         try {
             return MapperDaoUtils.updateById(this, po);
         } catch (SqlException e) {
@@ -61,7 +61,7 @@ public interface MultipleIdMapper<P, K extends MultiId> extends NoIdMapper<P> {
      * @param columns 更新列
      * @return 更新条数
      */
-    default int updateByIdWithColumns(P po, List<Column> columns) {
+    default int updateByIdWithColumns(T po, List<Column> columns) {
         return MapperDaoUtils.updateById(this, po, columns);
     }
 
@@ -72,7 +72,7 @@ public interface MultipleIdMapper<P, K extends MultiId> extends NoIdMapper<P> {
      * @param ids 主键列表
      * @return 更新条数
      */
-    default int updateByIds(P po, List<K> ids) {
+    default int updateByIds(T po, List<K> ids) {
         return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByMultiIds(this, po, ids);
     }
 
@@ -84,7 +84,7 @@ public interface MultipleIdMapper<P, K extends MultiId> extends NoIdMapper<P> {
      * @param ids     主键列表
      * @return 更新条数
      */
-    default int updateByIdsWithColumns(P po, List<Column> columns, List<K> ids) {
+    default int updateByIdsWithColumns(T po, List<Column> columns, List<K> ids) {
         return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByMultiIds(this, po, columns, ids);
     }
 
@@ -94,7 +94,7 @@ public interface MultipleIdMapper<P, K extends MultiId> extends NoIdMapper<P> {
      * @param id 主键
      * @return 相应的对象
      */
-    default P getById(K id) {
+    default T getById(K id) {
         return null == id ? null : MapperDaoUtils.getByMultiId(this, getPoClazz(), id);
     }
 
@@ -104,7 +104,7 @@ public interface MultipleIdMapper<P, K extends MultiId> extends NoIdMapper<P> {
      * @param ids 主键列表
      * @return 相应的对象列表
      */
-    default List<P> getByIds(List<K> ids) {
+    default List<T> getByIds(List<K> ids) {
         return CollectionUtils.isEmpty(ids) ? Collections.emptyList() : MapperDaoUtils.getByMultiIds(this, getPoClazz(), ids);
     }
 }

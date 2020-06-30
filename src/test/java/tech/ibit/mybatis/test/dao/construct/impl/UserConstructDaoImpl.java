@@ -3,13 +3,12 @@ package tech.ibit.mybatis.test.dao.construct.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import tech.ibit.mybatis.MapperDaoUtils;
+import tech.ibit.mybatis.test.dao.construct.UserConstructDao;
 import tech.ibit.mybatis.test.entity.UserPo;
 import tech.ibit.mybatis.test.entity.property.UserProperties;
 import tech.ibit.mybatis.test.mapper.UserMapper;
-import tech.ibit.mybatis.test.dao.construct.UserConstructDao;
 import tech.ibit.sqlbuilder.OrderBy;
-import tech.ibit.sqlbuilder.SqlFactory;
-import tech.ibit.sqlbuilder.sql.SearchSql;
+import tech.ibit.sqlbuilder.sql.Page;
 
 import java.util.List;
 
@@ -31,11 +30,25 @@ public class UserConstructDaoImpl implements UserConstructDao {
      */
     @Override
     public List<Integer> listUserIds() {
-        SearchSql sql = SqlFactory.createSearch()
+        return mapper.createQuery()
                 .column(UserProperties.userId)
                 .from(UserProperties.TABLE)
-                .orderBy(new OrderBy(UserProperties.userId));
-        return mapper.rawSelectDefault(sql.getPrepareStatement());
+                .orderBy(new OrderBy(UserProperties.userId))
+                .doQueryDefault();
+    }
+
+    /**
+     * 列举用户id
+     *
+     * @return 用户id列表
+     */
+    @Override
+    public Page<Integer> listUserIdsWithTotal() {
+        return mapper.createQuery()
+                .column(UserProperties.userId)
+                .from(UserProperties.TABLE)
+                .orderBy(new OrderBy(UserProperties.userId))
+                .doQueryDefaultPage();
     }
 
     /**

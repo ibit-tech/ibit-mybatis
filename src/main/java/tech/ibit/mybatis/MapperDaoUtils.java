@@ -6,9 +6,10 @@ import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.mybatis.template.provider.SqlBuilder;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.converter.EntityConverter;
+import tech.ibit.sqlbuilder.sql.InsertSql;
 import tech.ibit.sqlbuilder.sql.support.WhereSupport;
 import tech.ibit.sqlbuilder.utils.CollectionUtils;
-import tech.ibit.sqlbuilder.utils.DaoUtils;
+import tech.ibit.sqlbuilder.utils.IdSqlUtils;
 import tech.ibit.structlog4j.Logger;
 import tech.ibit.structlog4j.StructLoggerFactory;
 
@@ -38,16 +39,15 @@ public class MapperDaoUtils {
      * @return 插入条数
      */
     public <T> int insert(RawMapper mapper, T entity) {
-        PrepareStatement sqlParams = DaoUtils.insertInto(entity);
-        doLog(sqlParams);
+        InsertSql sql = IdSqlUtils.insertInto(mapper, entity);
         AutoIncrementIdSetterMethod idSetterMethod =
                 EntityConverter.getAutoIncrementIdSetterMethod(entity.getClass());
         if (null == idSetterMethod) {
-            return mapper.rawInsert(sqlParams);
+            return sql.doInsert();
         }
         KeyValuePair key = new KeyValuePair(SqlBuilder.PARAM_KEY, null);
         //write auto increase key
-        int result = mapper.rawInsertWithGenerateKeys(sqlParams, key);
+        int result = sql.doInsertWithGenerateKeys(key);
         if (result == 0) {
             return result;
         }
@@ -70,9 +70,7 @@ public class MapperDaoUtils {
      * @return 删除条数
      */
     public <T> int deleteById(RawMapper mapper, Class<T> clazz, Object id) {
-        PrepareStatement sqlParams = DaoUtils.deleteById(clazz, id);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.deleteById(mapper, clazz, id).doDelete();
     }
 
     /**
@@ -85,9 +83,7 @@ public class MapperDaoUtils {
      * @return 删除条数
      */
     public <T> int deleteByIds(RawMapper mapper, Class<T> clazz, Collection<?> ids) {
-        PrepareStatement sqlParams = DaoUtils.deleteByIds(clazz, ids);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.deleteByIds(mapper, clazz, ids).doDelete();
     }
 
     /**
@@ -98,9 +94,7 @@ public class MapperDaoUtils {
      * @return 删除条数
      */
     public int deleteByMultiId(RawMapper mapper, MultiId id) {
-        PrepareStatement sqlParams = DaoUtils.deleteByMultiId(id);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.deleteByMultiId(mapper, id).doDelete();
     }
 
     /**
@@ -111,9 +105,7 @@ public class MapperDaoUtils {
      * @return 删除条数
      */
     public int deleteByMultiIds(RawMapper mapper, List<? extends MultiId> ids) {
-        PrepareStatement sqlParams = DaoUtils.deleteByMultiIds(ids);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.deleteByMultiIds(mapper, ids).doDelete();
     }
 
     /**
@@ -124,9 +116,7 @@ public class MapperDaoUtils {
      * @return 更新条数
      */
     public int updateById(RawMapper mapper, Object entity) {
-        PrepareStatement sqlParams = DaoUtils.updateById(entity);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.updateById(mapper, entity).doUpdate();
     }
 
 
@@ -139,9 +129,7 @@ public class MapperDaoUtils {
      * @return 更新条数
      */
     public int updateById(RawMapper mapper, Object entity, List<Column> columns) {
-        PrepareStatement sqlParams = DaoUtils.updateById(entity, columns);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.updateById(mapper, entity, columns).doUpdate();
     }
 
 
@@ -159,7 +147,7 @@ public class MapperDaoUtils {
             updateById(mapper, entities.get(0));
         } else {
             List<PrepareStatement> sqlParamsList = entities.stream()
-                    .map(DaoUtils::updateById).collect(Collectors.toList());
+                    .map(entity -> IdSqlUtils.updateById(mapper, entity).getPrepareStatement()).collect(Collectors.toList());
             PrepareStatement sqlParams = merge(sqlParamsList);
             doLog(sqlParams);
             mapper.rawUpdate(sqlParams);
@@ -182,7 +170,7 @@ public class MapperDaoUtils {
             updateById(mapper, entities.get(0), columns);
         } else {
             List<PrepareStatement> sqlParamsList = entities.stream()
-                    .map(entity -> DaoUtils.updateById(entity, columns)).collect(Collectors.toList());
+                    .map(entity -> IdSqlUtils.updateById(mapper, entity, columns).getPrepareStatement()).collect(Collectors.toList());
             PrepareStatement sqlParams = merge(sqlParamsList);
             doLog(sqlParams);
             mapper.rawUpdate(sqlParams);
@@ -261,9 +249,7 @@ public class MapperDaoUtils {
      * @return 更新条数
      */
     public int updateByIds(RawMapper mapper, Object entity, Collection<?> ids) {
-        PrepareStatement sqlParams = DaoUtils.updateByIds(entity, ids);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.updateByIds(mapper, entity, ids).doUpdate();
     }
 
     /**
@@ -276,9 +262,7 @@ public class MapperDaoUtils {
      * @return 更新条数
      */
     public int updateByIds(RawMapper mapper, Object entity, List<Column> columns, Collection<?> ids) {
-        PrepareStatement sqlParams = DaoUtils.updateByIds(entity, columns, ids);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.updateByIds(mapper, entity, columns, ids).doUpdate();
     }
 
 
@@ -291,9 +275,7 @@ public class MapperDaoUtils {
      * @return 更新条数
      */
     public int updateByMultiIds(RawMapper mapper, Object entity, List<? extends MultiId> ids) {
-        PrepareStatement sqlParams = DaoUtils.updateByMultiIds(entity, ids);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.updateByMultiIds(mapper, entity, ids).doUpdate();
     }
 
     /**
@@ -306,9 +288,7 @@ public class MapperDaoUtils {
      * @return 更新条数
      */
     public int updateByMultiIds(RawMapper mapper, Object entity, List<Column> columns, List<? extends MultiId> ids) {
-        PrepareStatement sqlParams = DaoUtils.updateByMultiIds(entity, columns, ids);
-        doLog(sqlParams);
-        return mapper.rawUpdate(sqlParams);
+        return IdSqlUtils.updateByMultiIds(mapper, entity, columns, ids).doUpdate();
     }
 
     /**
@@ -321,9 +301,7 @@ public class MapperDaoUtils {
      * @return 实体
      */
     public <T> T getById(RawMapper<T> mapper, Class<T> clazz, Object id) {
-        PrepareStatement sqlParams = DaoUtils.getById(clazz, id);
-        doLog(sqlParams);
-        return mapper.rawSelectOne(sqlParams);
+        return IdSqlUtils.getById(mapper, clazz, id).doQueryOne();
     }
 
     /**
@@ -336,9 +314,7 @@ public class MapperDaoUtils {
      * @return 实体列表
      */
     public <T> List<T> getByIds(RawMapper<T> mapper, Class<T> clazz, Collection<?> ids) {
-        PrepareStatement sqlParams = DaoUtils.getByIds(clazz, ids);
-        doLog(sqlParams);
-        return executeQuery(mapper, sqlParams);
+        return IdSqlUtils.getByIds(mapper, clazz, ids).doQuery();
     }
 
     /**
@@ -351,9 +327,7 @@ public class MapperDaoUtils {
      * @return 实体
      */
     public <T> T getByMultiId(RawMapper<T> mapper, Class<T> clazz, MultiId id) {
-        PrepareStatement sqlParams = DaoUtils.getByMultiId(clazz, id);
-        doLog(sqlParams);
-        return mapper.rawSelectOne(sqlParams);
+        return IdSqlUtils.getByMultiId(mapper, clazz, id).doQueryOne();
     }
 
     /**
@@ -366,9 +340,7 @@ public class MapperDaoUtils {
      * @return 实体列表
      */
     public <T> List<T> getByMultiIds(RawMapper<T> mapper, Class<T> clazz, List<? extends MultiId> ids) {
-        PrepareStatement sqlParams = DaoUtils.getByMultiIds(clazz, ids);
-        doLog(sqlParams);
-        return executeQuery(mapper, sqlParams);
+        return IdSqlUtils.getByMultiIds(mapper, clazz, ids).doQuery();
     }
 
 
@@ -383,10 +355,8 @@ public class MapperDaoUtils {
      * @return 持久化对象
      */
     public <T, P> P getPoById(RawMapper<T> mapper, Class<P> clazz, Object id) {
-        PrepareStatement sqlParams = DaoUtils.getById(clazz, id);
-        doLog(sqlParams);
-        List<P> result = executeQuery(mapper, clazz, sqlParams);
-        return result.isEmpty() ? null : result.get(0);
+        T result = IdSqlUtils.getById(mapper, clazz, id).doQueryOne();
+        return EntityConverter.copyColumns(result, clazz);
     }
 
     /**
@@ -400,9 +370,8 @@ public class MapperDaoUtils {
      * @return 持久化对象列表
      */
     public <T, P> List<P> getPoByIds(RawMapper<T> mapper, Class<P> clazz, Collection<?> ids) {
-        PrepareStatement sqlParams = DaoUtils.getByIds(clazz, ids);
-        doLog(sqlParams);
-        return executeQuery(mapper, clazz, sqlParams);
+        List<T> result = IdSqlUtils.getByIds(mapper, clazz, ids).doQuery();
+        return EntityConverter.copyColumns(result, clazz);
     }
 
     /**
@@ -416,10 +385,8 @@ public class MapperDaoUtils {
      * @return 持久化对象
      */
     public <T, P> P getPoByMultiId(RawMapper<T> mapper, Class<P> clazz, MultiId id) {
-        PrepareStatement sqlParams = DaoUtils.getByMultiId(clazz, id);
-        doLog(sqlParams);
-        T entity = mapper.rawSelectOne(sqlParams);
-        return null == entity ? null : EntityConverter.copyColumns(entity, clazz);
+        T result = IdSqlUtils.getByMultiId(mapper, clazz, id).doQueryOne();
+        return EntityConverter.copyColumns(result, clazz);
     }
 
     /**
@@ -433,9 +400,8 @@ public class MapperDaoUtils {
      * @return 持久化对象列表
      */
     public <T, P> List<P> getPoByMultiIds(RawMapper<T> mapper, Class<P> clazz, List<? extends MultiId> ids) {
-        PrepareStatement sqlParams = DaoUtils.getByMultiIds(clazz, ids);
-        doLog(sqlParams);
-        return executeQuery(mapper, clazz, sqlParams);
+        List<T> result = IdSqlUtils.getByMultiIds(mapper, clazz, ids).doQuery();
+        return EntityConverter.copyColumns(result, clazz);
     }
 
     /**

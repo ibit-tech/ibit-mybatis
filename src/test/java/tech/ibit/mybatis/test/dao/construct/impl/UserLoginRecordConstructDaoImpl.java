@@ -7,8 +7,6 @@ import tech.ibit.mybatis.test.entity.UserLoginRecord;
 import tech.ibit.mybatis.test.entity.property.UserLoginRecordProperties;
 import tech.ibit.mybatis.test.mapper.UserLoginRecordMapper;
 import tech.ibit.sqlbuilder.SqlFactory;
-import tech.ibit.sqlbuilder.sql.DeleteSql;
-import tech.ibit.sqlbuilder.sql.SearchSql;
 
 import java.util.List;
 
@@ -30,10 +28,9 @@ public class UserLoginRecordConstructDaoImpl implements UserLoginRecordConstruct
      */
     @Override
     public int deleteAll() {
-        DeleteSql sql = SqlFactory.createDelete()
+        return SqlFactory.createDelete(mapper)
                 .deleteFrom(UserLoginRecordProperties.TABLE)
-                .andWhere(UserLoginRecordProperties.userId.gt(0));
-        return mapper.rawUpdate(sql.getPrepareStatement());
+                .andWhere(UserLoginRecordProperties.userId.gt(0)).doDelete();
     }
 
     /**
@@ -43,10 +40,9 @@ public class UserLoginRecordConstructDaoImpl implements UserLoginRecordConstruct
      */
     @Override
     public List<UserLoginRecord> listAll() {
-        SearchSql sql = SqlFactory.createSearch()
+        return SqlFactory.createQuery(mapper)
                 .columnPo(mapper.getPoClazz())
-                .from(UserLoginRecordProperties.TABLE);
-        return mapper.rawSelect(sql.getPrepareStatement());
+                .from(UserLoginRecordProperties.TABLE).doQuery();
     }
 
 }

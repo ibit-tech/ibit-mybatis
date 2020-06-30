@@ -12,11 +12,11 @@ import java.util.List;
 /**
  * 单一主键的表的DAO
  *
- * @param <P> 实体类型
+ * @param <T> 实体类型
  * @param <K> 主键类型
  * @author IBIT程序猿
  */
-public interface SingleIdMapper<P, K> extends NoIdMapper<P> {
+public interface SingleIdMapper<T, K> extends NoIdMapper<T> {
 
     /**
      * 通过主键删除记录
@@ -44,7 +44,7 @@ public interface SingleIdMapper<P, K> extends NoIdMapper<P> {
      * @param po 更新对象
      * @return 更新条数
      */
-    default int updateById(P po) {
+    default int updateById(T po) {
         try {
             return MapperDaoUtils.updateById(this, po);
         } catch (SqlException e) {
@@ -59,7 +59,7 @@ public interface SingleIdMapper<P, K> extends NoIdMapper<P> {
      * @param columns 更新列
      * @return 更新条数
      */
-    default int updateByIdWithColumns(P po, List<Column> columns) {
+    default int updateByIdWithColumns(T po, List<Column> columns) {
         return MapperDaoUtils.updateById(this, po, columns);
     }
 
@@ -70,7 +70,7 @@ public interface SingleIdMapper<P, K> extends NoIdMapper<P> {
      * @param ids 主键列表
      * @return 更新条数
      */
-    default int updateByIds(P po, Collection<K> ids) {
+    default int updateByIds(T po, Collection<K> ids) {
         return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByIds(this, po, ids);
     }
 
@@ -82,7 +82,7 @@ public interface SingleIdMapper<P, K> extends NoIdMapper<P> {
      * @param ids     主键列表
      * @return 更新条数
      */
-    default int updateByIdsWithColumns(P po, List<Column> columns, Collection<K> ids) {
+    default int updateByIdsWithColumns(T po, List<Column> columns, Collection<K> ids) {
         return CollectionUtils.isEmpty(ids) ? 0 : MapperDaoUtils.updateByIds(this, po, columns, ids);
     }
 
@@ -92,7 +92,7 @@ public interface SingleIdMapper<P, K> extends NoIdMapper<P> {
      * @param id 主键
      * @return 相应的对象
      */
-    default P getById(K id) {
+    default T getById(K id) {
         return null == id ? null : MapperDaoUtils.getById(this, getPoClazz(), id);
     }
 
@@ -102,7 +102,7 @@ public interface SingleIdMapper<P, K> extends NoIdMapper<P> {
      * @param ids 主键列表
      * @return 相应的对象列表
      */
-    default List<P> getByIds(Collection<K> ids) {
+    default List<T> getByIds(Collection<K> ids) {
         return CollectionUtils.isEmpty(ids) ? Collections.emptyList() : MapperDaoUtils.getByIds(this, getPoClazz(), ids);
     }
 }

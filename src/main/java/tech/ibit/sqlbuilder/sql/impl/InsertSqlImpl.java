@@ -1,10 +1,8 @@
 package tech.ibit.sqlbuilder.sql.impl;
 
 import lombok.Getter;
-import tech.ibit.sqlbuilder.Column;
-import tech.ibit.sqlbuilder.ColumnValue;
-import tech.ibit.sqlbuilder.PrepareStatement;
-import tech.ibit.sqlbuilder.Table;
+import tech.ibit.mybatis.template.mapper.RawMapper;
+import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.sql.InsertSql;
 import tech.ibit.sqlbuilder.sql.field.ListField;
 
@@ -19,7 +17,7 @@ import java.util.List;
  * @version 2.0
  */
 @Getter
-public class InsertSqlImpl implements InsertSql {
+public class InsertSqlImpl extends SqlLogImpl implements InsertSql {
 
     /**
      * from
@@ -35,6 +33,15 @@ public class InsertSqlImpl implements InsertSql {
      * value
      */
     private ListField<Object> value = new ListField<>();
+
+    /**
+     * 基础mapper
+     */
+    private RawMapper mapper;
+
+    public InsertSqlImpl(RawMapper mapper) {
+        this.mapper = mapper;
+    }
 
 
     @Override
@@ -62,5 +69,20 @@ public class InsertSqlImpl implements InsertSql {
 
 
         return new PrepareStatement(prepareSql.toString(), values);
+    }
+
+
+    @Override
+    public int doInsert() {
+        PrepareStatement statement = getPrepareStatement();
+        doLog(statement);
+        return mapper.rawInsert(getPrepareStatement());
+    }
+
+    @Override
+    public int doInsertWithGenerateKeys(KeyValuePair key) {
+        PrepareStatement statement = getPrepareStatement();
+        doLog(statement);
+        return mapper.rawInsertWithGenerateKeys(statement, key);
     }
 }

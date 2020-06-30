@@ -1,6 +1,7 @@
 package tech.ibit.sqlbuilder.sql.impl;
 
 import lombok.Getter;
+import tech.ibit.mybatis.template.mapper.RawMapper;
 import tech.ibit.sqlbuilder.*;
 import tech.ibit.sqlbuilder.exception.SqlException;
 import tech.ibit.sqlbuilder.sql.UpdateSql;
@@ -17,7 +18,7 @@ import java.util.List;
  * @version 2.0
  */
 @Getter
-public class UpdateSqlImpl implements UpdateSql {
+public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql {
 
     /**
      * from
@@ -38,6 +39,15 @@ public class UpdateSqlImpl implements UpdateSql {
      * where
      */
     private ListField<Criteria> where = new ListField<>();
+
+    /**
+     * 基础mapper
+     */
+    private RawMapper mapper;
+
+    public UpdateSqlImpl(RawMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @Override
     public boolean isUseAlias() {
@@ -72,5 +82,12 @@ public class UpdateSqlImpl implements UpdateSql {
                 ), prepareSql, values);
 
         return new PrepareStatement(prepareSql.toString(), values);
+    }
+
+    @Override
+    public int doUpdate() {
+        PrepareStatement statement = getPrepareStatement();
+        doLog(statement);
+        return mapper.rawUpdate(statement);
     }
 }

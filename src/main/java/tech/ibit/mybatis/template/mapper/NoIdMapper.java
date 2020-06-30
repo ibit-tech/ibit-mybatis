@@ -7,7 +7,7 @@ import tech.ibit.mybatis.MapperDaoUtils;
  *
  * @author IBIT程序猿
  */
-public interface NoIdMapper<P> extends RawMapper<P> {
+public interface NoIdMapper<T> extends RawMapper<T> {
 
     /**
      * 插入对象
@@ -15,7 +15,7 @@ public interface NoIdMapper<P> extends RawMapper<P> {
      * @param po 插入对象
      * @return 插入条数
      */
-    default int insert(P po) {
+    default int insert(T po) {
         return MapperDaoUtils.insert(this, po);
     }
 
@@ -24,7 +24,7 @@ public interface NoIdMapper<P> extends RawMapper<P> {
      *
      * @return 实体类型
      */
-    default Class<P> getPoClazz() {
+    default Class<T> getPoClazz() {
         return null;
     }
 
