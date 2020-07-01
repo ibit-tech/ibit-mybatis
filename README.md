@@ -188,6 +188,12 @@ configuration.setDefaultEnumTypeHandler(tech.ibit.mybatis.CommonEnumTypeHandler.
 mybatis.configuration.default-enum-type-handler=tech.ibit.mybatis.CommonEnumTypeHandler
 ```
 
+## 公众号
+
+喜欢我的文章，请关注公众号
+
+![IBIT程序猿](https://x-halo.oss-cn-beijing.aliyuncs.com/halo/wechat_1589272852710.jpg)
+
 
 
 
