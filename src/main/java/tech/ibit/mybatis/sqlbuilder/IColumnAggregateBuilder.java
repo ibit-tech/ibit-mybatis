@@ -1,7 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import tech.ibit.mybatis.sqlbuilder.AggregateColumn;
-import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.enums.AggregateFunctionNameEnum;
 
 /**

@@ -14,7 +14,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultSetSupport<T> extends SetSupport<T>, DefaultPrepareStatementSupport {
+public interface DefaultSetSupport<T> extends DefaultSqlSupport<T>,
+        SetSupport<T>, DefaultPrepareStatementSupport {
 
 
     /**

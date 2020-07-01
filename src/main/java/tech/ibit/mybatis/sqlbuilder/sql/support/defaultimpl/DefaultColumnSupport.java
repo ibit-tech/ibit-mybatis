@@ -14,9 +14,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultColumnSupport<T> extends ColumnSupport<T>, DefaultPrepareStatementSupport {
-
-
+public interface DefaultColumnSupport<T>
+        extends DefaultSqlSupport<T>, ColumnSupport<T>, DefaultPrepareStatementSupport {
 
     /**
      * 获取列

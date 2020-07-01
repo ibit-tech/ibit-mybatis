@@ -16,7 +16,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultHavingSupport<T> extends HavingSupport<T>, DefaultCriteriaSupport {
+public interface DefaultHavingSupport<T> extends DefaultSqlSupport<T>,
+        HavingSupport<T>, DefaultCriteriaSupport {
 
 
     /**

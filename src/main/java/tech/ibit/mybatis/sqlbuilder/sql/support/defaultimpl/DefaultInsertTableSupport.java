@@ -12,7 +12,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultInsertTableSupport<T> extends InsertTableSupport<T>, DefaultTableSupport {
+public interface DefaultInsertTableSupport<T> extends DefaultSqlSupport<T>,
+        InsertTableSupport<T>, DefaultTableSupport {
 
 
     /**

@@ -11,7 +11,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface HavingSupport<T> extends SqlSupport<T> {
+public interface HavingSupport<T> {
 
 
     /**

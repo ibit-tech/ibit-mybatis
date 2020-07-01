@@ -19,7 +19,7 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
         LimitSupport<QuerySql<T>>,
         OrderBySupport<QuerySql<T>>,
         WhereSupport<QuerySql<T>>,
-        UseAliasSupport {
+        PrepareStatementSupport {
 
     /**
      * 转换为 CountSql

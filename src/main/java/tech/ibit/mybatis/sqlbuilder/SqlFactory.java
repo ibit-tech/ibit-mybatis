@@ -32,7 +32,7 @@ public class SqlFactory {
      * @param mapper mapper对象
      * @return 计数sql
      */
-    public  CountSql createCount(RawMapper mapper) {
+    public CountSql createCount(RawMapper mapper) {
         return new CountSqlImpl(mapper);
     }
 

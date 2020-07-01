@@ -11,7 +11,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface GroupBySupport<T> extends SqlSupport<T> {
+public interface GroupBySupport<T> {
 
     /**
      * `GROUP BY t1.column`语句

@@ -15,7 +15,7 @@ public interface DeleteSql extends DeleteSupport<DeleteSql>,
         FromSupport<DeleteSql>,
         JoinOnSupport<DeleteSql>,
         WhereSupport<DeleteSql>,
-        UseAliasSupport {
+        PrepareStatementSupport {
 
     /**
      * 删除表，item和from同时设置
@@ -23,11 +23,7 @@ public interface DeleteSql extends DeleteSupport<DeleteSql>,
      * @param table 表
      * @return SQL对象
      */
-    default DeleteSql deleteFrom(Table table) {
-        delete(table);
-        from(table);
-        return getSql();
-    }
+    DeleteSql deleteFrom(Table table);
 
 
     /**
@@ -36,11 +32,7 @@ public interface DeleteSql extends DeleteSupport<DeleteSql>,
      * @param tables 表列表
      * @return SQL对象
      */
-    default DeleteSql deleteFrom(List<Table> tables) {
-        delete(tables);
-        from(tables);
-        return getSql();
-    }
+    DeleteSql deleteFrom(List<Table> tables);
 
     /**
      * 执行删除

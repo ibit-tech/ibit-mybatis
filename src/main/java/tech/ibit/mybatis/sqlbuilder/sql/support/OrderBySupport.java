@@ -10,7 +10,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface OrderBySupport<T> extends SqlSupport<T> {
+public interface OrderBySupport<T> {
 
 
     /**

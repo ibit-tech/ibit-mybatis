@@ -12,7 +12,7 @@ public interface UpdateSql extends UpdateTableSupport<UpdateSql>,
         JoinOnSupport<UpdateSql>,
         SetSupport<UpdateSql>,
         WhereSupport<UpdateSql>,
-        UseAliasSupport {
+        PrepareStatementSupport {
 
     /**
      * 执行更新

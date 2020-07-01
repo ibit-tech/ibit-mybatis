@@ -6,7 +6,7 @@ package tech.ibit.mybatis.sqlbuilder.sql.support;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface DistinctSupport<T> extends SqlSupport<T> {
+public interface DistinctSupport<T> {
 
 
     /**

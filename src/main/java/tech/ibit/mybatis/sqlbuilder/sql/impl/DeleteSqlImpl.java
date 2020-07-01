@@ -6,10 +6,7 @@ import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.DeleteSql;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultDeleteSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultFromSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultJoinOnSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultWhereSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +23,8 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
         DefaultDeleteSupport<DeleteSql>,
         DefaultFromSupport<DeleteSql>,
         DefaultJoinOnSupport<DeleteSql>,
-        DefaultWhereSupport<DeleteSql> {
+        DefaultWhereSupport<DeleteSql>,
+        DefaultUseAliasSupport {
 
     /**
      * 删除项
@@ -108,5 +106,32 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
         return mapper.rawUpdate(statement);
+    }
+
+    /**
+     * 删除表，item和from同时设置
+     *
+     * @param table 表
+     * @return SQL对象
+     */
+    @Override
+    public DeleteSql deleteFrom(Table table) {
+        delete(table);
+        from(table);
+        return getSql();
+    }
+
+
+    /**
+     * 删除表，item和from同时设置
+     *
+     * @param tables 表列表
+     * @return SQL对象
+     */
+    @Override
+    public DeleteSql deleteFrom(List<Table> tables) {
+        delete(tables);
+        from(tables);
+        return getSql();
     }
 }

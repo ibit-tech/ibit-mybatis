@@ -15,7 +15,7 @@ public interface CountSql extends ColumnSupport<CountSql>,
         HavingSupport<CountSql>,
         JoinOnSupport<CountSql>,
         WhereSupport<CountSql>,
-        UseAliasSupport {
+        PrepareStatementSupport {
 
     /**
      * 计数

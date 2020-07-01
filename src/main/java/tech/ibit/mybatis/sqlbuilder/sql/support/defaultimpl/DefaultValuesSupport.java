@@ -17,7 +17,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultValuesSupport<T> extends ValuesSupport<T>, DefaultPrepareStatementSupport {
+public interface DefaultValuesSupport<T> extends DefaultSqlSupport<T>,
+        ValuesSupport<T>, DefaultPrepareStatementSupport {
 
     /**
      * 获取列

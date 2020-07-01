@@ -10,7 +10,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface DeleteSupport<T> extends SqlSupport<T> {
+public interface DeleteSupport<T> {
 
     /**
      * `DELETE t1.*` 语句, t1表示"表别名"

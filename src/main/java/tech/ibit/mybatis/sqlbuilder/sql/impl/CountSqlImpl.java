@@ -31,7 +31,8 @@ public class CountSqlImpl extends SqlLogImpl
         DefaultJoinOnSupport<CountSql>,
         DefaultWhereSupport<CountSql>,
         DefaultGroupBySupport<CountSql>,
-        DefaultHavingSupport<CountSql> {
+        DefaultHavingSupport<CountSql>,
+        DefaultUseAliasSupport {
 
 
     /**

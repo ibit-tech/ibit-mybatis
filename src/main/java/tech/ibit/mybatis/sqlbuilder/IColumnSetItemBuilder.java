@@ -1,9 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import tech.ibit.mybatis.sqlbuilder.Column;
-import tech.ibit.mybatis.sqlbuilder.IColumn;
-import tech.ibit.mybatis.sqlbuilder.SetItem;
-
 /**
  * 列构造setItem
  *

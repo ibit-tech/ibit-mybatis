@@ -10,7 +10,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface SetSupport<T> extends SqlSupport<T> {
+public interface SetSupport<T> {
 
     /**
      * 增加设置内容

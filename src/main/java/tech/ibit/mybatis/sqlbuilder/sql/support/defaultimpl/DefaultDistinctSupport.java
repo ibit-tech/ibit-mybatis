@@ -8,7 +8,8 @@ import tech.ibit.mybatis.sqlbuilder.sql.support.DistinctSupport;
  *
  * @author IBIT程序猿
  */
-public interface DefaultDistinctSupport<T> extends DistinctSupport<T> {
+public interface DefaultDistinctSupport<T> extends DefaultSqlSupport<T>,
+        DistinctSupport<T> {
 
     /**
      * 获取distinct

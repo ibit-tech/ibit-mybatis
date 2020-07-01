@@ -12,7 +12,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultUpdateTableSupport<T> extends UpdateTableSupport<T>, DefaultTableSupport {
+public interface DefaultUpdateTableSupport<T> extends DefaultSqlSupport<T>,
+        UpdateTableSupport<T>, DefaultTableSupport {
 
     /**
      * 获取更新表

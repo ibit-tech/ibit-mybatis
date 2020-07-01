@@ -36,7 +36,8 @@ public class QuerySqlImpl<T> extends SqlLogImpl
         DefaultGroupBySupport<QuerySql<T>>,
         DefaultHavingSupport<QuerySql<T>>,
         DefaultOrderBySupport<QuerySql<T>>,
-        DefaultLimitSupport<QuerySql<T>> {
+        DefaultLimitSupport<QuerySql<T>>,
+        DefaultUseAliasSupport {
 
 
     /**

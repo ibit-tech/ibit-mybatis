@@ -13,7 +13,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface JoinOnSupport<T> extends SqlSupport<T> {
+public interface JoinOnSupport<T> {
 
     /**
      * JoinOn操作

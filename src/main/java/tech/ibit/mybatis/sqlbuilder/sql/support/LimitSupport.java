@@ -6,7 +6,7 @@ package tech.ibit.mybatis.sqlbuilder.sql.support;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface LimitSupport<T> extends SqlSupport<T> {
+public interface LimitSupport<T> {
 
     /**
      * `LIMIT #{start}, #{limit}` 语句

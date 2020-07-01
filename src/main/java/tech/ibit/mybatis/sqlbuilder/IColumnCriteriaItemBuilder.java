@@ -1,8 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import tech.ibit.mybatis.sqlbuilder.CriteriaItem;
-import tech.ibit.mybatis.sqlbuilder.FlagCriteriaItem;
-import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.enums.OperatorEnum;
 
 import java.util.ArrayList;

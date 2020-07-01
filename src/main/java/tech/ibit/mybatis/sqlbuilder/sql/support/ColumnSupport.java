@@ -10,7 +10,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface ColumnSupport<T> extends SqlSupport<T> {
+public interface ColumnSupport<T> {
 
     /**
      * `t.column1, t.column2, ...`语句, "t": 为表的别名

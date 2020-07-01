@@ -1,10 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import tech.ibit.mybatis.sqlbuilder.CustomOrderBy;
-import tech.ibit.mybatis.sqlbuilder.IColumn;
-import tech.ibit.mybatis.sqlbuilder.IOrderBy;
-import tech.ibit.mybatis.sqlbuilder.OrderBy;
-
 import java.util.List;
 
 /**

@@ -14,7 +14,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultOrderBySupport<T> extends OrderBySupport<T>, DefaultPrepareStatementSupport {
+public interface DefaultOrderBySupport<T> extends DefaultSqlSupport<T>,
+        OrderBySupport<T>, DefaultPrepareStatementSupport {
 
     /**
      * Order by

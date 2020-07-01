@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support;
+package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
 
 /**
  * UseAlias Support
@@ -6,7 +6,7 @@ package tech.ibit.mybatis.sqlbuilder.sql.support;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface UseAliasSupport {
+public interface DefaultUseAliasSupport {
 
     /**
      * 是否使用别名

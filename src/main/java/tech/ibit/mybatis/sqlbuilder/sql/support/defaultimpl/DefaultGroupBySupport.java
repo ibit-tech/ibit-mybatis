@@ -14,7 +14,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultGroupBySupport<T> extends GroupBySupport<T>, DefaultPrepareStatementSupport {
+public interface DefaultGroupBySupport<T> extends DefaultSqlSupport<T>,
+        GroupBySupport<T>, DefaultPrepareStatementSupport {
 
 
     /**

@@ -12,7 +12,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultFromSupport<T> extends FromSupport<T>, DefaultTableSupport {
+public interface DefaultFromSupport<T> extends DefaultSqlSupport<T>,
+        FromSupport<T>, DefaultTableSupport {
 
     /**
      * 获取from

@@ -6,6 +6,7 @@ import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.sql.InsertSql;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultInsertTableSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultUseAliasSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultValuesSupport;
 
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ import java.util.List;
 @Getter
 public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
         DefaultInsertTableSupport<InsertSql>,
-        DefaultValuesSupport<InsertSql> {
+        DefaultValuesSupport<InsertSql>,
+        DefaultUseAliasSupport {
 
     /**
      * from

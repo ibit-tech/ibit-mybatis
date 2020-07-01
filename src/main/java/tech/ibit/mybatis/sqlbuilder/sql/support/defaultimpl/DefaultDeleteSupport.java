@@ -13,7 +13,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultDeleteSupport<T> extends DeleteSupport<T>, DefaultPrepareStatementSupport {
+public interface DefaultDeleteSupport<T> extends DefaultSqlSupport<T>,
+        DeleteSupport<T>, DefaultPrepareStatementSupport {
 
 
     /**

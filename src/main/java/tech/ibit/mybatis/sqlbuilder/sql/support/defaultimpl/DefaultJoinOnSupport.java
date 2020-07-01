@@ -12,7 +12,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultJoinOnSupport<T> extends JoinOnSupport<T>, DefaultPrepareStatementSupport {
+public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
+        JoinOnSupport<T>, DefaultPrepareStatementSupport {
 
 
     /**

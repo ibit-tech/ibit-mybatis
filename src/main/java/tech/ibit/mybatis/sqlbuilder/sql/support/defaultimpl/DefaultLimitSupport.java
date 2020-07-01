@@ -14,7 +14,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultLimitSupport<T> extends LimitSupport<T> {
+public interface DefaultLimitSupport<T> extends DefaultSqlSupport<T>,
+        LimitSupport<T> {
 
 
     /**

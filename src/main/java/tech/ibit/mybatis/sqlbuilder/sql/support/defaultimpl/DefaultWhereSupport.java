@@ -16,7 +16,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface DefaultWhereSupport<T> extends WhereSupport<T>, DefaultCriteriaSupport {
+public interface DefaultWhereSupport<T> extends DefaultSqlSupport<T>,
+        WhereSupport<T>, DefaultCriteriaSupport {
 
 
     /**
