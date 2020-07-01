@@ -16,7 +16,6 @@
         <javadoc.skip>false</javadoc.skip>
         <common-lang.version>2.6</common-lang.version>
         <lombok.version>1.16.20</lombok.version>
-        <!--<sql-builder.version>2.0-SNAPSHOT</sql-builder.version>-->
         <structlog4j.version>1.3</structlog4j.version>
         <mybatis.version>3.5.5</mybatis.version>
 
@@ -80,13 +79,6 @@
             <artifactId>structlog4j-api</artifactId>
             <version>${structlog4j.version}</version>
         </dependency>
-
-        <!--&lt;!&ndash;sql builder&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>tech.ibit</groupId>-->
-            <!--<artifactId>sql-builder</artifactId>-->
-            <!--<version>${sql-builder.version}</version>-->
-        <!--</dependency>-->
 
         <!-- lombok -->
         <dependency>
