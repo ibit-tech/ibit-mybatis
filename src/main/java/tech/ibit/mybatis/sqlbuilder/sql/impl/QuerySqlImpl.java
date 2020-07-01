@@ -204,6 +204,11 @@ public class QuerySqlImpl<T> extends SqlLogImpl
         return mapper.rawSelectDefault(statement);
     }
 
+    @Override
+    public QuerySql<T> columnPo() {
+        return columnPo(mapper.getClass());
+    }
+
     private PrepareStatement logAndGetPrepareStatement() {
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);

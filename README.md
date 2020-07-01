@@ -1,73 +1,100 @@
-# ibit-mybatis
+# ibit-mybatis 2.x 介绍
 
 ## 概述
 
-&nbsp;&nbsp; ibit-mybatis是一个Mybatis的增强工具，在Mybatis的基础上增加了新的特性与功能，志在简化开发流程、提高开发效率。</br>
+&nbsp;&nbsp; ibit-mybatis 是一个 Mybatis 的增强工具，在 Mybatis 的基础上增加了新的特性与功能，志在简化开发流程、提高开发效率。</br>
 
 ### 特性
 
 * 无侵入，引入”ibit-mybatis”对现有工程不会产生影响。
-* 灵活的CRUD（增、删、改、查）操作，内置Dao，Mapper，支持常用的单表CRUD操作，更有强大的SQL构造器（[sql-builder](https://github.com/ibit-tech/sql-builder)），满足更为复杂的操作（如聚合函数、分组、连表）。
-* 内置代码生成器（[ibit-mybatis-generator](https://github.com/ibit-tech/ibit-mybatis-generator)），指定数据库表，自动生成Dao、Mapper、Entity、Properties等基础类，减少重复或者相似代码编写。
-* 扩展支持，分页、数据脱敏
-* 主流微服务框架springboot（[ibit-mybatis-springboot-starter](https://github.com/ibit-tech/ibit-mybatis-springboot-starter)）的支持
+* 无 xml 配置，基于注解的方式实现
+* 灵活的CRUD（增、删、改、查）操作，Mapper，支持常用的单表CRUD操作，更有强大的SQL构造器（[sql-builder](https://github.com/ibit-tech/sql-builder)），满足更为复杂的操作（如聚合函数、分组、连表、分页），为了让sql-builder更好的支持 ibit-mybatis，从 ibit-mybatis 2.0 开始，sql-builder 合并到 ibit-mybatis 中。
+* 内置代码生成器（[ibit-mybatis-generator](https://github.com/ibit-tech/ibit-mybatis-generator)），指定数据库表，自动生成Mapper（无主键、单主键和多主键 Mapper）、Entity、Properties等基础类，减少重复或者相似代码编写。
+* 扩展支持，数据脱敏（后续支持）
 
-### 整体框架图
-
-![](framework.png)
 
 ### sql-builder描述
 
 `sql-builder`定义动态SQL的生成规则，用来实现单表的CRUD操作。
 
-#### 模块图
+#### 核心 sql 接口
 
-![](sql-builder.png)
+详细 api 文档参考：[ibit-mybatis 2.x API 文档](https://ibit.tech/apidocs/ibit-mybatis/2.x/index.html) 
 
+| 说明 | 接口 | 
+| --- | --- |
+| 搜索 | [QuerySql](https://ibit.tech/apidocs/ibit-mybatis/2.x/index.html) |
+| 计数 | [CountSql](https://ibit.tech/apidocs/ibit-mybatis/2.x/index.html) |
+| 删除 | [DeleteSql](https://ibit.tech/apidocs/ibit-mybatis/2.x/index.html) |
+| 插入 | [InsertSql](https://ibit.tech/apidocs/ibit-mybatis/2.x/index.html) |
+| 更新 | [UpdateSql](https://ibit.tech/apidocs/ibit-mybatis/2.x/index.html) |
 
-#### 动态SQL构造规则
+#### sql 接口支持
 
-| 序号 | 方法 | 描述 |
-| -- | -- | -- |
-| 1 | rawSelect </br> selectPo（对象）</br> selectDistinct </br> selectDistinctPo（对象）| `rawSelect [distinct]`语句 |
-| 2	 | count </br> countDistinct | `rawSelect count [distinct]`语句 |
-| 3 | deleteFrom </br> deleteTableFrom（别名）| `delete from`语句 |
-| 4	 | rawUpdate | `rawUpdate`语句 |
-| 5 | insertInto </br> batchInsertInto（批量）| `insert into`语句 |
-| 6 | set </br> increaseSet（列自增）</br> decreaseSet（列自减）</br> |`set`语句 |
-| 7 | values | `values`语句 |
-| 8 | from | `from`语句 |
-| 9 | joinOn </br> leftJoinOn </br> rightJoinOn </br> fullJoinOn </br> innerJoinOn </br>complexLeftJoinOn </br> complexRightJoinOn </br> complexFullJoinOn </br> complexInnerJoinOn | `[left\|right\|full\|inner] join on`语句 |
-| 10 | where </br> andWhere </br> orWhere | `where`语句 |
-| 11 | groupBy | `group by`语句 |
-| 12 | having </br> andHaving </br> orHaving | `having`语句 |
-| 13 | orderBy | `order by`语句 |
-| 14 | limit | `limit`语句 |
+不同类型的 sql， 其语句的约束不一样，下表列举所有的语句支持。
 
-更加详细用法参考[sql-builder](https://github.com/ibit-tech/sql-builder)。
+| 接口 | 支持方法 | 说明 |
+| --- | --- | --- |
+| ColumnSupport | column </br> columnPo | `SELECT column1[, column2...]` 语句|
+| DeleteSupport | delete | `DELETE t1.*` 语句|
+| DistinctSupport | distinct | `DISTINCT` 语句 |
+| FromSupport | from | `FROM table1 t1[, table2 t2...]` 语句|
+| GroupBySupport | groupBy | `GROUP BY t1.column1[, t2.column2, ...]`语句| 
+| HavingSupport | having </br> andHaving </br> orHaving | `HAVING`语句|
+| InsertTableSupport | insert | `INSERT INTO table1 t1` 语句, t1表示 "表别名" |
+| JoinOnSupport | joinOn </br> leftJoinOn </br> rightJoinOn </br> fullJoinOn </br> innerJoinOn </br>complexLeftJoinOn </br> complexRightJoinOn </br> complexFullJoinOn </br> complexInnerJoinOn | `[LEFT\|RIGHT\|FULL\|INNER] JOIN ON`语句 |
+| LimitSupport | limit | `LIMIT #{start}, #{limit}`语句 |
+| OrderBySupport | orderBy | `ORDER BY` 语句 |
+| SetSupport | set | SET 条件语句 |
+| UpdateTableSupport | update | `UPDATE table1 t1[, table2 t2...]`语句，t1，t2表示"表别名" |
+| ValuesSupport | values | `(column1, column2, ...) VALUES(?, ?, ...)`语句 |
+| WhereSupport | where </br> andWhere </br> orWhere | `WHERE` 语句 |
 
-### 核心代码说明
+#### sql 工厂类
 
-  ibit-mybatis重新定义了业务分层模型，将原有的Dao层下放到Mapper（数据访问层），增加新的Dao层（构造层）。
+工厂类：`tech.ibit.mybatis.sqlbuilder.SqlFactory`，一般不直接使用，继承 `RawMapper` 的 Mapper 可直接创建 `QuerySql`、`CountSql`、`DeleteSql`、`InsertSql` 和 `UpdateSql` 对应实例。
+
+### Mapper 说明
+
+#### Mapper 基础支持
+`ibit-mybatis` 定义了 4 种 Mapper，分别是 `RawMapper`，`NoIdMapper`，`SingleIdMapper`，`MultipleIdMapper`。以下分别说明。
   
-#### 分层模型
+| Mapper 类型 | 父接口 | 说明 |
+| --- | --- | --- |
+| RawMapper | / | 定义最原始的增、删、改、查和 Sql 实例创建 |
+| NoIdMapper | RawMapper |  扩展无主键表的增 |
+| SingleIdMapper | NoIdMapper | 扩展单主键表的根据id增、删、改、查 |
+| MultipleIdMapper | NoIdMapper | 扩展多主键表的根据id增、删、改、查 |
+  
+  
+  使用 [ibit-mybatis-generator](https://github.com/ibit-tech/ibit-mybatis-generator) 2.x 版本，会根据表主键数量，继承不同的 Mapper。
+  
+#### Mapper 结合 Sql 自定义增、删、改、查
 
- ![](level.png)  
- 
-#### 定义Mapper
+| Mapper 创建 Sql 实例方法 | 实例类型 | 实例执行方法说明 | 
+| --- | --- | --- |
+| createQuery | QuerySql | executeQueryPage：查询（包含分页信息）</br> executeQuery：查询列表 </br> executeQueryOne：查询单条 </br> executeQueryDefaultPage：查询基本类型（包含分页信息）</br> executeQueryDefault：查询基本类型|
+| createCount | CountSql | executeCount：计数 |
+| createDelete | DeleteSql | executeDelete：执行删除 |
+| createInsert | InsertSql | executeInsert：执行插入 </br> executeInsertWithGenerateKeys：执行插入并生成主键 |
+| createUpdate | UpdateSql | executeUpdate：执行更新|
 
-Mapper为数据访问层，默认基于注解实现了insert（增加），rawUpdate（更新/删除），rawSelect（查询），count（计数）和实体映射到xml的ResultMap。接收参数为`sql-builder`生成的SqlParams参数。Mapper对于原生的基于xml、注解的数据访问方式是兼容的。 
+自定义查询例子：
 
-#### 定义Dao
-
-Dao为构造层，可以通过`sql-builder`构造sql，调用Mapper获取结果。定义通用的Dao模板，默认支持跟主键相关的CRUD操作。</br>
-Dao模板设计，按照主键个数分类，分成3类，无主键、单个主键、多个主键。
-
-* NoIdDao：无主键Dao，只支持插入操作。
-* SingleIdDao：单个主键Dao，支持插入，通过主键查询、更新删除操作。
-* MultipleIdDao：多个主键Dao，支持插入，通过主键查询、更新删除操作。
-
-![](dao.png)
+```
+public User getByUsername(String username) {
+    if (StringUtils.isBlank(username)) {
+        return null;
+    }
+    return mapper
+            .createQuery()
+            .columnPo(User.class)
+            .from(UserProperties.TABLE)
+            .andWhere(UserProperties.username.eq(username))
+            .limit(1)
+            .executeQueryOne();
+}
+```
 
 ## 用法
 
@@ -89,71 +116,78 @@ compile 'tech.ibit:ibit-mybatis:${lastest}'
 </dependency>
 ```
 
-**说明**: 将 "${latest}" 替换成对应的版本
+**说明**: 将 "${latest}" 替换成 `2.0` 以上版本。
+
+### 配置说明
+
+需要将 Mybatis Configuration 的 `mapUnderscoreToCamelCase` 的值设置为 true。
+
+**方式1**：使用 mybatis-config.xml
+
+```
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+</configuration>    
+```
+
+**方式2**：java 代码方式
+
+```
+Configuration configuration = new Configuration(environment);
+configuration.setMapUnderscoreToCamelCase(true);
+```
+
+**方式3**：使用了 `mybatis-spring-boot-starter`，修改配置如下
+
+```
+# 字段映射驼峰
+mybatis.configuration.map-underscore-to-camel-case=true
+```
 
 ### 其他说明
 
-如果需要需要在Mapper中动态指定"resultMap",则需要增加拦截器`tech.ibit.mybatis.plugin.ResultMapInterceptor`
+`ibit-mybatis` 定义了枚举类型（`CommonEnum`，枚举-Integer转换），其`TypeHandler`为 `CommonEnumTypeHandler`。
+
+如果使用 `CommonEnum` 作为系统通用枚举类，则需要做以下改造。 
+
+**a.** 新的枚举需要实现`CommonEnum#getValue`方法。
+
+**b.** SqlProvider 需要做配置
 
 ```
-@Bean
-public ResultMapInterceptor getResultMapInterceptor() {
-    return new ResultMapInterceptor();
-}
-```
-
-## 更新说明
-
-### 1.1 更新内容
-
- * 支持通用枚举类型（CommonEnum，枚举-Integer转换）
- * 如果需要自定义的枚举类型，则
- 
-### 增加类
-
-```
-
-/**
- * 定义通用枚举类
- */ 
-public interface CommonEnum {
-
-    /**
-     * 获取枚举值
-     *
-     * @return 枚举值
-     */
-    int getValue();
-    
-    // 省略其他方法
-}
-
-/**
- * 通用枚举类处理器
- */
-public class CommonEnumTypeHandler<E extends CommonEnum> extends BaseTypeHandler<E> {
-   // 省略方法
-}
-
-```
-
-### 用法
-
-#### mapper中，字段增加handler
-
-```
-<result column="type" jdbcType="INTEGER" property="type"
-          typeHandler="tech.ibit.mybatis.CommonEnumTypeHandler"/>
-```
-
-#### SqlBuilder，定义类型转换
-
-```
-// 测试设置枚举类型
-SqlBuilder.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
+SqlProvider.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
     put(tech.ibit.mybatis.CommonEnum.class, o -> ((tech.ibit.mybatis.CommonEnum) o).getValue());
 }});
 ```
+
+**c.** 修改默认的枚举 TypeHandler
+
+**方式1**：使用 mybatis-config.xml
+
+```
+<configuration>
+    <settings>
+        <setting name="defaultEnumTypeHandler" value="tech.ibit.mybatis.CommonEnumTypeHandler"/>
+    </settings>
+</configuration>    
+```
+
+**方式2**：java 代码方式
+
+```
+Configuration configuration = new Configuration(environment);
+configuration.setDefaultEnumTypeHandler(tech.ibit.mybatis.CommonEnumTypeHandler.class);
+```
+
+**方式3**：使用了 `mybatis-spring-boot-starter`，修改配置如下
+
+```
+# 指定默认的枚举处理类
+mybatis.configuration.default-enum-type-handler=tech.ibit.mybatis.CommonEnumTypeHandler
+```
+
 
 
 

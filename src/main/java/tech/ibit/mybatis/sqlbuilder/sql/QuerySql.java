@@ -92,4 +92,11 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
      */
     <V> List<V> executeQueryDefault();
 
+    /**
+     * 定义搜索列（从mapper getPoClazz中获取）
+     *
+     * @return sql对象本身
+     */
+    QuerySql<T> columnPo();
+
 }
