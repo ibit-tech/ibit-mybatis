@@ -4,7 +4,6 @@ import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.CriteriaItem;
 import tech.ibit.mybatis.sqlbuilder.JoinOn;
 import tech.ibit.mybatis.sqlbuilder.Table;
-import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 
 import java.util.List;
 
@@ -17,22 +16,12 @@ import java.util.List;
 public interface JoinOnSupport<T> extends SqlSupport<T> {
 
     /**
-     * Join on
-     *
-     * @return JoinOn
-     */
-    ListField<JoinOn> getJoinOn();
-
-    /**
      * JoinOn操作
      *
      * @param joinOn JoinOn操作
      * @return SQL对象
      */
-    default T joinOn(JoinOn joinOn) {
-        getJoinOn().addItem(joinOn);
-        return getSql();
-    }
+    T joinOn(JoinOn joinOn);
 
 
     /**
@@ -41,10 +30,7 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @param joinOns JoinOn操作列表
      * @return SQL对象
      */
-    default T joinOn(List<JoinOn> joinOns) {
-        getJoinOn().addItems(joinOns);
-        return getSql();
-    }
+    T joinOn(List<JoinOn> joinOns);
 
     /**
      * `JOIN table t1 ON t1.column1=t0.column2, t1.column3=t0.column4`语句
@@ -54,10 +40,7 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Column
      */
-    default T joinOn(Table table, List<Column> columnPairs) {
-        joinOn(JoinOn.none(table, columnPairs));
-        return getSql();
-    }
+    T joinOn(Table table, List<Column> columnPairs);
 
     /**
      * `LEFT JOIN table t1 ON t1.column1=t0.column2, t1.column3=t0.column4`语句
@@ -67,10 +50,7 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Column
      */
-    default T leftJoinOn(Table table, List<Column> columnPairs) {
-        joinOn(JoinOn.left(table, columnPairs));
-        return getSql();
-    }
+    T leftJoinOn(Table table, List<Column> columnPairs);
 
     /**
      * `RIGHT JOIN table t1 ON t1.column1=t0.column2, t1.column3=t0.column4`语句
@@ -80,10 +60,7 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Column
      */
-    default T rightJoinOn(Table table, List<Column> columnPairs) {
-        joinOn(JoinOn.right(table, columnPairs));
-        return getSql();
-    }
+    T rightJoinOn(Table table, List<Column> columnPairs);
 
     /**
      * `FULL JOIN table t1 ON t1.column1=t0.column2, t1.column3=t0.column4`语句
@@ -93,10 +70,7 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Column
      */
-    default T fullJoinOn(Table table, List<Column> columnPairs) {
-        joinOn(JoinOn.full(table, columnPairs));
-        return getSql();
-    }
+    T fullJoinOn(Table table, List<Column> columnPairs);
 
     /**
      * `INNER JOIN table t1 ON t1.column1=t0.column2, t1.column3=t0.column4`语句
@@ -106,10 +80,7 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Column
      */
-    default T innerJoinOn(Table table, List<Column> columnPairs) {
-        joinOn(JoinOn.inner(table, columnPairs));
-        return getSql();
-    }
+    T innerJoinOn(Table table, List<Column> columnPairs);
 
 
     /**
@@ -119,10 +90,7 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @param criteriaItems 条件
      * @return SQL对象
      */
-    default T complexLeftJoinOn(Table table, List<CriteriaItem> criteriaItems) {
-        joinOn(JoinOn.left(table, null, criteriaItems));
-        return getSql();
-    }
+    T complexLeftJoinOn(Table table, List<CriteriaItem> criteriaItems);
 
     /**
      * `RIGHT JOIN table t1 on t1.column1=t0.column2, t1.column3=t0.column4 AND t1.column5=?`语句
@@ -131,10 +99,7 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @param criteriaItems 条件
      * @return SQL对象
      */
-    default T complexRightJoinOn(Table table, List<CriteriaItem> criteriaItems) {
-        joinOn(JoinOn.right(table, null, criteriaItems));
-        return getSql();
-    }
+    T complexRightJoinOn(Table table, List<CriteriaItem> criteriaItems);
 
     /**
      * `FULL JOIN table t1 on t1.column1=t0.column2, t1.column3=t0.column4 AND t1.column5=?`语句
@@ -143,10 +108,7 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @param criteriaItems 条件
      * @return SQL对象
      */
-    default T complexFullJoinOn(Table table, List<CriteriaItem> criteriaItems) {
-        joinOn(JoinOn.full(table, null, criteriaItems));
-        return getSql();
-    }
+    T complexFullJoinOn(Table table, List<CriteriaItem> criteriaItems);
 
     /**
      * `INNER JOIN table t1 on t1.column1=t0.column2, t1.column3=t0.column4 AND t1.column5=?`语句
@@ -155,9 +117,6 @@ public interface JoinOnSupport<T> extends SqlSupport<T> {
      * @param criteriaItems 条件
      * @return SQL对象
      */
-    default T complexInnerJoinOn(Table table, List<CriteriaItem> criteriaItems) {
-        joinOn(JoinOn.inner(table, null, criteriaItems));
-        return getSql();
-    }
+    T complexInnerJoinOn(Table table, List<CriteriaItem> criteriaItems);
 
 }

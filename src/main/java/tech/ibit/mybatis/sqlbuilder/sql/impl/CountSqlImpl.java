@@ -9,7 +9,7 @@ import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.CountSql;
 import tech.ibit.mybatis.sqlbuilder.sql.field.BooleanField;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.statement.*;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +25,7 @@ import java.util.List;
 @Setter
 public class CountSqlImpl extends SqlLogImpl
         implements CountSql,
+        DefaultDistinctSupport<CountSql>,
         DefaultColumnSupport<CountSql>,
         DefaultFromSupport<CountSql>,
         DefaultJoinOnSupport<CountSql>,
@@ -100,7 +101,7 @@ public class CountSqlImpl extends SqlLogImpl
 
         String columnStr = columnPrepareStatement.getPrepareSql();
         if (StringUtils.isBlank(columnStr) && distinct) {
-            throw new SqlException("Columns cannot be empty while at distinct statement!");
+            throw new SqlException("Columns cannot be empty while at distinct defaultimpl!");
         }
 
         // 构造count字段

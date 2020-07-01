@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import tech.ibit.mybatis.RawMapper;
 import tech.ibit.mybatis.sqlbuilder.*;
+import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
 import tech.ibit.mybatis.sqlbuilder.sql.CountSql;
 import tech.ibit.mybatis.sqlbuilder.sql.Page;
 import tech.ibit.mybatis.sqlbuilder.sql.QuerySql;
 import tech.ibit.mybatis.sqlbuilder.sql.field.BooleanField;
 import tech.ibit.mybatis.sqlbuilder.sql.field.LimitField;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.statement.*;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +28,7 @@ import java.util.List;
 @Setter
 public class QuerySqlImpl<T> extends SqlLogImpl
         implements QuerySql<T>,
+        DefaultDistinctSupport<QuerySql<T>>,
         DefaultColumnSupport<QuerySql<T>>,
         DefaultFromSupport<QuerySql<T>>,
         DefaultJoinOnSupport<QuerySql<T>>,
@@ -154,15 +156,35 @@ public class QuerySqlImpl<T> extends SqlLogImpl
     }
 
     @Override
+    public <P> Page<P> executeQueryPage(Class<P> clazz) {
+        int total = toCountSql().executeCount();
+        if (total <= 0) {
+            return new Page<>(limit.getStart(), limit.getLimit(), total, Collections.emptyList());
+        }
+        List<P> results = executeQuery(clazz);
+        return new Page<>(limit.getStart(), limit.getLimit(), total, results);
+    }
+
+    @Override
     public List<T> executeQuery() {
         PrepareStatement statement = logAndGetPrepareStatement();
         return mapper.rawSelect(statement);
     }
 
     @Override
+    public <P> List<P> executeQuery(Class<P> clazz) {
+        return EntityConverter.copyColumns(executeQuery(), clazz);
+    }
+
+    @Override
     public T executeQueryOne() {
         PrepareStatement statement = logAndGetPrepareStatement();
         return mapper.rawSelectOne(statement);
+    }
+
+    @Override
+    public <P> P executeQueryOne(Class<P> clazz) {
+        return EntityConverter.copyColumns(executeQueryOne(), clazz);
     }
 
     @Override

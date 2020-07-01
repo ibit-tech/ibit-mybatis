@@ -27,7 +27,7 @@ public class UserExtMapperTest {
     private UserExtMapper mapper;
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         mapper.deleteAllUsers();
     }
 

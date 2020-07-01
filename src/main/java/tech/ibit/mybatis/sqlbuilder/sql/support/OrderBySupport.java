@@ -1,7 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support;
 
 import tech.ibit.mybatis.sqlbuilder.IOrderBy;
-import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 
 import java.util.List;
 
@@ -13,13 +12,6 @@ import java.util.List;
  */
 public interface OrderBySupport<T> extends SqlSupport<T> {
 
-    /**
-     * Order by
-     *
-     * @return Order by
-     */
-    ListField<IOrderBy> getOrderBy();
-
 
     /**
      * `ORDER BY` 语句
@@ -28,10 +20,7 @@ public interface OrderBySupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see IOrderBy
      */
-    default T orderBy(IOrderBy orderBy) {
-        getOrderBy().addItem(orderBy);
-        return getSql();
-    }
+    T orderBy(IOrderBy orderBy);
 
     /**
      * `ORDER BY` 语句
@@ -40,8 +29,5 @@ public interface OrderBySupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see IOrderBy
      */
-    default T orderBy(List<IOrderBy> orderBys) {
-        getOrderBy().addItems(orderBys);
-        return getSql();
-    }
+    T orderBy(List<IOrderBy> orderBys);
 }

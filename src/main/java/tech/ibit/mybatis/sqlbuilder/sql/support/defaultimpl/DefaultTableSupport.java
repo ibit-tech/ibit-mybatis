@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.statement;
+package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
 
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.Table;

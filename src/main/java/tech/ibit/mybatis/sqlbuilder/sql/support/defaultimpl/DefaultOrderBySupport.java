@@ -1,7 +1,8 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.statement;
+package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
 
 import tech.ibit.mybatis.sqlbuilder.IOrderBy;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
+import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.OrderBySupport;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
@@ -14,6 +15,40 @@ import java.util.List;
  * @author IBIT程序猿
  */
 public interface DefaultOrderBySupport<T> extends OrderBySupport<T>, DefaultPrepareStatementSupport {
+
+    /**
+     * Order by
+     *
+     * @return Order by
+     */
+    ListField<IOrderBy> getOrderBy();
+
+
+    /**
+     * `ORDER BY` 语句
+     *
+     * @param orderBy 相关orderBy
+     * @return SQL对象
+     * @see IOrderBy
+     */
+    @Override
+    default T orderBy(IOrderBy orderBy) {
+        getOrderBy().addItem(orderBy);
+        return getSql();
+    }
+
+    /**
+     * `ORDER BY` 语句
+     *
+     * @param orderBys 相关orderBy列表
+     * @return SQL对象
+     * @see IOrderBy
+     */
+    @Override
+    default T orderBy(List<IOrderBy> orderBys) {
+        getOrderBy().addItems(orderBys);
+        return getSql();
+    }
 
     /**
      * 获取预查询SQL对象

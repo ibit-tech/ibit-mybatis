@@ -6,10 +6,10 @@ import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.UpdateSql;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.statement.DefaultJoinOnSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.statement.DefaultSetSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.statement.DefaultUpdateTableSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.statement.DefaultWhereSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultJoinOnSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultSetSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultUpdateTableSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultWhereSupport;
 
 import java.util.ArrayList;
 import java.util.Arrays;

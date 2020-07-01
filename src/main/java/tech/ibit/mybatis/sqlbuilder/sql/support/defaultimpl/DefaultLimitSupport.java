@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.statement;
+package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
 
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
@@ -15,6 +15,39 @@ import java.util.List;
  * @author IBIT程序猿
  */
 public interface DefaultLimitSupport<T> extends LimitSupport<T> {
+
+
+    /**
+     * 获取limit相关参数
+     *
+     * @return limit相关参数
+     */
+    LimitField getLimit();
+
+    /**
+     * `LIMIT #{start}, #{limit}` 语句
+     *
+     * @param start 开始位置
+     * @param limit 限制条数
+     * @return SQL对象
+     */
+    @Override
+    default T limit(int start, int limit) {
+        getLimit().limit(start, limit);
+        return getSql();
+    }
+
+    /**
+     * `LIMIT 0, #{limit}` 语句
+     *
+     * @param limit 限制条数
+     * @return SQL对象
+     */
+    @Override
+    default T limit(int limit) {
+        getLimit().limit(limit);
+        return getSql();
+    }
 
     /**
      * 获取预查询SQL对象

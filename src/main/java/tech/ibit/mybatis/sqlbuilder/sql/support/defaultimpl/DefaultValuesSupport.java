@@ -1,10 +1,11 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.statement;
+package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
 
 import org.apache.commons.lang.StringUtils;
 import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.CriteriaMaker;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
+import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.ValuesSupport;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
@@ -17,6 +18,62 @@ import java.util.List;
  * @author IBIT程序猿
  */
 public interface DefaultValuesSupport<T> extends ValuesSupport<T>, DefaultPrepareStatementSupport {
+
+    /**
+     * 获取列
+     *
+     * @return 列
+     */
+    ListField<Column> getColumn();
+
+    /**
+     * 获取值
+     *
+     * @return 值
+     */
+    ListField<Object> getValue();
+
+    /**
+     * `(column1, column2, ...) VALUES(?, ?, ...)`语句
+     *
+     * @param columnValues 列和值列表
+     * @return SQL对象
+     * @see ColumnValue
+     */
+    @Override
+    default T values(List<? extends ColumnValue> columnValues) {
+        columnValues.forEach(this::values);
+        return getSql();
+    }
+
+    /**
+     * `(column1) VALUES(?)`语句
+     *
+     * @param columnValue 列和值
+     * @return SQL对象
+     * @see ColumnValue
+     */
+    @Override
+    default T values(ColumnValue columnValue) {
+        getColumn().addItem((Column) columnValue.getColumn());
+        getValue().addItem(columnValue.getValue());
+        return getSql();
+    }
+
+    /**
+     * `(column1, column2, ...) VALUES(?, ?, ...)`语句
+     *
+     * @param columns 列列表
+     * @param values  值列表
+     * @return SQL对象
+     * @see ColumnValue
+     */
+    @Override
+    default T values(List<Column> columns, List<Object> values) {
+        getColumn().addItems(columns);
+        getValue().addItems(values);
+        return getSql();
+    }
 
     /**
      * 获取列预查询SQL

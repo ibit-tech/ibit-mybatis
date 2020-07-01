@@ -1,7 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support;
 
-import tech.ibit.mybatis.sqlbuilder.sql.field.LimitField;
-
 /**
  * Limit Support
  *
@@ -11,23 +9,13 @@ import tech.ibit.mybatis.sqlbuilder.sql.field.LimitField;
 public interface LimitSupport<T> extends SqlSupport<T> {
 
     /**
-     * 获取limit相关参数
-     *
-     * @return limit相关参数
-     */
-    LimitField getLimit();
-
-    /**
      * `LIMIT #{start}, #{limit}` 语句
      *
      * @param start 开始位置
      * @param limit 限制条数
      * @return SQL对象
      */
-    default T limit(int start, int limit) {
-        getLimit().limit(start, limit);
-        return getSql();
-    }
+    T limit(int start, int limit);
 
     /**
      * `LIMIT 0, #{limit}` 语句
@@ -35,9 +23,6 @@ public interface LimitSupport<T> extends SqlSupport<T> {
      * @param limit 限制条数
      * @return SQL对象
      */
-    default T limit(int limit) {
-        getLimit().limit(limit);
-        return getSql();
-    }
+    T limit(int limit);
 
 }

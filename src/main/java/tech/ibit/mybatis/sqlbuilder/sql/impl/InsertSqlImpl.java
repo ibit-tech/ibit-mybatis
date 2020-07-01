@@ -5,8 +5,8 @@ import tech.ibit.mybatis.RawMapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.sql.InsertSql;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.statement.DefaultInsertTableSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.statement.DefaultValuesSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultInsertTableSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultValuesSupport;
 
 import java.util.ArrayList;
 import java.util.Arrays;

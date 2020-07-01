@@ -2,7 +2,6 @@ package tech.ibit.mybatis.sqlbuilder.sql.support;
 
 import tech.ibit.mybatis.sqlbuilder.Criteria;
 import tech.ibit.mybatis.sqlbuilder.CriteriaItem;
-import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 
 import java.util.List;
 
@@ -14,12 +13,6 @@ import java.util.List;
  */
 public interface WhereSupport<T> extends SqlSupport<T> {
 
-    /**
-     * 返回where条件
-     *
-     * @return where条件
-     */
-    ListField<Criteria> getWhere();
 
     /**
      * `WHERE` 语句
@@ -28,10 +21,7 @@ public interface WhereSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Criteria
      */
-    default T where(Criteria criteria) {
-        getWhere().addItem(criteria);
-        return getSql();
-    }
+    T where(Criteria criteria);
 
     /**
      * `WHERE` 语句
@@ -40,10 +30,7 @@ public interface WhereSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Criteria
      */
-    default T where(List<Criteria> criterion) {
-        getWhere().addItems(criterion);
-        return getSql();
-    }
+    T where(List<Criteria> criterion);
 
     /**
      * `WHERE AND` 语句
@@ -52,9 +39,7 @@ public interface WhereSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Criteria
      */
-    default T andWhere(CriteriaItem item) {
-        return where(item.and());
-    }
+    T andWhere(CriteriaItem item);
 
     /**
      * `WHERE AND` 语句
@@ -63,9 +48,7 @@ public interface WhereSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Criteria
      */
-    default T andWhere(List<Criteria> criterion) {
-        return where(Criteria.and(criterion));
-    }
+    T andWhere(List<Criteria> criterion);
 
     /**
      * `WHERE OR`语句
@@ -74,9 +57,7 @@ public interface WhereSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Criteria
      */
-    default T orWhere(CriteriaItem item) {
-        return where(item.or());
-    }
+    T orWhere(CriteriaItem item);
 
     /**
      * `WHERE OR`语句
@@ -85,7 +66,5 @@ public interface WhereSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see Criteria
      */
-    default T orWhere(List<Criteria> criterion) {
-        return where(Criteria.or(criterion));
-    }
+    T orWhere(List<Criteria> criterion);
 }

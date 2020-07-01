@@ -2,7 +2,6 @@ package tech.ibit.mybatis.sqlbuilder.sql.support;
 
 import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
-import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 
 import java.util.List;
 
@@ -14,19 +13,6 @@ import java.util.List;
  */
 public interface ValuesSupport<T> extends SqlSupport<T> {
 
-    /**
-     * 获取列
-     *
-     * @return 列
-     */
-    ListField<Column> getColumn();
-
-    /**
-     * 获取值
-     *
-     * @return 值
-     */
-    ListField<Object> getValue();
 
     /**
      * `(column1, column2, ...) VALUES(?, ?, ...)`语句
@@ -35,10 +21,7 @@ public interface ValuesSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see ColumnValue
      */
-    default T values(List<? extends ColumnValue> columnValues) {
-        columnValues.forEach(this::values);
-        return getSql();
-    }
+    T values(List<? extends ColumnValue> columnValues);
 
     /**
      * `(column1) VALUES(?)`语句
@@ -47,11 +30,7 @@ public interface ValuesSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see ColumnValue
      */
-    default T values(ColumnValue columnValue) {
-        getColumn().addItem((Column) columnValue.getColumn());
-        getValue().addItem(columnValue.getValue());
-        return getSql();
-    }
+    T values(ColumnValue columnValue);
 
     /**
      * `(column1, column2, ...) VALUES(?, ?, ...)`语句
@@ -61,10 +40,6 @@ public interface ValuesSupport<T> extends SqlSupport<T> {
      * @return SQL对象
      * @see ColumnValue
      */
-    default T values(List<Column> columns, List<Object> values) {
-        getColumn().addItems(columns);
-        getValue().addItems(values);
-        return getSql();
-    }
+    T values(List<Column> columns, List<Object> values);
 
 }

@@ -36,6 +36,15 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
     Page<T> executeQueryPage();
 
     /**
+     * 查询（包含分页信息）
+     *
+     * @param clazz 返回类型
+     * @param <P>   返回类型模板
+     * @return 查询结果
+     */
+    <P> Page<P> executeQueryPage(Class<P> clazz);
+
+    /**
      * 查询
      *
      * @return 结果列表
@@ -43,11 +52,29 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
     List<T> executeQuery();
 
     /**
+     * 查询
+     *
+     * @param clazz 返回类型
+     * @param <P>   返回类型模板
+     * @return 结果列表
+     */
+    <P> List<P> executeQuery(Class<P> clazz);
+
+    /**
      * 查询单个对象
      *
      * @return 结果对象
      */
     T executeQueryOne();
+
+    /**
+     * 查询单个对象
+     *
+     * @param clazz 返回类型
+     * @param <P>   返回类型模板
+     * @return 结果对象
+     */
+    <P> P executeQueryOne(Class<P> clazz);
 
     /**
      * 查询基本类型（包含分页信息）

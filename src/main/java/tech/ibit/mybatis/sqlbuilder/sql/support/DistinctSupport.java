@@ -1,7 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support;
 
-import tech.ibit.mybatis.sqlbuilder.sql.field.BooleanField;
-
 /**
  * Distinct Support
  *
@@ -10,21 +8,13 @@ import tech.ibit.mybatis.sqlbuilder.sql.field.BooleanField;
  */
 public interface DistinctSupport<T> extends SqlSupport<T> {
 
-    /**
-     * 获取distinct
-     *
-     * @return distinct
-     */
-    BooleanField getDistinct();
 
     /**
      * distinct 操作
      *
      * @return SQL对象
      */
-    default T distinct() {
-        return distinct(true);
-    }
+    T distinct();
 
 
     /**
@@ -33,9 +23,6 @@ public interface DistinctSupport<T> extends SqlSupport<T> {
      * @param distinct 是否distinct
      * @return SQL对象
      */
-    default T distinct(boolean distinct) {
-        getDistinct().setValue(distinct);
-        return getSql();
-    }
+    T distinct(boolean distinct);
 
 }

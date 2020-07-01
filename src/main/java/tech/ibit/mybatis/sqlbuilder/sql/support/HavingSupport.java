@@ -2,7 +2,6 @@ package tech.ibit.mybatis.sqlbuilder.sql.support;
 
 import tech.ibit.mybatis.sqlbuilder.Criteria;
 import tech.ibit.mybatis.sqlbuilder.CriteriaItem;
-import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 
 import java.util.List;
 
@@ -14,13 +13,6 @@ import java.util.List;
  */
 public interface HavingSupport<T> extends SqlSupport<T> {
 
-    /**
-     * Having
-     *
-     * @return Having
-     */
-    ListField<Criteria> getHaving();
-
 
     /**
      * `HAVING`语句
@@ -28,10 +20,7 @@ public interface HavingSupport<T> extends SqlSupport<T> {
      * @param having having语句对象
      * @return SQL对象
      */
-    default T having(Criteria having) {
-        getHaving().addItem(having);
-        return getSql();
-    }
+    T having(Criteria having);
 
     /**
      * `HAVING`语句
@@ -39,10 +28,7 @@ public interface HavingSupport<T> extends SqlSupport<T> {
      * @param havings having语句对象列表
      * @return SQL对象
      */
-    default T having(List<Criteria> havings) {
-        getHaving().addItems(havings);
-        return getSql();
-    }
+    T having(List<Criteria> havings);
 
     /**
      * `HAVING AND item`语句
@@ -50,10 +36,7 @@ public interface HavingSupport<T> extends SqlSupport<T> {
      * @param havingItem having语句对象
      * @return SQL对象
      */
-    default T andHaving(CriteriaItem havingItem) {
-        having(havingItem.and());
-        return getSql();
-    }
+    T andHaving(CriteriaItem havingItem);
 
     /**
      * `HAVING AND (havings)`语句
@@ -61,10 +44,7 @@ public interface HavingSupport<T> extends SqlSupport<T> {
      * @param havings having语句对象列表
      * @return SQL对象
      */
-    default T andHaving(List<Criteria> havings) {
-        having(Criteria.and(havings));
-        return getSql();
-    }
+    T andHaving(List<Criteria> havings);
 
 
     /**
@@ -73,10 +53,7 @@ public interface HavingSupport<T> extends SqlSupport<T> {
      * @param havingItem having语句对象
      * @return SQL对象
      */
-    default T orHaving(CriteriaItem havingItem) {
-        having(havingItem.or());
-        return getSql();
-    }
+    T orHaving(CriteriaItem havingItem);
 
     /**
      * `HAVING OR (havings)`语句（多个OR关系）
@@ -84,9 +61,6 @@ public interface HavingSupport<T> extends SqlSupport<T> {
      * @param havings having语句对象列表
      * @return SQL对象
      */
-    default T orHaving(List<Criteria> havings) {
-        having(Criteria.or(havings));
-        return getSql();
-    }
+    T orHaving(List<Criteria> havings);
 
 }
