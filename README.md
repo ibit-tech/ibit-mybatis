@@ -143,7 +143,7 @@ public class CommonEnumTypeHandler<E extends CommonEnum> extends BaseTypeHandler
 
 ```
 <result column="type" jdbcType="INTEGER" property="type"
-          typeHandler="tech.ibit.mybatis.type.CommonEnumTypeHandler"/>
+          typeHandler="tech.ibit.mybatis.CommonEnumTypeHandler"/>
 ```
 
 #### SqlBuilder，定义类型转换
@@ -151,7 +151,7 @@ public class CommonEnumTypeHandler<E extends CommonEnum> extends BaseTypeHandler
 ```
 // 测试设置枚举类型
 SqlBuilder.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
-    put(tech.ibit.mybatis.type.CommonEnum.class, o -> ((tech.ibit.mybatis.type.CommonEnum) o).getValue());
+    put(tech.ibit.mybatis.CommonEnum.class, o -> ((tech.ibit.mybatis.CommonEnum) o).getValue());
 }});
 ```
 

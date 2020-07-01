@@ -9,12 +9,12 @@ import tech.ibit.mybatis.demo.entity.*;
 import tech.ibit.mybatis.demo.entity.property.OrganizationProperties;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.demo.entity.type.UserType;
-import tech.ibit.mybatis.template.provider.SqlBuilder;
-import tech.ibit.sqlbuilder.KeyValuePair;
-import tech.ibit.sqlbuilder.PrepareStatement;
-import tech.ibit.sqlbuilder.SqlFactory;
-import tech.ibit.sqlbuilder.exception.SqlException;
-import tech.ibit.sqlbuilder.sql.QuerySql;
+import tech.ibit.mybatis.sqlbuilder.KeyValuePair;
+import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
+import tech.ibit.mybatis.sqlbuilder.SqlFactory;
+import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
+import tech.ibit.mybatis.sqlbuilder.sql.QuerySql;
+import tech.ibit.mybatis.utils.MapperUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,8 +45,8 @@ public class MapperUtilsTest extends CommonTest {
         user.setName("dev");
         MapperUtils.insert(new TestMapper() {
             @Override
-            public int rawInsertWithGenerateKeys(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams,
-                                                 @Param(SqlBuilder.PARAM_KEY) KeyValuePair key) {
+            public int rawInsertWithGenerateKeys(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams,
+                                                 @Param(SqlProvider.PARAM_KEY) KeyValuePair key) {
                 assertPrepareStatementEquals(
                         "INSERT INTO user(login_id, name, email, password, mobile_phone, type) VALUES(?, ?, ?, ?, ?, ?)",
                         Arrays.asList(
@@ -71,7 +71,7 @@ public class MapperUtilsTest extends CommonTest {
         organization.setPhone("188");
         MapperUtils.insert(new TestMapper() {
             @Override
-            public int rawInsert(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawInsert(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "INSERT INTO organization(city_code, name, type, phone) VALUES(?, ?, ?, ?)",
                         Arrays.asList(
@@ -112,7 +112,7 @@ public class MapperUtilsTest extends CommonTest {
     public void deleteById() {
         MapperUtils.deleteById(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "DELETE FROM user WHERE user_id = ?",
                         Collections.singletonList(
@@ -128,7 +128,7 @@ public class MapperUtilsTest extends CommonTest {
     public void deleteByIds() {
         MapperUtils.deleteByIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "DELETE FROM user WHERE user_id IN(?, ?)",
                         Arrays.asList(
@@ -142,7 +142,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.deleteByIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "DELETE FROM user WHERE user_id = ?",
                         Collections.singletonList(
@@ -160,7 +160,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.deleteByMultiId(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "DELETE FROM user WHERE user_id = ?",
                         Collections.singletonList(
@@ -174,7 +174,7 @@ public class MapperUtilsTest extends CommonTest {
         OrganizationKey oKey1 = new OrganizationKey("001", "001");
         MapperUtils.deleteByMultiId(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "DELETE FROM organization WHERE (city_code = ? AND name = ?)",
                         Arrays.asList(
@@ -193,7 +193,7 @@ public class MapperUtilsTest extends CommonTest {
         UserKey uKey2 = new UserKey(2);
         MapperUtils.deleteByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "DELETE FROM user WHERE user_id = ?",
                         Collections.singletonList(
@@ -206,7 +206,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.deleteByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "DELETE FROM user WHERE user_id IN(?, ?)",
                         Arrays.asList(
@@ -224,7 +224,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.deleteByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "DELETE FROM organization WHERE (city_code = ? AND name = ?)",
                         Arrays.asList(
@@ -238,7 +238,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.deleteByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "DELETE FROM organization WHERE (city_code = ? AND name = ?) OR (city_code = ? AND name = ?)",
                         Arrays.asList(
@@ -264,7 +264,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateById(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.email = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
                         Arrays.asList(
@@ -280,7 +280,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateById(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.login_id = ?, u.mobile_phone = ? WHERE u.user_id = ?",
                         Arrays.asList(
@@ -300,7 +300,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateById(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE organization o SET o.type = ? WHERE o.city_code = ? AND o.name = ?",
                         Arrays.asList(
@@ -325,7 +325,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.batchUpdateById(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.email = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?;"
                                 + "UPDATE user u SET u.email = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
@@ -346,7 +346,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.batchUpdateById(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals("UPDATE user u SET u.login_id = ?, u.mobile_phone = ? WHERE u.user_id = ?;"
                                 + "UPDATE user u SET u.login_id = ?, u.mobile_phone = ? WHERE u.user_id = ?",
                         Arrays.asList(
@@ -403,7 +403,7 @@ public class MapperUtilsTest extends CommonTest {
         User user = getUser1();
         MapperUtils.updateByIdAndIgnoreColumns(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals("UPDATE user u SET u.login_id = ?, u.name = ?, u.email = ?"
                                 + ", u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
                         Arrays.asList(
@@ -423,7 +423,7 @@ public class MapperUtilsTest extends CommonTest {
         user.setLoginId(null);
         MapperUtils.updateByIdAndIgnoreColumns(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.login_id = ?, u.name = ?, u.email = ?, "
                                 + "u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
@@ -444,7 +444,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByIdAndIgnoreColumns(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.name = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id = ?",
                         Arrays.asList(
@@ -462,7 +462,7 @@ public class MapperUtilsTest extends CommonTest {
         user.setUserId(null);
         MapperUtils.updateByIdAndIgnoreColumns(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.name = ?, u.password = ?, u.mobile_phone = ?, u.type = ? WHERE u.user_id IN(?, ?)",
                         Arrays.asList(
@@ -482,7 +482,7 @@ public class MapperUtilsTest extends CommonTest {
         user = getUser1();
         MapperUtils.updateByIdAndIgnoreColumns(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.login_id = ?, u.name = ?, u.email = ?, u.password = ?, "
                                 + "u.mobile_phone = ?, u.type = ? WHERE u.user_id IN(?, ?)",
@@ -512,7 +512,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.password = ?, u.type = ? WHERE u.user_id IN(?, ?, ?)",
                         Arrays.asList(
@@ -529,7 +529,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.password = ?, u.type = ? WHERE u.user_id = ?",
                         Arrays.asList(
@@ -545,7 +545,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.password = ?, u.type = ? WHERE u.user_id IN(?, ?, ?)",
                         Arrays.asList(
@@ -562,7 +562,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.type = ?, u.password = ? WHERE u.user_id IN(?, ?, ?)",
                         Arrays.asList(
@@ -579,7 +579,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.type = ?, u.password = ?, u.login_id = ? WHERE u.user_id IN(?, ?, ?)",
                         Arrays.asList(
@@ -625,7 +625,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.password = ?, u.type = ? WHERE u.user_id IN(?, ?, ?)",
                         Arrays.asList(
@@ -642,7 +642,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.password = ?, u.type = ? WHERE u.user_id = ?",
                         Arrays.asList(
@@ -657,7 +657,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.type = ? WHERE u.user_id IN(?, ?, ?)",
                         Arrays.asList(
@@ -673,7 +673,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.type = ?, u.password = ? WHERE u.user_id IN(?, ?, ?)",
                         Arrays.asList(
@@ -691,7 +691,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE user u SET u.type = ?, u.password = ?, u.login_id = ? WHERE u.user_id IN(?, ?, ?)",
                         Arrays.asList(
@@ -716,7 +716,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?)",
                         Arrays.asList(
@@ -731,7 +731,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?) "
                                 + "OR (o.city_code = ? AND o.name = ?) OR (o.city_code = ? AND o.name = ?)",
@@ -751,7 +751,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?)",
                         Arrays.asList(
@@ -768,7 +768,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE organization o SET o.phone = ?, o.type = ? WHERE (o.city_code = ? AND o.name = ?)",
                         Arrays.asList(
@@ -784,7 +784,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?) "
                                 + "OR (o.city_code = ? AND o.name = ?) OR (o.city_code = ? AND o.name = ?)",
@@ -804,7 +804,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.updateByMultiIds(new TestMapper() {
             @Override
-            public int rawUpdate(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "UPDATE organization o SET o.phone = ?, o.type = ? WHERE (o.city_code = ? AND o.name = ?)"
                                 + " OR (o.city_code = ? AND o.name = ?) OR (o.city_code = ? AND o.name = ?)",
@@ -849,7 +849,7 @@ public class MapperUtilsTest extends CommonTest {
     public void getById() {
         MapperUtils.getById(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id = ? LIMIT ?, ?",
@@ -868,7 +868,7 @@ public class MapperUtilsTest extends CommonTest {
     public void getByIds() {
         MapperUtils.getByIds(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id IN(?, ?, ?) LIMIT ?, ?",
@@ -886,7 +886,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.getByIds(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id = ? LIMIT ?, ?",
@@ -906,7 +906,7 @@ public class MapperUtilsTest extends CommonTest {
         UserKey uKey1 = new UserKey(1);
         MapperUtils.getByMultiId(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id = ? LIMIT ?, ?",
@@ -924,7 +924,7 @@ public class MapperUtilsTest extends CommonTest {
         OrganizationKey oKey1 = new OrganizationKey("001", "001");
         MapperUtils.getByMultiId(new TestMapper<Organization>() {
             @Override
-            public List<Organization> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<Organization> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT o.city_code, o.name, o.type, o.phone FROM organization o "
                                 + "WHERE (o.city_code = ? AND o.name = ?) LIMIT ?, ?",
@@ -946,7 +946,7 @@ public class MapperUtilsTest extends CommonTest {
         UserKey uKey2 = new UserKey(2);
         MapperUtils.getByMultiIds(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id IN(?, ?) LIMIT ?, ?",
@@ -965,7 +965,7 @@ public class MapperUtilsTest extends CommonTest {
         OrganizationKey oKey2 = new OrganizationKey("001", "002");
         MapperUtils.getByMultiIds(new TestMapper<Organization>() {
             @Override
-            public List<Organization> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<Organization> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT o.city_code, o.name, o.type, o.phone FROM organization o "
                                 + "WHERE (o.city_code = ? AND o.name = ?) OR (o.city_code = ? AND o.name = ?) LIMIT ?, ?",
@@ -988,7 +988,7 @@ public class MapperUtilsTest extends CommonTest {
     public void getPOById() {
         MapperUtils.getPoById(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.email, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id = ? LIMIT ?, ?",
@@ -1007,7 +1007,7 @@ public class MapperUtilsTest extends CommonTest {
     public void getPOByIds() {
         MapperUtils.getPoByIds(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.email, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id IN(?, ?, ?) LIMIT ?, ?",
@@ -1025,7 +1025,7 @@ public class MapperUtilsTest extends CommonTest {
 
         MapperUtils.getPoByIds(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.email, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id = ? LIMIT ?, ?",
@@ -1045,7 +1045,7 @@ public class MapperUtilsTest extends CommonTest {
         UserKey uKey1 = new UserKey(1);
         MapperUtils.getPoByMultiId(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.email, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id = ? LIMIT ?, ?",
@@ -1066,7 +1066,7 @@ public class MapperUtilsTest extends CommonTest {
         UserKey uKey2 = new UserKey(2);
         MapperUtils.getPoByMultiIds(new TestMapper<User>() {
             @Override
-            public List<User> rawSelect(@Param(SqlBuilder.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.email, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id IN(?, ?) LIMIT ?, ?",

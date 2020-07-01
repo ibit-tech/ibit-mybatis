@@ -6,7 +6,7 @@ import tech.ibit.mybatis.demo.entity.UserLoginRecord;
 import tech.ibit.mybatis.demo.entity.property.UserLoginRecordProperties;
 import tech.ibit.mybatis.demo.ext.dao.UserLoginRecordExtDao;
 import tech.ibit.mybatis.demo.mapper.UserLoginRecordMapper;
-import tech.ibit.sqlbuilder.SqlFactory;
+import tech.ibit.mybatis.sqlbuilder.SqlFactory;
 
 import java.util.List;
 

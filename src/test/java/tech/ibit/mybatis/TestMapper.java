@@ -1,8 +1,7 @@
 package tech.ibit.mybatis;
 
-import tech.ibit.mybatis.template.mapper.RawMapper;
-import tech.ibit.sqlbuilder.KeyValuePair;
-import tech.ibit.sqlbuilder.PrepareStatement;
+import tech.ibit.mybatis.sqlbuilder.KeyValuePair;
+import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 
 import java.util.List;
 

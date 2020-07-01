@@ -1,7 +1,7 @@
 package tech.ibit.mybatis.demo.entity.property;
 
-import tech.ibit.sqlbuilder.Column;
-import tech.ibit.sqlbuilder.Table;
+import tech.ibit.mybatis.sqlbuilder.Column;
+import tech.ibit.mybatis.sqlbuilder.Table;
 
 /**
  * Table for organization

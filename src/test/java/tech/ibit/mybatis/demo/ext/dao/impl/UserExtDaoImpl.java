@@ -2,12 +2,12 @@ package tech.ibit.mybatis.demo.ext.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import tech.ibit.mybatis.MapperUtils;
+import tech.ibit.mybatis.utils.MapperUtils;
 import tech.ibit.mybatis.demo.entity.UserPo;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.demo.ext.dao.UserExtDao;
 import tech.ibit.mybatis.demo.mapper.UserMapper;
-import tech.ibit.sqlbuilder.sql.Page;
+import tech.ibit.mybatis.sqlbuilder.sql.Page;
 
 import java.util.List;
 

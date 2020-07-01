@@ -1,7 +1,7 @@
 package tech.ibit.mybatis.demo.mapper;
 
 import tech.ibit.mybatis.demo.entity.User;
-import tech.ibit.mybatis.template.mapper.SingleIdMapper;
+import tech.ibit.mybatis.SingleIdMapper;
 
 /**
  * RawMapper for user

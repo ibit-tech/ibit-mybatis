@@ -1,8 +1,8 @@
 package tech.ibit.mybatis.demo;
 
-import tech.ibit.sqlbuilder.ColumnValue;
-import tech.ibit.sqlbuilder.PrepareStatement;
-import tech.ibit.sqlbuilder.SimpleNameColumn;
+import tech.ibit.mybatis.sqlbuilder.ColumnValue;
+import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
+import tech.ibit.mybatis.sqlbuilder.SimpleNameColumn;
 
 import java.util.List;
 

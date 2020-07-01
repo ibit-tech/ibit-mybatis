@@ -10,7 +10,7 @@
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone"/>
         <result column="type" jdbcType="INTEGER" property="type"
-                typeHandler="tech.ibit.mybatis.type.CommonEnumTypeHandler"/>
+                typeHandler="tech.ibit.mybatis.CommonEnumTypeHandler"/>
     </resultMap>
 
     <sql id="columns">

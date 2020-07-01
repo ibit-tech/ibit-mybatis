@@ -4,9 +4,9 @@ package tech.ibit.mybatis.demo.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.ibit.sqlbuilder.MultiId;
-import tech.ibit.sqlbuilder.annotation.DbId;
-import tech.ibit.sqlbuilder.annotation.DbTable;
+import tech.ibit.mybatis.sqlbuilder.MultiId;
+import tech.ibit.mybatis.sqlbuilder.annotation.DbId;
+import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
 
 /**
  * Entity for organization

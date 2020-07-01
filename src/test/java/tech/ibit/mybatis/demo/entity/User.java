@@ -2,9 +2,9 @@ package tech.ibit.mybatis.demo.entity;
 
 import lombok.Data;
 import tech.ibit.mybatis.demo.entity.type.UserType;
-import tech.ibit.sqlbuilder.annotation.DbColumn;
-import tech.ibit.sqlbuilder.annotation.DbId;
-import tech.ibit.sqlbuilder.annotation.DbTable;
+import tech.ibit.mybatis.sqlbuilder.annotation.DbColumn;
+import tech.ibit.mybatis.sqlbuilder.annotation.DbId;
+import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
 
 /**
  * Entity for user

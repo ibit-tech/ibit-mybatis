@@ -2,7 +2,7 @@ package tech.ibit.mybatis.demo.entity.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import tech.ibit.mybatis.type.CommonEnum;
+import tech.ibit.mybatis.CommonEnum;
 
 /**
  * 用户类型

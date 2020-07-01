@@ -2,7 +2,7 @@ package tech.ibit.mybatis.demo.mapper;
 
 import tech.ibit.mybatis.demo.entity.Organization;
 import tech.ibit.mybatis.demo.entity.OrganizationKey;
-import tech.ibit.mybatis.template.mapper.MultipleIdMapper;
+import tech.ibit.mybatis.MultipleIdMapper;
 
 /**
  * RawMapper for organization

@@ -2,7 +2,7 @@ package tech.ibit.mybatis.demo.ext.dao;
 
 
 import tech.ibit.mybatis.demo.entity.UserPo;
-import tech.ibit.sqlbuilder.sql.Page;
+import tech.ibit.mybatis.sqlbuilder.sql.Page;
 
 import java.util.List;
 
