@@ -1,22 +1,20 @@
-package tech.ibit.mybatis.demo.ext.dao.impl;
+package tech.ibit.mybatis.demo.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import tech.ibit.mybatis.demo.entity.UserLoginRecord;
 import tech.ibit.mybatis.demo.entity.property.UserLoginRecordProperties;
-import tech.ibit.mybatis.demo.ext.dao.UserLoginRecordExtDao;
 import tech.ibit.mybatis.demo.mapper.UserLoginRecordMapper;
+import tech.ibit.mybatis.demo.service.UserLoginRecordService;
 import tech.ibit.mybatis.sqlbuilder.SqlFactory;
 
 import java.util.List;
 
 /**
- * Dao for user_login_record
- *
  * @author IBIT程序猿
  */
-@Repository
-public class UserLoginRecordExtDaoImpl implements UserLoginRecordExtDao {
+@Service
+public class UserLoginRecordServiceImpl implements UserLoginRecordService {
 
     @Autowired
     private UserLoginRecordMapper mapper;

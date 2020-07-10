@@ -3,7 +3,7 @@ package tech.ibit.mybatis.sqlbuilder.utils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import tech.ibit.mybatis.RawMapper;
+import tech.ibit.mybatis.*;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.converter.ColumnSetValue;
 import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
@@ -34,69 +34,70 @@ public class IdSqlUtils {
      * 构造通过主键查询对象的SQL参数对象（单列作为主键）
      *
      * @param mapper   mapper对象
-     * @param poClazz  返回实体类
      * @param idValues 主键值集合
-     * @param <P>      返回实体类类型
+     * @param <K>      主键类型
      * @param <T>      模板类型
      * @return SQL参数对象
      * @see QuerySql
      */
-    public <T, P> QuerySql<T> getByIds(RawMapper<T> mapper, Class<P> poClazz, Collection<?> idValues) {
+    public <T, K> QuerySql<T> getByIds(SingleIdMapper<T, K> mapper, Collection<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
-        TableColumnInfo table = getAndCheckTableIdInfo(poClazz);
-        if (table.getIds().size() > 1) {
-            throw SqlException.multiIdNotSupported(table.getTable().getName());
-        }
-        return getById(mapper, table, idValues);
+        return getById(mapper, mapper.getId(), idValues);
     }
 
     /**
      * 构造通过主键查询对象的SQL参数对象（单列作为主键）
      *
      * @param mapper  mapper对象
-     * @param poClazz 返回实体类
      * @param idValue 主键值
      * @param <T>     模板类型
-     * @param <P>     返回实体类类型
+     * @param <K>     主键类型
      * @return SQL参数对象
      * @see QuerySql
      */
-    public <T, P> QuerySql<T> getById(RawMapper<T> mapper, Class<P> poClazz, Object idValue) {
-        return getByIds(mapper, poClazz, null == idValue ? null : Collections.singletonList(idValue));
+    public <T, K> QuerySql<T> getById(SingleIdMapper<T, K> mapper, K idValue) {
+        return getByIds(mapper, null == idValue ? null : Collections.singletonList(idValue));
     }
 
     /**
      * 构造通过主键查询对象的SQL参数对象（多列作为主键）
      *
      * @param mapper   mapper对象
-     * @param poClazz  返回实体类
      * @param idValues 主键值列表
-     * @param <P>      返回实体类类型
+     * @param <K>      返回实体类类型
      * @param <T>      模板类型
      * @return SQL参数对象
      * @see QuerySql
      * @see MultiId
      */
-    public <T, P> QuerySql<T> getByMultiIds(RawMapper<T> mapper, Class<P> poClazz, List<? extends MultiId> idValues) {
+    public <T, K extends MultiId> QuerySql<T> getByMultiIds(MultipleIdMapper<T, K> mapper, List<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
-        TableColumnInfo tableColumnInfo = getAndCheckTableIdInfo(poClazz);
-        List<Column> ids = tableColumnInfo.getIds();
-        List<TableColumnSetValues> columnValuesList = EntityConverter
-                .getTableColumnValuesList(new ArrayList<>(idValues), ids);
-        if (1 == ids.size()) {
-            return getById(mapper, tableColumnInfo, getIdValues(ids.get(0), columnValuesList));
+        List<TableColumnSetValues> idValueList
+                = EntityConverter.getTableColumnValuesList(new ArrayList<>(idValues), true);
+
+        TableColumnSetValues firstIdValues = idValueList.get(0);
+
+        //没有主键
+        if (firstIdValues.getColumnValues().isEmpty()) {
+            throw SqlException.idNotFound(firstIdValues.getTable().getName());
         }
 
-        QuerySql<T> sql = SqlFactory
-                .createQuery(mapper)
-                .column(tableColumnInfo.getColumns())
-                .from(tableColumnInfo.getTable());
-        appendWhereSql(columnValuesList, sql);
-        sql.limit(idValues.size());
+        if (1 == firstIdValues.getColumnValues().size()) {
+            Column id = (Column) firstIdValues.getColumnValues().get(0).getColumn();
+            return getById(mapper, id, getIdValues(id, idValueList));
+        }
+
+        QuerySql<T> sql = mapper.createQuery()
+                .columnDefaultPo()
+                .fromDefault()
+                .limit(idValues.size());
+
+        appendWhereSql(idValueList, sql);
+
         return sql;
     }
 
@@ -104,16 +105,15 @@ public class IdSqlUtils {
      * 构造通过主键查询对象的SQL参数对象（多列作为主键）
      *
      * @param mapper  mapper对象
-     * @param poClazz 返回实体类
      * @param idValue 主键值
-     * @param <P>     返回实体类类型
+     * @param <K>     主键类型
      * @param <T>     模板类型
      * @return SQL参数对象
      * @see QuerySql
      * @see MultiId
      */
-    public <T, P> QuerySql<T> getByMultiId(RawMapper<T> mapper, Class<P> poClazz, MultiId idValue) {
-        return getByMultiIds(mapper, poClazz, null == idValue ? null : Collections.singletonList(idValue));
+    public <T, K extends MultiId> QuerySql<T> getByMultiId(MultipleIdMapper<T, K> mapper, K idValue) {
+        return getByMultiIds(mapper, null == idValue ? null : Collections.singletonList(idValue));
     }
 
 
@@ -121,42 +121,33 @@ public class IdSqlUtils {
      * 构造通过主键删除对象的SQL对象参数（单列作为主键）
      *
      * @param mapper   mapper对象
-     * @param poClazz  返回实体类类
      * @param idValues 主键值列表
      * @param <T>      返回实体类类型
+     * @param <K>      主键值类型
      * @return SQL参数对象
      * @see DeleteSql
      */
-    public <T> DeleteSql deleteByIds(RawMapper mapper, Class<T> poClazz, Collection<?> idValues) {
-
+    public <T, K> DeleteSql deleteByIds(SingleIdMapper<T, K> mapper, Collection<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
-
-        TableColumnInfo tableIdInfo = getAndCheckTableIdInfo(poClazz);
-        if (tableIdInfo.getIds().size() > 1) {
-            throw SqlException.multiIdNotSupported(tableIdInfo.getTable().getName());
-        }
-
-        Column id = tableIdInfo.getIds().get(0);
-        return SqlFactory
-                .createDelete(mapper)
-                .deleteFrom(tableIdInfo.getTable())
-                .andWhere(id.in(idValues));
+        return mapper.createDelete()
+                .deleteFromDefault()
+                .andWhere(mapper.getId().in(idValues));
     }
 
     /**
      * 构造通过主键删除对象的SQL对象参数（单列作为主键）
      *
      * @param mapper  mapper对象
-     * @param poClazz 返回实体类类
      * @param idValue 主键值
      * @param <T>     返回实体类类型
+     * @param <K>     主键值类型
      * @return SQL参数对象
      * @see DeleteSql
      */
-    public <T> DeleteSql deleteById(RawMapper mapper, Class<T> poClazz, Object idValue) {
-        return deleteByIds(mapper, poClazz, null == idValue ? null : Collections.singletonList(idValue));
+    public <T, K> DeleteSql deleteById(SingleIdMapper<T, K> mapper, K idValue) {
+        return deleteByIds(mapper, null == idValue ? null : Collections.singletonList(idValue));
     }
 
     /**
@@ -168,12 +159,12 @@ public class IdSqlUtils {
      * @see DeleteSql
      * @see MultiId
      */
-    public DeleteSql deleteByMultiIds(RawMapper mapper, List<? extends MultiId> idValues) {
+    public <T, K extends MultiId> DeleteSql deleteByMultiIds(MultipleIdMapper<T, K> mapper, List<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
-        List<TableColumnSetValues> idValueList = EntityConverter.getTableColumnValuesList(
-                new ArrayList<>(idValues), true);
+        List<TableColumnSetValues> idValueList =
+                EntityConverter.getTableColumnValuesList(idValues, true);
         TableColumnSetValues firstIdValues = idValueList.get(0);
 
         //没有主键
@@ -183,19 +174,14 @@ public class IdSqlUtils {
 
         } else if (1 == firstIdValues.getColumnValues().size()) {
             //single id
-
             Column id = (Column) firstIdValues.getColumnValues().get(0).getColumn();
             List<Object> actualIdValues = getIdValues(idValueList);
-
-            return SqlFactory
-                    .createDelete(mapper)
-                    .deleteFrom(firstIdValues.getTable())
+            return mapper.createDelete()
+                    .deleteFromDefault()
                     .andWhere(id.in(actualIdValues));
         }
 
-        DeleteSql sql = SqlFactory
-                .createDelete(mapper)
-                .deleteFrom(firstIdValues.getTable());
+        DeleteSql sql = mapper.createDelete().deleteFromDefault();
         appendWhereSql(idValueList, sql);
         return sql;
     }
@@ -210,7 +196,7 @@ public class IdSqlUtils {
      * @see DeleteSql
      * @see MultiId
      */
-    public DeleteSql deleteByMultiId(RawMapper mapper, MultiId idValue) {
+    public <T, K extends MultiId> DeleteSql deleteByMultiId(MultipleIdMapper<T, K> mapper, K idValue) {
         return deleteByMultiIds(mapper, null == idValue ? null : Collections.singletonList(idValue));
     }
 
@@ -223,21 +209,24 @@ public class IdSqlUtils {
      * @return SQL参数对象
      * @see InsertSql
      */
-    public InsertSql insertInto(RawMapper mapper, Object po) {
+    public <T> InsertSql insertInto(Mapper<T> mapper, T po) {
 
-        // 逻辑，1）只插入非null字段，2）如果字段不允许为null，值为null报错，3）id不允许为null
+        // 逻辑，1）只插入非null字段，
+        // 2）如果字段不允许为null，值为null报错，
+        // 3）id不允许为null
         TableColumnSetValues entity = EntityConverter.getTableColumnValues(po, true);
         if (entity.getColumnValues().isEmpty()) {
             throw SqlException.columnValueNotFound();
         }
+
         List<ColumnSetValue> columnValues2Insert = getFilterColumnSetValues(entity.getColumnValues());
         if (columnValues2Insert.isEmpty()) {
             throw SqlException.columnValueNotFound();
         }
 
-        return SqlFactory
-                .createInsert(mapper)
-                .insert(entity.getTable())
+        return mapper
+                .createInsert()
+                .insertDefault()
                 .values(columnValues2Insert);
     }
 
@@ -291,11 +280,11 @@ public class IdSqlUtils {
      * @return SQL参数对象
      * @see InsertSql
      */
-    public InsertSql batchInsertInto(RawMapper mapper, List<?> pos, List<Column> columns) {
+    public <T> InsertSql batchInsertInto(Mapper<T> mapper, List<T> pos, List<Column> columns) {
         BatchInsertItems batchInsertItems = getBatchInsertItems(pos, columns);
-        return SqlFactory
-                .createInsert(mapper)
-                .insert(batchInsertItems.getTable())
+        return mapper
+                .createInsert()
+                .insertDefault()
                 .values(batchInsertItems.getColumns(), batchInsertItems.getValues());
     }
 
@@ -307,7 +296,7 @@ public class IdSqlUtils {
      * @return SQL参数对象
      * @see UpdateSql
      */
-    public UpdateSql updateById(RawMapper mapper, Object updateObject) {
+    public <T> UpdateSql updateById(Mapper<T> mapper, T updateObject) {
         return updateById(mapper, updateObject, null);
     }
 
@@ -320,7 +309,7 @@ public class IdSqlUtils {
      * @return SQL参数对象
      * @see UpdateSql
      */
-    public UpdateSql updateById(RawMapper mapper, Object updateObject, List<Column> updateColumns) {
+    public <T> UpdateSql updateById(RawMapper<T> mapper, T updateObject, List<Column> updateColumns) {
         TableColumnInfo idEntity = getAndCheckTableIdInfo(updateObject.getClass());
         if (null != updateColumns) {
             if (updateColumns.isEmpty()) {
@@ -337,9 +326,9 @@ public class IdSqlUtils {
         //检查主键是否为空
         checkIdNotNull(idEntity.getIds(), tableColumnValues.getColumnValues());
 
-        UpdateSql sql = SqlFactory
-                .createUpdate(mapper)
-                .update(idEntity.getTable());
+        UpdateSql sql = mapper
+                .createUpdate()
+                .updateDefault();
 
         for (ColumnSetValue cv : tableColumnValues.getColumnValues()) {
             Column column = (Column) cv.getColumn();
@@ -369,7 +358,7 @@ public class IdSqlUtils {
      * @return SQL参数对象
      * @see UpdateSql
      */
-    public UpdateSql updateByIds(RawMapper mapper, Object updateObject, Collection<?> idValues) {
+    public <T, K> UpdateSql updateByIds(SingleIdMapper<T, K> mapper, T updateObject, Collection<K> idValues) {
         return updateByIds(mapper, updateObject, null, idValues);
     }
 
@@ -383,25 +372,20 @@ public class IdSqlUtils {
      * @return SQL参数对象
      * @see UpdateSql
      */
-    public UpdateSql updateByIds(RawMapper mapper, Object updateObject, List<Column> updateColumns, Collection<?> idValues) {
+    public <T, K> UpdateSql updateByIds(SingleIdMapper<T, K> mapper, T updateObject, List<Column> updateColumns, Collection<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
-        }
-        TableColumnInfo idEntity = getAndCheckTableIdInfo(updateObject.getClass());
-        if (idEntity.getIds().size() > 1) {
-            throw SqlException.multiIdNotSupported(idEntity.getTable().getName());
         }
 
         TableColumnSetValues tableColumnValues = null == updateColumns
                 ? EntityConverter.getTableColumnValues(updateObject, false)
                 : EntityConverter.getTableColumnValues(updateObject, updateColumns);
 
-        Table table = idEntity.getTable();
-        UpdateSql sql = SqlFactory
-                .createUpdate(mapper)
-                .update(table);
-        addSetsSql(table, tableColumnValues, sql);
-        sql.andWhere(idEntity.getIds().get(0).in(idValues));
+        UpdateSql sql = mapper
+                .createUpdate()
+                .updateDefault();
+        addSetsSql(mapper.getDefaultTable(), tableColumnValues, sql);
+        sql.andWhere(mapper.getId().in(idValues));
         return sql;
     }
 
@@ -415,7 +399,7 @@ public class IdSqlUtils {
      * @see UpdateSql
      * @see MultiId
      */
-    public UpdateSql updateByMultiIds(RawMapper mapper, Object updateObject, List<? extends MultiId> idValues) {
+    public <T, K extends MultiId> UpdateSql updateByMultiIds(MultipleIdMapper<T, K> mapper, T updateObject, List<K> idValues) {
         return updateByMultiIds(mapper, updateObject, null, idValues);
     }
 
@@ -431,12 +415,14 @@ public class IdSqlUtils {
      * @see UpdateSql
      * @see MultiId
      */
-    public UpdateSql updateByMultiIds(RawMapper mapper, Object updateObject, List<Column> updateColumns, List<? extends MultiId> idValues) {
+    public <T, K extends MultiId> UpdateSql updateByMultiIds(MultipleIdMapper<T, K> mapper, T updateObject
+            , List<Column> updateColumns, List<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
-        List<TableColumnSetValues> idValueList = EntityConverter.getTableColumnValuesList(
-                new ArrayList<>(idValues), true);
+        List<TableColumnSetValues> idValueList =
+                EntityConverter.getTableColumnValuesList(
+                        new ArrayList<>(idValues), true);
         TableColumnSetValues firstIdValues = idValueList.get(0);
 
         Table table = firstIdValues.getTable();
@@ -513,16 +499,15 @@ public class IdSqlUtils {
      * 构造通过单个主键构造函数
      *
      * @param mapper   mapper对象
-     * @param table    表
+     * @param id       主键列
      * @param idValues 主键值列表
      * @return 预查询sql
      */
-    private <T> QuerySql<T> getById(RawMapper<T> mapper, TableColumnInfo table, Collection<?> idValues) {
-        Column id = table.getIds().get(0);
-        return SqlFactory
-                .createQuery(mapper)
-                .column(table.getColumns())
-                .from(table.getTable())
+    private <T> QuerySql<T> getById(Mapper<T> mapper, Column id, Collection<?> idValues) {
+        return mapper
+                .createQuery()
+                .columnDefaultPo()
+                .fromDefault()
                 .andWhere(id.in(idValues))
                 .limit(idValues.size());
     }

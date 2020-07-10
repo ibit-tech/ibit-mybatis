@@ -50,5 +50,35 @@ public interface UserProperties {
      */
     Column type = new Column(TABLE, "type");
 
+    /**
+     * 组织id
+     */
+    Column orgId = new Column(TABLE, "org_id");
+
+    /**
+     * 当前项目
+     */
+    Column currentProjectId = new Column(TABLE, "current_project_id");
+
+    /**
+     * 年龄
+     */
+    Column age = new Column(TABLE, "age");
+
+    /**
+     * 性别
+     */
+    Column gender = new Column(TABLE, "gender");
+
+    /**
+     * 头像
+     */
+    Column avatarId = new Column(TABLE, "avatar_id");
+
+    /**
+     * 登录次数
+     */
+    Column loginTimes = new Column(TABLE, "login_times");
+
 
 }

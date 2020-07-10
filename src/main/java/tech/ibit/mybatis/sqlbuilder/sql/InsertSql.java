@@ -16,6 +16,13 @@ public interface InsertSql extends InsertTableSupport<InsertSql>,
         PrepareStatementSupport {
 
     /**
+     * 插入表，从mapper获取
+     *
+     * @return SQL对象
+     */
+    InsertSql insertDefault();
+
+    /**
      * 插入
      *
      * @return 插入条数

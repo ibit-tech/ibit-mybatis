@@ -18,6 +18,13 @@ public interface DeleteSql extends DeleteSupport<DeleteSql>,
         PrepareStatementSupport {
 
     /**
+     * 删除表，从mapper获取
+     *
+     * @return SQL对象
+     */
+    DeleteSql deleteFromDefault();
+
+    /**
      * 删除表，item和from同时设置
      *
      * @param table 表

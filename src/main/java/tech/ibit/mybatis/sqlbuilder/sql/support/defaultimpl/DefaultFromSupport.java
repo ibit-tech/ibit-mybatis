@@ -18,7 +18,7 @@ public interface DefaultFromSupport<T> extends DefaultSqlSupport<T>,
     /**
      * 获取from
      *
-     * @return from
+     * @return fromDefault
      */
     ListField<Table> getFrom();
 

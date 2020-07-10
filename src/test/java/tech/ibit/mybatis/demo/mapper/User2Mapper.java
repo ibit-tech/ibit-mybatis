@@ -1,9 +1,9 @@
 package tech.ibit.mybatis.demo.mapper;
 
-import tech.ibit.mybatis.SingleIdMapper;
+import tech.ibit.mybatis.MultipleIdMapper;
 import tech.ibit.mybatis.demo.entity.User;
+import tech.ibit.mybatis.demo.entity.UserKey;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
-import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.Table;
 
 /**
@@ -11,7 +11,7 @@ import tech.ibit.mybatis.sqlbuilder.Table;
  *
  * @author IBIT程序猿
  */
-public interface UserMapper extends SingleIdMapper<User, Integer> {
+public interface User2Mapper extends MultipleIdMapper<User, UserKey> {
 
     @Override
     default Class<User> getPoClazz() {
@@ -21,10 +21,5 @@ public interface UserMapper extends SingleIdMapper<User, Integer> {
     @Override
     default Table getDefaultTable() {
         return UserProperties.TABLE;
-    }
-
-    @Override
-    default Column getId() {
-        return UserProperties.userId;
     }
 }

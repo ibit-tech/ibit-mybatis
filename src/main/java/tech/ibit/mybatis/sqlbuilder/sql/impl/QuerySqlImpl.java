@@ -205,8 +205,13 @@ public class QuerySqlImpl<T> extends SqlLogImpl
     }
 
     @Override
-    public QuerySql<T> columnPo() {
-        return columnPo(mapper.getClass());
+    public QuerySql<T> columnDefaultPo() {
+        return columnPo(mapper.getPoClazz());
+    }
+
+    @Override
+    public QuerySql<T> fromDefault() {
+        return from(mapper.getDefaultTable());
     }
 
     private PrepareStatement logAndGetPrepareStatement() {

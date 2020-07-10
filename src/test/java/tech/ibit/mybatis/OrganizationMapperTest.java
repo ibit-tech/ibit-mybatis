@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.mapper;
+package tech.ibit.mybatis;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
-public class MultipleIdMapperTest {
+public class OrganizationMapperTest {
 
 
     @Rule

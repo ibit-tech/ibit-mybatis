@@ -11,9 +11,15 @@ import tech.ibit.mybatis.sqlbuilder.Table;
 public interface OrganizationProperties {
 
     /**
-     *
+     * 表名
      */
     Table TABLE = new Table("organization", "o");
+
+
+    /**
+     * 组织id
+     */
+    Column orgId = new Column(TABLE, "org_id");
 
     /**
      * 城市编码

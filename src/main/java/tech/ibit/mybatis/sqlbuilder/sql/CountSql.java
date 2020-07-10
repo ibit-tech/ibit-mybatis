@@ -18,6 +18,13 @@ public interface CountSql extends ColumnSupport<CountSql>,
         PrepareStatementSupport {
 
     /**
+     * 计算默认的表
+     *
+     * @return SQL对象本身
+     */
+    CountSql fromDefault();
+
+    /**
      * 计数
      *
      * @return 计算结果

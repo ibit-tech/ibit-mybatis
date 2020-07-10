@@ -15,6 +15,13 @@ public interface UpdateSql extends UpdateTableSupport<UpdateSql>,
         PrepareStatementSupport {
 
     /**
+     * `UPDATE table1 t1` 语句, t1表示"表别名"
+     *
+     * @return SQL对象
+     */
+    UpdateSql updateDefault();
+
+    /**
      * 执行更新
      *
      * @return 更新条数

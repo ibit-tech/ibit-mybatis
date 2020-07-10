@@ -3,6 +3,11 @@ package tech.ibit.mybatis.sqlbuilder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import tech.ibit.mybatis.CommonTest;
+import tech.ibit.mybatis.demo.entity.UserPo;
+import tech.ibit.mybatis.demo.entity.property.OrganizationProperties;
+import tech.ibit.mybatis.demo.entity.property.ProjectProperties;
+import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.sqlbuilder.sql.*;
 
 import java.util.Arrays;

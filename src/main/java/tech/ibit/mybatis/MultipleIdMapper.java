@@ -14,7 +14,7 @@ import java.util.List;
  * @param <K> 主键类型
  * @author IBIT程序猿
  */
-public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
+public interface MultipleIdMapper<T, K extends MultiId> extends Mapper<T> {
 
 
     /**
@@ -92,7 +92,7 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      * @return 相应的对象
      */
     default T getById(K id) {
-        return MapperUtils.getByMultiId(this, getPoClazz(), id);
+        return MapperUtils.getByMultiId(this, id);
     }
 
     /**
@@ -102,6 +102,6 @@ public interface MultipleIdMapper<T, K extends MultiId> extends NoIdMapper<T> {
      * @return 相应的对象列表
      */
     default List<T> getByIds(List<K> ids) {
-        return MapperUtils.getByMultiIds(this, getPoClazz(), ids);
+        return MapperUtils.getByMultiIds(this, ids);
     }
 }

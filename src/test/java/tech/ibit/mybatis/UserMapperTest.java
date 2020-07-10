@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.mapper;
+package tech.ibit.mybatis;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,10 +13,8 @@ import tech.ibit.mybatis.demo.entity.User;
 import tech.ibit.mybatis.demo.entity.UserPo;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.demo.entity.type.UserType;
-import tech.ibit.mybatis.demo.ext.dao.UserExtDao;
 import tech.ibit.mybatis.demo.mapper.UserMapper;
-import tech.ibit.mybatis.SqlProvider;
-import tech.ibit.mybatis.CommonEnum;
+import tech.ibit.mybatis.demo.service.UserService;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.Page;
 import tech.ibit.mybatis.utils.CollectionUtils;
@@ -35,7 +33,7 @@ import static org.junit.Assert.assertNull;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
-public class SingleIdMapperTest {
+public class UserMapperTest {
 
 
     @Rule
@@ -60,7 +58,7 @@ public class SingleIdMapperTest {
     }
 
     @Autowired
-    private UserExtDao userExtMapper;
+    private UserService userExtMapper;
 
     @Autowired
     private UserMapper userMapper;

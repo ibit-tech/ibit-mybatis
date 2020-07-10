@@ -1,6 +1,8 @@
 package tech.ibit.mybatis.sqlbuilder;
 
 import org.junit.Test;
+import tech.ibit.mybatis.demo.entity.property.OrganizationProperties;
+import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.sqlbuilder.enums.OperatorEnum;
 
 import java.util.Arrays;

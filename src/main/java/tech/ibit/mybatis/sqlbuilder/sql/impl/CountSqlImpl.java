@@ -92,6 +92,12 @@ public class CountSqlImpl extends SqlLogImpl
         return true;
     }
 
+
+    @Override
+    public CountSql fromDefault() {
+        return from(mapper.getDefaultTable());
+    }
+
     @Override
     public PrepareStatement getPrepareStatement() {
 

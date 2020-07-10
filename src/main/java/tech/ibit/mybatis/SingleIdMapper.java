@@ -1,6 +1,7 @@
 package tech.ibit.mybatis;
 
 import tech.ibit.mybatis.sqlbuilder.Column;
+import tech.ibit.mybatis.sqlbuilder.exception.OperationNotSupportedException;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.utils.MapperUtils;
 
@@ -14,7 +15,16 @@ import java.util.List;
  * @param <K> 主键类型
  * @author IBIT程序猿
  */
-public interface SingleIdMapper<T, K> extends NoIdMapper<T> {
+public interface SingleIdMapper<T, K> extends Mapper<T> {
+
+    /**
+     * 获取主键列
+     *
+     * @return 主键列
+     */
+    default Column getId() {
+        throw new OperationNotSupportedException("Method getId needs to override!");
+    }
 
     /**
      * 通过主键删除记录
@@ -23,7 +33,7 @@ public interface SingleIdMapper<T, K> extends NoIdMapper<T> {
      * @return 删除条数
      */
     default int deleteById(K id) {
-        return MapperUtils.deleteById(this, getPoClazz(), id);
+        return MapperUtils.deleteById(this, id);
     }
 
     /**
@@ -33,7 +43,7 @@ public interface SingleIdMapper<T, K> extends NoIdMapper<T> {
      * @return 删除条数
      */
     default int deleteByIds(Collection<K> ids) {
-        return MapperUtils.deleteByIds(this, getPoClazz(), ids);
+        return MapperUtils.deleteByIds(this, ids);
     }
 
     /**
@@ -91,7 +101,7 @@ public interface SingleIdMapper<T, K> extends NoIdMapper<T> {
      * @return 相应的对象
      */
     default T getById(K id) {
-        return MapperUtils.getById(this, getPoClazz(), id);
+        return MapperUtils.getById(this, id);
     }
 
     /**
@@ -101,6 +111,6 @@ public interface SingleIdMapper<T, K> extends NoIdMapper<T> {
      * @return 相应的对象列表
      */
     default List<T> getByIds(Collection<K> ids) {
-        return MapperUtils.getByIds(this, getPoClazz(), ids);
+        return MapperUtils.getByIds(this, ids);
     }
 }

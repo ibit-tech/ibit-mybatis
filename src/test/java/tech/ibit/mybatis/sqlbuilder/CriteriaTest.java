@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import tech.ibit.mybatis.demo.entity.property.UserProperties;
 
 import java.util.Arrays;
 import java.util.List;

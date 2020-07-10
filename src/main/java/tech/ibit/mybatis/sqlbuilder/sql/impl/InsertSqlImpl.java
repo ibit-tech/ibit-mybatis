@@ -26,7 +26,7 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
         DefaultUseAliasSupport {
 
     /**
-     * from
+     * fromDefault
      */
     private ListField<Table> insertTable = new ListField<>();
 
@@ -61,6 +61,11 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
     }
 
     @Override
+    public InsertSql insertDefault() {
+        return insert(mapper.getDefaultTable());
+    }
+
+    @Override
     public PrepareStatement getPrepareStatement() {
 
         StringBuilder prepareSql = new StringBuilder();
@@ -82,7 +87,7 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
     public int executeInsert() {
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
-        return mapper.rawInsert(getPrepareStatement());
+        return mapper.rawInsert(statement);
     }
 
     @Override

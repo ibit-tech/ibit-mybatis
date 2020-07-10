@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.mapper;
+package tech.ibit.mybatis;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +9,6 @@ import tech.ibit.mybatis.demo.entity.User;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.demo.entity.type.UserType;
 import tech.ibit.mybatis.demo.mapper.UserMapper;
-import tech.ibit.mybatis.SqlProvider;
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.KeyValuePair;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;

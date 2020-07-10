@@ -1,4 +1,7 @@
-package tech.ibit.mybatis.sqlbuilder;
+package tech.ibit.mybatis.demo.entity.property;
+
+import tech.ibit.mybatis.sqlbuilder.Column;
+import tech.ibit.mybatis.sqlbuilder.Table;
 
 /**
  * DbTable for sz_project

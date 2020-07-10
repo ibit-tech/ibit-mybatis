@@ -1,13 +1,13 @@
-package tech.ibit.mybatis.demo.ext.dao.impl;
+package tech.ibit.mybatis.demo.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import tech.ibit.mybatis.utils.MapperUtils;
+import org.springframework.stereotype.Service;
 import tech.ibit.mybatis.demo.entity.UserPo;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
-import tech.ibit.mybatis.demo.ext.dao.UserExtDao;
 import tech.ibit.mybatis.demo.mapper.UserMapper;
+import tech.ibit.mybatis.demo.service.UserService;
 import tech.ibit.mybatis.sqlbuilder.sql.Page;
+import tech.ibit.mybatis.utils.MapperUtils;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-@Repository
-public class UserExtDaoImpl implements UserExtDao {
+@Service
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper mapper;

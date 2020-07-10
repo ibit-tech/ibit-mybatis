@@ -108,6 +108,11 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
         return mapper.rawUpdate(statement);
     }
 
+    @Override
+    public DeleteSql deleteFromDefault() {
+        return deleteFrom(mapper.getDefaultTable());
+    }
+
     /**
      * 删除表，item和from同时设置
      *

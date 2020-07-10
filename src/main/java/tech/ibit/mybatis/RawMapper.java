@@ -3,6 +3,8 @@ package tech.ibit.mybatis;
 import org.apache.ibatis.annotations.*;
 import tech.ibit.mybatis.sqlbuilder.KeyValuePair;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
+import tech.ibit.mybatis.sqlbuilder.Table;
+import tech.ibit.mybatis.sqlbuilder.exception.OperationNotSupportedException;
 import tech.ibit.mybatis.sqlbuilder.sql.*;
 import tech.ibit.mybatis.sqlbuilder.sql.impl.*;
 
@@ -11,6 +13,7 @@ import java.util.List;
 /**
  * 抽象Mapper接口（定义基础增、删、改、查）
  *
+ * @param <T> 实体类型
  * @author IBIT程序猿
  */
 public interface RawMapper<T> {
@@ -125,6 +128,24 @@ public interface RawMapper<T> {
      */
     default UpdateSql createUpdate() {
         return new UpdateSqlImpl(this);
+    }
+
+    /**
+     * 获取实体类型
+     *
+     * @return 实体类型
+     */
+    default Class<T> getPoClazz() {
+        throw new OperationNotSupportedException("Method getPoClazz needs to override!");
+    }
+
+    /**
+     * 获取默认的表对象
+     *
+     * @return 表对象
+     */
+    default Table getDefaultTable() {
+        throw new OperationNotSupportedException("Method getDefaultTable needs to override!");
     }
 
 }

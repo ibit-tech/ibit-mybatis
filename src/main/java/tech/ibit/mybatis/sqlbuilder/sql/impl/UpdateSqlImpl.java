@@ -27,7 +27,7 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
         DefaultUseAliasSupport {
 
     /**
-     * from
+     * fromDefault
      */
     private ListField<Table> updateTable = new ListField<>();
 
@@ -63,6 +63,12 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
     @Override
     public UpdateSql getSql() {
         return this;
+    }
+
+
+    @Override
+    public UpdateSql updateDefault() {
+        return update(mapper.getDefaultTable());
     }
 
     @Override

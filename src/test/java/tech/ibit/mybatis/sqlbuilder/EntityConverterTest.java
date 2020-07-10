@@ -5,6 +5,9 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import tech.ibit.mybatis.demo.entity.User;
+import tech.ibit.mybatis.demo.entity.UserPo;
+import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbColumn;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
 import tech.ibit.mybatis.sqlbuilder.converter.ColumnSetValue;
@@ -33,7 +36,11 @@ public class EntityConverterTest {
     public void getTableColumns() {
         TableColumnInfo entity = EntityConverter.getTableColumns(User.class);
         assertColumns(entity.getColumns(),
-                Arrays.asList(UserProperties.userId, UserProperties.loginId, UserProperties.email, UserProperties.password, UserProperties.mobilePhone, UserProperties.type));
+                Arrays.asList(
+                        UserProperties.userId, UserProperties.loginId, UserProperties.name, UserProperties.email
+                        , UserProperties.password, UserProperties.mobilePhone, UserProperties.type
+                )
+        );
         assertColumns(entity.getIds(), Collections.singletonList(UserProperties.userId));
         Assert.assertEquals(entity.getTable(), new Table("user", "u"));
     }
@@ -48,16 +55,18 @@ public class EntityConverterTest {
     @Test
     public void getColumns() {
         List<Column> columns = EntityConverter.getColumns(User.class);
-        assertColumns(columns, Arrays.asList(UserProperties.userId, UserProperties.loginId, UserProperties.email, UserProperties.password, UserProperties.mobilePhone, UserProperties.type));
+        assertColumns(columns, Arrays.asList(UserProperties.userId, UserProperties.loginId, UserProperties.name
+                , UserProperties.email, UserProperties.password, UserProperties.mobilePhone, UserProperties.type));
     }
 
     @Test
     public void getUpdateColumns() {
         List<Column> columns = EntityConverter.getUpdateColumns(User.class);
-        assertColumns(columns, Arrays.asList(UserProperties.loginId, UserProperties.email, UserProperties.password, UserProperties.mobilePhone, UserProperties.type));
+        assertColumns(columns, Arrays.asList(UserProperties.loginId, UserProperties.name, UserProperties.email
+                , UserProperties.password, UserProperties.mobilePhone, UserProperties.type));
 
         columns = EntityConverter.getUpdateColumns(User.class, Arrays.asList(UserProperties.email, UserProperties.password));
-        assertColumns(columns, Arrays.asList(UserProperties.loginId, UserProperties.mobilePhone, UserProperties.type));
+        assertColumns(columns, Arrays.asList(UserProperties.loginId, UserProperties.name, UserProperties.mobilePhone, UserProperties.type));
     }
 
     @Test
@@ -67,11 +76,12 @@ public class EntityConverterTest {
         TableColumnSetValues entity = EntityConverter.getTableColumnValues(user, false);
 
         List<ColumnSetValue> columnSetValues = entity.getColumnValues();
-        assertEquals(4, columnSetValues.size());
+        assertEquals(5, columnSetValues.size());
         assertColumnSetValue(columnSetValues.get(0), UserProperties.userId, 1, true, false);
         assertColumnSetValue(columnSetValues.get(1), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
-        assertColumnSetValue(columnSetValues.get(2), UserProperties.email, "ibit_tech@aliyun.com", false, false);
-        assertColumnSetValue(columnSetValues.get(3), UserProperties.mobilePhone, "188", false, false);
+        assertColumnSetValue(columnSetValues.get(2), UserProperties.name, "ibit-tech", false, false);
+        assertColumnSetValue(columnSetValues.get(3), UserProperties.email, "ibit_tech@aliyun.com", false, false);
+        assertColumnSetValue(columnSetValues.get(4), UserProperties.mobilePhone, "188", false, false);
 
         entity = EntityConverter.getTableColumnValues(user, Arrays.asList(UserProperties.loginId, UserProperties.email, UserProperties.type));
         columnSetValues = entity.getColumnValues();
@@ -83,13 +93,14 @@ public class EntityConverterTest {
 
         entity = EntityConverter.getTableColumnValues(user, true);
         columnSetValues = entity.getColumnValues();
-        assertEquals(6, columnSetValues.size());
+        assertEquals(7, columnSetValues.size());
         assertColumnSetValue(columnSetValues.get(0), UserProperties.userId, 1, true, false);
         assertColumnSetValue(columnSetValues.get(1), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
-        assertColumnSetValue(columnSetValues.get(2), UserProperties.email, "ibit_tech@aliyun.com", false, false);
-        assertColumnSetValue(columnSetValues.get(3), UserProperties.password, null, false, false);
-        assertColumnSetValue(columnSetValues.get(4), UserProperties.mobilePhone, "188", false, false);
-        assertColumnSetValue(columnSetValues.get(5), UserProperties.type, null, false, false);
+        assertColumnSetValue(columnSetValues.get(2), UserProperties.name, "ibit-tech", false, false);
+        assertColumnSetValue(columnSetValues.get(3), UserProperties.email, "ibit_tech@aliyun.com", false, false);
+        assertColumnSetValue(columnSetValues.get(4), UserProperties.password, null, false, false);
+        assertColumnSetValue(columnSetValues.get(5), UserProperties.mobilePhone, "188", false, false);
+        assertColumnSetValue(columnSetValues.get(6), UserProperties.type, null, false, false);
     }
 
 
@@ -105,15 +116,17 @@ public class EntityConverterTest {
         List<ColumnSetValue> columnSetValues = entities.get(0).getColumnValues();
         assertColumnSetValue(columnSetValues.get(0), UserProperties.userId, 1, true, false);
         assertColumnSetValue(columnSetValues.get(1), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
-        assertColumnSetValue(columnSetValues.get(2), UserProperties.email, "ibit_tech@aliyun.com", false, false);
-        assertColumnSetValue(columnSetValues.get(3), UserProperties.mobilePhone, "188", false, false);
+        assertColumnSetValue(columnSetValues.get(2), UserProperties.name, "ibit-tech", false, false);
+        assertColumnSetValue(columnSetValues.get(3), UserProperties.email, "ibit_tech@aliyun.com", false, false);
+        assertColumnSetValue(columnSetValues.get(4), UserProperties.mobilePhone, "188", false, false);
 
 
         columnSetValues = entities.get(1).getColumnValues();
         assertColumnSetValue(columnSetValues.get(0), UserProperties.userId, 2, true, false);
         assertColumnSetValue(columnSetValues.get(1), UserProperties.loginId, "xiao2@ibit.tech", false, true);
-        assertColumnSetValue(columnSetValues.get(2), UserProperties.email, "xiao2@ibit.tech", false, false);
-        assertColumnSetValue(columnSetValues.get(3), UserProperties.mobilePhone, "199", false, false);
+        assertColumnSetValue(columnSetValues.get(2), UserProperties.name, "xiao2", false, false);
+        assertColumnSetValue(columnSetValues.get(3), UserProperties.email, "xiao2@ibit.tech", false, false);
+        assertColumnSetValue(columnSetValues.get(4), UserProperties.mobilePhone, "199", false, false);
 
     }
 
@@ -129,6 +142,7 @@ public class EntityConverterTest {
     private User getUser1() {
         User user = new User();
         user.setUserId(1);
+        user.setName("ibit-tech");
         user.setLoginId("ibit_tech@aliyun.com");
         user.setEmail("ibit_tech@aliyun.com");
         user.setMobilePhone("188");
@@ -138,6 +152,7 @@ public class EntityConverterTest {
     public User getUser2() {
         User user = new User();
         user.setUserId(2);
+        user.setName("xiao2");
         user.setLoginId("xiao2@ibit.tech");
         user.setEmail("xiao2@ibit.tech");
         user.setMobilePhone("199");

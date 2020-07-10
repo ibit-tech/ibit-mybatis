@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.demo.ext.dao;
+package tech.ibit.mybatis.demo.service;
 
 
 import tech.ibit.mybatis.demo.entity.UserPo;
@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public interface UserExtDao {
+public interface UserService {
 
     /**
      * 列举用户id

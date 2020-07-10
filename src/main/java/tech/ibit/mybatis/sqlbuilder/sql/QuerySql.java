@@ -97,6 +97,14 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
      *
      * @return sql对象本身
      */
-    QuerySql<T> columnPo();
+    QuerySql<T> columnDefaultPo();
+
+
+    /**
+     * 定义搜索定义搜索表（从 mapper getDefaultTable 中获取）
+     *
+     * @return sql对象本身
+     */
+    QuerySql<T> fromDefault();
 
 }
