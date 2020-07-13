@@ -193,6 +193,7 @@ public class IdSqlUtils {
      * 构造通过主键查询对象的SQL参数对象（多列作为主键）
      *
      * @param mapper  mapper对象
+     * @param poClazz 查询类
      * @param idValue 主键值
      * @param <K>     主键值类型
      * @param <T>     模板类型
@@ -243,6 +244,8 @@ public class IdSqlUtils {
      *
      * @param mapper   mapper对象
      * @param idValues 主键对象列表
+     * @param <T>      返回实体类类型
+     * @param <K>      主键值类型
      * @return SQL参数对象
      * @see DeleteSql
      * @see MultiId
@@ -280,6 +283,8 @@ public class IdSqlUtils {
      *
      * @param mapper  mapper对象
      * @param idValue 主键对象
+     * @param <T>     返回实体类类型
+     * @param <K>     主键值类型
      * @return SQL参数对象
      * @see DeleteSql
      * @see MultiId
@@ -294,6 +299,7 @@ public class IdSqlUtils {
      *
      * @param mapper mapper对象
      * @param po     插入对象
+     * @param <T>    返回实体类类型
      * @return SQL参数对象
      * @see InsertSql
      */
@@ -365,6 +371,7 @@ public class IdSqlUtils {
      * @param mapper  mapper对象
      * @param pos     返回实体类列表
      * @param columns 需要插入列
+     * @param <T>     返回实体类类型
      * @return SQL参数对象
      * @see InsertSql
      */
@@ -381,6 +388,7 @@ public class IdSqlUtils {
      *
      * @param mapper       mapper对象
      * @param updateObject 更新对象
+     * @param <T>          返回实体类类型
      * @return SQL参数对象
      * @see UpdateSql
      */
@@ -394,6 +402,7 @@ public class IdSqlUtils {
      * @param mapper        mapper对象
      * @param updateObject  更新对象
      * @param updateColumns 指定更新字段
+     * @param <T>           返回实体类类型
      * @return SQL参数对象
      * @see UpdateSql
      */
@@ -443,6 +452,8 @@ public class IdSqlUtils {
      * @param mapper       mapper对象
      * @param updateObject 更新对象
      * @param idValues     主键值列表
+     * @param <T>          返回实体类类型
+     * @param <K>          主键值类型
      * @return SQL参数对象
      * @see UpdateSql
      */
@@ -457,6 +468,8 @@ public class IdSqlUtils {
      * @param updateObject  更新对象
      * @param idValues      主键值列表
      * @param updateColumns 指定更新列
+     * @param <T>           返回实体类类型
+     * @param <K>           主键值类型
      * @return SQL参数对象
      * @see UpdateSql
      */
@@ -483,6 +496,8 @@ public class IdSqlUtils {
      * @param mapper       mapper对象
      * @param updateObject 更新对象
      * @param idValues     主键对象列表
+     * @param <T>          返回实体类类型
+     * @param <K>          主键值类型
      * @return SQL参数对象
      * @see UpdateSql
      * @see MultiId
@@ -499,6 +514,8 @@ public class IdSqlUtils {
      * @param updateObject  更新对象
      * @param idValues      主键值列表
      * @param updateColumns 指定更新列
+     * @param <T>           返回实体类类型
+     * @param <K>           主键值类型
      * @return Update相关SQLParams
      * @see UpdateSql
      * @see MultiId
@@ -640,7 +657,7 @@ public class IdSqlUtils {
     /**
      * 获取列信息并检查主键是否为空
      *
-     * @param poClazz 实体类
+     * @param poClazz 查询类
      * @param <T>     返回实体类类型
      * @return 列信息
      */
