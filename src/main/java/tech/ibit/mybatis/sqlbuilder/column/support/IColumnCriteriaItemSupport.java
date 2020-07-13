@@ -1,5 +1,8 @@
-package tech.ibit.mybatis.sqlbuilder;
+package tech.ibit.mybatis.sqlbuilder.column.support;
 
+import tech.ibit.mybatis.sqlbuilder.CriteriaItem;
+import tech.ibit.mybatis.sqlbuilder.FlagCriteriaItem;
+import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.enums.OperatorEnum;
 
 import java.util.ArrayList;
@@ -11,7 +14,7 @@ import java.util.Collection;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface IColumnCriteriaItemBuilder {
+public interface IColumnCriteriaItemSupport {
 
     /**
      * 获取列

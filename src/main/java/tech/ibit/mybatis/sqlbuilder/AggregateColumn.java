@@ -3,6 +3,8 @@ package tech.ibit.mybatis.sqlbuilder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang.ArrayUtils;
+import tech.ibit.mybatis.sqlbuilder.column.support.IColumnCriteriaItemSupport;
+import tech.ibit.mybatis.sqlbuilder.column.support.IColumnOrderBySupport;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -16,7 +18,7 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 public class AggregateColumn implements IColumn,
-        IColumnOrderByBuilder, IColumnCriteriaItemBuilder {
+        IColumnOrderBySupport, IColumnCriteriaItemSupport {
 
     /**
      * 列分割符

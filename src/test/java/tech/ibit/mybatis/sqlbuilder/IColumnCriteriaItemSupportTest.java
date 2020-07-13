@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
  * @author IBIT程序猿
  * @version 2.0
  */
-public class IColumnCriteriaItemBuilderTest {
+public class IColumnCriteriaItemSupportTest {
 
 
     @Test

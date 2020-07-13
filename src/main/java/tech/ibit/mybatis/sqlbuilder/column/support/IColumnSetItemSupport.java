@@ -1,4 +1,8 @@
-package tech.ibit.mybatis.sqlbuilder;
+package tech.ibit.mybatis.sqlbuilder.column.support;
+
+import tech.ibit.mybatis.sqlbuilder.Column;
+import tech.ibit.mybatis.sqlbuilder.IColumn;
+import tech.ibit.mybatis.sqlbuilder.SetItem;
 
 /**
  * 列构造setItem
@@ -6,7 +10,7 @@ package tech.ibit.mybatis.sqlbuilder;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface IColumnSetItemBuilder {
+public interface IColumnSetItemSupport {
 
 
     /**

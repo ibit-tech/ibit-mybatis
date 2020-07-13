@@ -3,6 +3,10 @@ package tech.ibit.mybatis.sqlbuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import tech.ibit.mybatis.sqlbuilder.column.support.IColumnAggregateSupport;
+import tech.ibit.mybatis.sqlbuilder.column.support.IColumnCriteriaItemSupport;
+import tech.ibit.mybatis.sqlbuilder.column.support.IColumnOrderBySupport;
+import tech.ibit.mybatis.sqlbuilder.column.support.IColumnSetItemSupport;
 
 /**
  * 列定义
@@ -14,7 +18,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Column implements IColumn,
-        IColumnCriteriaItemBuilder, IColumnAggregateBuilder, IColumnSetItemBuilder, IColumnOrderByBuilder {
+        IColumnCriteriaItemSupport, IColumnAggregateSupport, IColumnSetItemSupport, IColumnOrderBySupport {
 
     /**
      * 表

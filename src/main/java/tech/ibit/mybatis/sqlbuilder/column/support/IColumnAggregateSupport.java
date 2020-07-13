@@ -1,5 +1,7 @@
-package tech.ibit.mybatis.sqlbuilder;
+package tech.ibit.mybatis.sqlbuilder.column.support;
 
+import tech.ibit.mybatis.sqlbuilder.AggregateColumn;
+import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.enums.AggregateFunctionNameEnum;
 
 /**
@@ -8,7 +10,7 @@ import tech.ibit.mybatis.sqlbuilder.enums.AggregateFunctionNameEnum;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface IColumnAggregateBuilder {
+public interface IColumnAggregateSupport {
 
     /**
      * 获取列
