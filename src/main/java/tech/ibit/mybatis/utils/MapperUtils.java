@@ -67,6 +67,7 @@ public class MapperUtils {
      * @param mapper 实体对应mapper
      * @param id     主键
      * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 删除条数
      */
     public <T, K> int deleteById(SingleIdMapper<T, K> mapper, K id) {
@@ -79,6 +80,7 @@ public class MapperUtils {
      * @param mapper 实体对应mapper
      * @param ids    主键列表
      * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 删除条数
      */
     public <T, K> int deleteByIds(SingleIdMapper<T, K> mapper, Collection<K> ids) {
@@ -90,6 +92,8 @@ public class MapperUtils {
      *
      * @param mapper 实体对应mapper
      * @param id     主键对象
+     * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 删除条数
      */
     public <T, K extends MultiId> int deleteByMultiId(MultipleIdMapper<T, K> mapper, K id) {
@@ -101,6 +105,8 @@ public class MapperUtils {
      *
      * @param mapper 实体对应mapper
      * @param ids    主键对象
+     * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 删除条数
      */
     public <T, K extends MultiId> int deleteByMultiIds(MultipleIdMapper<T, K> mapper, List<K> ids) {
@@ -112,6 +118,7 @@ public class MapperUtils {
      *
      * @param mapper 实体对应mapper
      * @param entity 实体对象
+     * @param <T>    实体类类型
      * @return 更新条数
      */
     public <T> int updateById(Mapper<T> mapper, T entity) {
@@ -125,6 +132,7 @@ public class MapperUtils {
      * @param mapper  实体对应mapper
      * @param entity  实体对象
      * @param columns 更新字段列表
+     * @param <T>     实体类类型
      * @return 更新条数
      */
     public <T> int updateById(Mapper<T> mapper, T entity, List<Column> columns) {
@@ -137,6 +145,7 @@ public class MapperUtils {
      *
      * @param mapper   实体对应mapper
      * @param entities 实体对象列表
+     * @param <T>      实体类类型
      */
     public <T> void batchUpdateById(Mapper<T> mapper, List<T> entities) {
         if (CollectionUtils.isEmpty(entities)) {
@@ -160,6 +169,7 @@ public class MapperUtils {
      * @param mapper   实体对应mapper
      * @param entities 实体对象列表
      * @param columns  更新列
+     * @param <T>      实体类类型
      */
     public <T> void batchUpdateById(Mapper<T> mapper, List<T> entities, List<Column> columns) {
         if (CollectionUtils.isEmpty(entities)) {
@@ -183,6 +193,7 @@ public class MapperUtils {
      * @param mapper        实体对应mapper
      * @param entities      实体对象列表
      * @param ignoreColumns 忽略的列
+     * @param <T>           实体类类型
      */
     public <T> void batchUpdateByIdAndIgnoreColumns(Mapper<T> mapper, List<T> entities, List<Column> ignoreColumns) {
         if (CollectionUtils.isEmpty(entities)) {
@@ -218,6 +229,7 @@ public class MapperUtils {
      * @param mapper        实体对应mapper
      * @param entity        实体对象
      * @param ignoreColumns 忽略的列
+     * @param <T>           实体类类型
      * @return 更新条数
      */
     public <T> int updateByIdAndIgnoreColumns(Mapper<T> mapper, T entity, List<Column> ignoreColumns) {
@@ -232,6 +244,8 @@ public class MapperUtils {
      * @param entity        实体对象
      * @param ignoreColumns 忽略的列
      * @param ids           主键列表
+     * @param <T>           实体类类型
+     * @param <K>           主键值类型
      * @return 更新条数
      */
     public <T, K> int updateByIdAndIgnoreColumns(SingleIdMapper<T, K> mapper, T entity, List<Column> ignoreColumns, Collection<K> ids) {
@@ -245,6 +259,8 @@ public class MapperUtils {
      * @param mapper 实体对应mapper
      * @param entity 实体对象
      * @param ids    主键列表
+     * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 更新条数
      */
     public <T, K> int updateByIds(SingleIdMapper<T, K> mapper, T entity, Collection<K> ids) {
@@ -258,6 +274,8 @@ public class MapperUtils {
      * @param entity  实体对象
      * @param ids     主键列表
      * @param columns 更新列
+     * @param <T>     实体类类型
+     * @param <K>     主键值类型
      * @return 更新条数
      */
     public <T, K> int updateByIds(SingleIdMapper<T, K> mapper, T entity, List<Column> columns, Collection<K> ids) {
@@ -271,6 +289,8 @@ public class MapperUtils {
      * @param mapper 实体对应mapper
      * @param entity 实体对象
      * @param ids    主键列表
+     * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 更新条数
      */
     public <T, K extends MultiId> int updateByMultiIds(MultipleIdMapper<T, K> mapper, T entity, List<K> ids) {
@@ -284,6 +304,8 @@ public class MapperUtils {
      * @param entity  实体对象
      * @param ids     主键列表
      * @param columns 更新列
+     * @param <T>     实体类类型
+     * @param <K>     主键值类型
      * @return 更新条数
      */
     public <T, K extends MultiId> int updateByMultiIds(MultipleIdMapper<T, K> mapper, T entity, List<Column> columns, List<K> ids) {
@@ -296,6 +318,7 @@ public class MapperUtils {
      * @param mapper 实体对应mapper
      * @param id     主键
      * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 实体
      */
     public <T, K> T getById(SingleIdMapper<T, K> mapper, K id) {
@@ -308,6 +331,7 @@ public class MapperUtils {
      * @param mapper 实体对应mapper
      * @param ids    主键列表
      * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 实体列表
      */
     public <T, K> List<T> getByIds(SingleIdMapper<T, K> mapper, Collection<K> ids) {
@@ -320,6 +344,7 @@ public class MapperUtils {
      * @param mapper 实体对应mapper
      * @param id     主键
      * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 实体
      */
     public <T, K extends MultiId> T getByMultiId(MultipleIdMapper<T, K> mapper, K id) {
@@ -332,6 +357,7 @@ public class MapperUtils {
      * @param mapper 实体对应mapper
      * @param ids    主键列表
      * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @return 实体列表
      */
     public <T, K extends MultiId> List<T> getByMultiIds(MultipleIdMapper<T, K> mapper, List<K> ids) {
@@ -345,12 +371,13 @@ public class MapperUtils {
      * @param mapper 实体对应的mapper
      * @param clazz  持久化对象类
      * @param id     主键
-     * @param <T>    模版类型
+     * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @param <P>    持久化对象类类型
      * @return 持久化对象
      */
     public <T, K, P> P getPoById(SingleIdMapper<T, K> mapper, Class<P> clazz, K id) {
-        return IdSqlUtils.getById(mapper, id).executeQueryOne(clazz);
+        return IdSqlUtils.getById(mapper, clazz, id).executeQueryOne(clazz);
     }
 
     /**
@@ -359,12 +386,13 @@ public class MapperUtils {
      * @param mapper 实体对应的mapper
      * @param clazz  持久化对象类
      * @param ids    主键列表
-     * @param <T>    模版类型
+     * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @param <P>    持久化对象类类型
      * @return 持久化对象列表
      */
     public <T, K, P> List<P> getPoByIds(SingleIdMapper<T, K> mapper, Class<P> clazz, Collection<K> ids) {
-        return IdSqlUtils.getByIds(mapper, ids).executeQuery(clazz);
+        return IdSqlUtils.getByIds(mapper, clazz, ids).executeQuery(clazz);
     }
 
     /**
@@ -373,7 +401,8 @@ public class MapperUtils {
      * @param mapper 实体对应的mapper
      * @param clazz  持久化对象类
      * @param id     主键
-     * @param <T>    模版类型
+     * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @param <P>    持久化对象类类型
      * @return 持久化对象
      */
@@ -388,6 +417,7 @@ public class MapperUtils {
      * @param clazz  持久化对象类
      * @param ids    主键列表
      * @param <T>    实体类类型
+     * @param <K>    主键值类型
      * @param <P>    持久化对象类类型
      * @return 持久化对象列表
      */
@@ -396,6 +426,16 @@ public class MapperUtils {
     }
 
 
+    /**
+     * 更新自增长id
+     *
+     * @param entity         实体类
+     * @param idSetterMethod id设置类
+     * @param key            值
+     * @param <T>            实体类类型
+     * @throws InvocationTargetException 调用失败
+     * @throws IllegalAccessException    无权限访问方法
+     */
     private <T> void updateAutoIncreaseId(T entity, AutoIncrementIdSetterMethod idSetterMethod, Number key)
             throws InvocationTargetException, IllegalAccessException {
         Class type = idSetterMethod.getType();

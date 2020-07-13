@@ -3,7 +3,10 @@ package tech.ibit.mybatis.sqlbuilder.utils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import tech.ibit.mybatis.*;
+import tech.ibit.mybatis.Mapper;
+import tech.ibit.mybatis.MultipleIdMapper;
+import tech.ibit.mybatis.RawMapper;
+import tech.ibit.mybatis.SingleIdMapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.converter.ColumnSetValue;
 import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
@@ -35,7 +38,7 @@ public class IdSqlUtils {
      *
      * @param mapper   mapper对象
      * @param idValues 主键值集合
-     * @param <K>      主键类型
+     * @param <K>      主键值类型
      * @param <T>      模板类型
      * @return SQL参数对象
      * @see QuerySql
@@ -44,7 +47,7 @@ public class IdSqlUtils {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
-        return getById(mapper, mapper.getId(), idValues);
+        return getByIds(mapper, mapper.getPoClazz(), mapper.getId(), idValues);
     }
 
     /**
@@ -53,7 +56,7 @@ public class IdSqlUtils {
      * @param mapper  mapper对象
      * @param idValue 主键值
      * @param <T>     模板类型
-     * @param <K>     主键类型
+     * @param <K>     主键值类型
      * @return SQL参数对象
      * @see QuerySql
      */
@@ -62,17 +65,87 @@ public class IdSqlUtils {
     }
 
     /**
+     * 构造通过主键查询对象的SQL参数对象（单列作为主键）
+     *
+     * @param mapper   mapper对象
+     * @param idValues 主键值集合
+     * @param poClazz  查询类
+     * @param <K>      主键值类型
+     * @param <T>      模板类型
+     * @return SQL参数对象
+     * @see QuerySql
+     */
+    public <T, K> QuerySql<T> getByIds(SingleIdMapper<T, K> mapper, Class poClazz, Collection<K> idValues) {
+        if (CollectionUtils.isEmpty(idValues)) {
+            throw SqlException.idValueNotFound();
+        }
+        return getByIds(mapper, poClazz, mapper.getId(), idValues);
+    }
+
+    /**
+     * 构造通过主键查询对象的SQL参数对象（单列作为主键）
+     *
+     * @param mapper  mapper对象
+     * @param idValue 主键值
+     * @param poClazz 查询类
+     * @param <T>     模板类型
+     * @param <K>     主键值类型
+     * @return SQL参数对象
+     * @see QuerySql
+     */
+    public <T, K> QuerySql<T> getById(SingleIdMapper<T, K> mapper, Class poClazz, K idValue) {
+        return getByIds(mapper, poClazz, null == idValue ? null : Collections.singletonList(idValue));
+    }
+
+    /**
+     * 构造通过单个主键构造函数
+     *
+     * @param mapper   mapper对象
+     * @param poClazz  查询类
+     * @param id       主键列
+     * @param idValues 主键值列表
+     * @return 预查询sql
+     */
+    private <T> QuerySql<T> getByIds(Mapper<T> mapper, Class poClazz, Column id, Collection<?> idValues) {
+        if (CollectionUtils.isEmpty(idValues)) {
+            throw SqlException.idValueNotFound();
+        }
+        return mapper
+                .createQuery()
+                .columnPo(poClazz)
+                .fromDefault()
+                .andWhere(id.in(idValues))
+                .limit(idValues.size());
+    }
+
+    /**
      * 构造通过主键查询对象的SQL参数对象（多列作为主键）
      *
      * @param mapper   mapper对象
      * @param idValues 主键值列表
-     * @param <K>      返回实体类类型
+     * @param <K>      主键值类型
      * @param <T>      模板类型
      * @return SQL参数对象
      * @see QuerySql
      * @see MultiId
      */
     public <T, K extends MultiId> QuerySql<T> getByMultiIds(MultipleIdMapper<T, K> mapper, List<K> idValues) {
+        return getByMultiIds(mapper, mapper.getPoClazz(), idValues);
+    }
+
+    /**
+     * 构造通过主键查询对象的SQL参数对象（多列作为主键）
+     *
+     * @param mapper   mapper对象
+     * @param idValues 主键值列表
+     * @param poClazz  查询实体类
+     * @param <K>      主键值类型
+     * @param <T>      模板类型
+     * @return SQL参数对象
+     * @see QuerySql
+     * @see MultiId
+     */
+    public <T, K extends MultiId> QuerySql<T> getByMultiIds(MultipleIdMapper<T, K> mapper, Class poClazz, List<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
@@ -88,11 +161,11 @@ public class IdSqlUtils {
 
         if (1 == firstIdValues.getColumnValues().size()) {
             Column id = (Column) firstIdValues.getColumnValues().get(0).getColumn();
-            return getById(mapper, id, getIdValues(id, idValueList));
+            return getByIds(mapper, poClazz, id, getIdValues(id, idValueList));
         }
 
         QuerySql<T> sql = mapper.createQuery()
-                .columnDefaultPo()
+                .columnPo(poClazz)
                 .fromDefault()
                 .limit(idValues.size());
 
@@ -106,14 +179,29 @@ public class IdSqlUtils {
      *
      * @param mapper  mapper对象
      * @param idValue 主键值
-     * @param <K>     主键类型
+     * @param <K>     主键值类型
      * @param <T>     模板类型
      * @return SQL参数对象
      * @see QuerySql
      * @see MultiId
      */
     public <T, K extends MultiId> QuerySql<T> getByMultiId(MultipleIdMapper<T, K> mapper, K idValue) {
-        return getByMultiIds(mapper, null == idValue ? null : Collections.singletonList(idValue));
+        return getByMultiId(mapper, mapper.getPoClazz(), idValue);
+    }
+
+    /**
+     * 构造通过主键查询对象的SQL参数对象（多列作为主键）
+     *
+     * @param mapper  mapper对象
+     * @param idValue 主键值
+     * @param <K>     主键值类型
+     * @param <T>     模板类型
+     * @return SQL参数对象
+     * @see QuerySql
+     * @see MultiId
+     */
+    public <T, K extends MultiId> QuerySql<T> getByMultiId(MultipleIdMapper<T, K> mapper, Class poClazz, K idValue) {
+        return getByMultiIds(mapper, poClazz, null == idValue ? null : Collections.singletonList(idValue));
     }
 
 
@@ -492,24 +580,6 @@ public class IdSqlUtils {
                 sql.set(column.set(value));
             }
         }
-    }
-
-
-    /**
-     * 构造通过单个主键构造函数
-     *
-     * @param mapper   mapper对象
-     * @param id       主键列
-     * @param idValues 主键值列表
-     * @return 预查询sql
-     */
-    private <T> QuerySql<T> getById(Mapper<T> mapper, Column id, Collection<?> idValues) {
-        return mapper
-                .createQuery()
-                .columnDefaultPo()
-                .fromDefault()
-                .andWhere(id.in(idValues))
-                .limit(idValues.size());
     }
 
     /**
