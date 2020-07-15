@@ -1,4 +1,4 @@
-# ibit-mybatis 2.x 介绍
+# ibit-mybatis 2.1 介绍
 
 ## 概述
 
@@ -187,6 +187,41 @@ configuration.setDefaultEnumTypeHandler(tech.ibit.mybatis.CommonEnumTypeHandler.
 # 指定默认的枚举处理类
 mybatis.configuration.default-enum-type-handler=tech.ibit.mybatis.CommonEnumTypeHandler
 ```
+
+### 版本升级说明
+
+ibit\-mybatis 从 2.0 升级到 2.1 需要做的事情，针对生成的 `mapper`
+
+继承 `SingleIdMapper`、`MultipleIdMapper` 和 `NoIdMapper` 的接口，需要重载以下方法
+
+```
+/**
+ * 获取默认的表对象
+ *
+ * @return 表对象
+ */
+@Override
+default Table getDefaultTable() {
+    return %propertyName%.TABLE;
+}
+
+```
+
+继承`SingleIdMapper`需要再重载以下方法：
+```
+
+/**
+ * 获取主键列
+ *
+ * @return 主键列
+ */
+@Override
+default Column getId() {
+    return %propertyName%.%idColumn%;
+}
+```
+
+最简单的方式，就是拿 ibit-mybatis-generator 2.1 重新生成一下 mapper 即可。
 
 ## 公众号
 
