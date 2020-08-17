@@ -1,6 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import lombok.Data;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -181,10 +180,29 @@ public class EntityConverterTest {
     }
 
     @DbTable(name = "user", alias = "u")
-    @Data
     public static class User2 {
+
         @DbColumn(name = "name")
         private String name;
+
+        /**
+         * Gets the value of name
+         *
+         * @return the value of name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Sets the name
+         * <p>You can use getName() to get the value of name</p>
+         *
+         * @param name name
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     @Test

@@ -1,6 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
-import lombok.Getter;
 import tech.ibit.mybatis.RawMapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
@@ -18,7 +17,6 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-@Getter
 public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
         DefaultDeleteSupport<DeleteSql>,
         DefaultFromSupport<DeleteSql>,
@@ -29,30 +27,30 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
     /**
      * 删除项
      */
-    private ListField<Table> deleteItem = new ListField<>();
+    private final ListField<Table> deleteItem = new ListField<>();
 
     /**
      * 表
      */
-    private ListField<Table> from = new ListField<>();
+    private final ListField<Table> from = new ListField<>();
 
     /**
      * Join on
      */
-    private ListField<JoinOn> joinOn = new ListField<>();
+    private final ListField<JoinOn> joinOn = new ListField<>();
 
     /**
      * where语句
      */
-    private ListField<Criteria> where = new ListField<>();
+    private final ListField<Criteria> where = new ListField<>();
 
 
     /**
      * 基础mapper
      */
-    private RawMapper mapper;
+    private final RawMapper<?> mapper;
 
-    public DeleteSqlImpl(RawMapper mapper) {
+    public DeleteSqlImpl(RawMapper<?> mapper) {
         this.mapper = mapper;
     }
 
@@ -113,12 +111,6 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
         return deleteFrom(mapper.getDefaultTable());
     }
 
-    /**
-     * 删除表，item和from同时设置
-     *
-     * @param table 表
-     * @return SQL对象
-     */
     @Override
     public DeleteSql deleteFrom(Table table) {
         delete(table);
@@ -127,16 +119,30 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
     }
 
 
-    /**
-     * 删除表，item和from同时设置
-     *
-     * @param tables 表列表
-     * @return SQL对象
-     */
     @Override
     public DeleteSql deleteFrom(List<Table> tables) {
         delete(tables);
         from(tables);
         return getSql();
+    }
+
+    @Override
+    public ListField<Table> getDeleteItem() {
+        return deleteItem;
+    }
+
+    @Override
+    public ListField<Table> getFrom() {
+        return from;
+    }
+
+    @Override
+    public ListField<JoinOn> getJoinOn() {
+        return joinOn;
+    }
+
+    @Override
+    public ListField<Criteria> getWhere() {
+        return where;
     }
 }

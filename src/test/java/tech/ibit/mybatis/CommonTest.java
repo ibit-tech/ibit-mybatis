@@ -1,5 +1,6 @@
 package tech.ibit.mybatis;
 
+import com.alibaba.fastjson.JSON;
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.SimpleNameColumn;
@@ -36,6 +37,16 @@ public class CommonTest {
      */
     public void assertPrepareStatementEquals(String sql, PrepareStatement sqlParams) {
         assertEquals(new PrepareStatement(sql, Collections.emptyList()).toString(), sqlParams.toString());
+    }
+
+    /**
+     * 判读对象是否相等
+     *
+     * @param o1 对象1
+     * @param o2 对象2
+     */
+    public void assetObjectEquals(Object o1, Object o2) {
+        assertEquals(JSON.toJSONString(o1), JSON.toJSONString(o2));
     }
 
     /**

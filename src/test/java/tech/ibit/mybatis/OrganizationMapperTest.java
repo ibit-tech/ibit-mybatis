@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
-public class OrganizationMapperTest {
+public class OrganizationMapperTest extends CommonTest {
 
 
     @Rule
@@ -60,7 +60,7 @@ public class OrganizationMapperTest {
     @Test
     public void insert() {
         Organization organization = insertOrganization();
-        assertEquals(organization, organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName())));
+        assetObjectEquals(organization, organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName())));
     }
 
     @Test
@@ -127,7 +127,7 @@ public class OrganizationMapperTest {
 
         Organization organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
         organization.setPhone("1190");
-        assertEquals(organization, organization1);
+        assetObjectEquals(organization, organization1);
     }
 
     @Test
@@ -144,14 +144,14 @@ public class OrganizationMapperTest {
 
         Organization organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
         organization.setType(3);
-        assertEquals(organization, organization1);
+        assetObjectEquals(organization, organization1);
 
         organizationUpdate.setPhone(null);
         organizationMapper.updateByIdWithColumns(organizationUpdate, Arrays.asList(OrganizationProperties.phone, OrganizationProperties.type));
 
         organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
         organization.setPhone(""); // h2会将值为NULL的字符串转为""
-        assertEquals(organization, organization1);
+        assetObjectEquals(organization, organization1);
     }
 
 
@@ -203,8 +203,8 @@ public class OrganizationMapperTest {
                 new OrganizationKey(organization1.getCityCode(), organization1.getName())));
         organization0.setType(3);
         organization1.setType(3);
-        assertEquals(organization0, organizations.get(0));
-        assertEquals(organization1, organizations.get(1));
+        assetObjectEquals(organization0, organizations.get(0));
+        assetObjectEquals(organization1, organizations.get(1));
     }
 
     @Test
@@ -226,15 +226,15 @@ public class OrganizationMapperTest {
                 new OrganizationKey(organization1.getCityCode(), organization1.getName())));
         organization0.setPhone("");
         organization1.setPhone("");
-        assertEquals(organization0, organizations.get(0));
-        assertEquals(organization1, organizations.get(1));
+        assetObjectEquals(organization0, organizations.get(0));
+        assetObjectEquals(organization1, organizations.get(1));
     }
 
     @Test
     public void getById() {
         Organization organization = insertOrganization();
         Organization organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
-        assertEquals(organization, organization1);
+        assetObjectEquals(organization, organization1);
     }
 
     @Test
@@ -246,8 +246,8 @@ public class OrganizationMapperTest {
                 Arrays.asList(
                         new OrganizationKey(organization0.getCityCode(), organization0.getName()),
                         new OrganizationKey(organization1.getCityCode(), organization1.getName())));
-        assertEquals(organization0, organizations.get(0));
-        assertEquals(organization1, organizations.get(1));
+        assetObjectEquals(organization0, organizations.get(0));
+        assetObjectEquals(organization1, organizations.get(1));
     }
 
     private Organization getOrganization() {

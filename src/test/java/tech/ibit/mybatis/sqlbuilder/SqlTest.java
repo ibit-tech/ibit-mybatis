@@ -1372,4 +1372,11 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
     }
+
+    @Test
+    public void test2() {
+        System.out.println(UserProperties.avatarId.toString());
+        System.out.println(UserProperties.avatarId.value(1).equals(UserProperties.avatarId.value(1)));
+
+    }
 }

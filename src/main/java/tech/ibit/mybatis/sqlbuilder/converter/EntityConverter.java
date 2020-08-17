@@ -1,6 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder.converter;
 
-import lombok.experimental.UtilityClass;
 import tech.ibit.mybatis.sqlbuilder.AutoIncrementIdSetterMethod;
 import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.Table;
@@ -22,15 +21,16 @@ import java.util.stream.Collectors;
  * @author IBIT程序猿
  * @version 1.0
  */
-@UtilityClass
 public class EntityConverter {
 
 
     /**
      * 定义遍历实体类继承深度
      */
-    private final int MAX_DEPTH = 3;
+    private static final int MAX_DEPTH = 3;
 
+    private EntityConverter() {
+    }
 
     /**
      * 获取表的列信息
@@ -39,10 +39,10 @@ public class EntityConverter {
      * @return 表的列对象信息
      * @see TableColumnInfo
      */
-    public TableColumnInfo getTableColumns(Class poClazz) {
+    public static TableColumnInfo getTableColumns(Class<?> poClazz) {
         checkEntityClazz(poClazz);
 
-        DbTable table = (DbTable) poClazz.getAnnotation(DbTable.class);
+        DbTable table = poClazz.getAnnotation(DbTable.class);
         Table dbTable = new Table(table.name(), table.alias());
         int depth = 0;
         Set<String> existedColumns = new HashSet<>();
@@ -83,7 +83,7 @@ public class EntityConverter {
      * @param poClazz 持久化对象类
      * @return 需要被更新的列列表
      */
-    public List<Column> getUpdateColumns(Class poClazz) {
+    public static List<Column> getUpdateColumns(Class<?> poClazz) {
         return getUpdateColumns(poClazz, null);
     }
 
@@ -94,7 +94,7 @@ public class EntityConverter {
      * @param ignoreColumns 需要忽略的列
      * @return 需要被更新的列列表
      */
-    public List<Column> getUpdateColumns(Class poClazz, List<Column> ignoreColumns) {
+    public static List<Column> getUpdateColumns(Class<?> poClazz, List<Column> ignoreColumns) {
         TableColumnInfo columnInfo = getTableColumns(poClazz);
         if (CollectionUtils.isEmpty(ignoreColumns)) {
             return columnInfo.getNotIdColumns();
@@ -118,7 +118,7 @@ public class EntityConverter {
      * @return "列-值"信息列表
      * @see TableColumnValues
      */
-    public List<TableColumnSetValues> getTableColumnValuesList(List<?> pos, boolean returnNullValue) {
+    public static List<TableColumnSetValues> getTableColumnValuesList(List<?> pos, boolean returnNullValue) {
         if (null == pos || pos.isEmpty()) {
             return Collections.emptyList();
         }
@@ -134,7 +134,7 @@ public class EntityConverter {
      * @param columnsOrder 指定列
      * @return "列-值"信息列表
      */
-    public List<TableColumnSetValues> getTableColumnValuesList(List<?> pos, List<Column> columnsOrder) {
+    public static List<TableColumnSetValues> getTableColumnValuesList(List<?> pos, List<Column> columnsOrder) {
         if (null == pos || pos.isEmpty()) {
             return Collections.emptyList();
         }
@@ -150,7 +150,7 @@ public class EntityConverter {
      * @return 自增正id的Setter方法
      * @see AutoIncrementIdSetterMethod
      */
-    public AutoIncrementIdSetterMethod getAutoIncrementIdSetterMethod(Class poClazz) {
+    public static AutoIncrementIdSetterMethod getAutoIncrementIdSetterMethod(Class<?> poClazz) {
         checkEntityClazz(poClazz);
 
         int depth = 0;
@@ -173,7 +173,7 @@ public class EntityConverter {
      * @param poClazz 持久化对象类
      * @return 列列表
      */
-    public List<Column> getColumns(Class poClazz) {
+    public static List<Column> getColumns(Class<?> poClazz) {
         TableColumnInfo tableColumnInfo = getTableColumns(poClazz);
         return tableColumnInfo.getColumns();
     }
@@ -188,7 +188,7 @@ public class EntityConverter {
      * @param <P>            目标类类型
      * @return 目标对象
      */
-    public <T, P> P copyColumns(T originalObject, Class<P> poClazz) {
+    public static <T, P> P copyColumns(T originalObject, Class<P> poClazz) {
         if (null == originalObject) {
             return null;
         }
@@ -216,7 +216,7 @@ public class EntityConverter {
      * @param <P>             目标类类型
      * @return 目标对象列表
      */
-    public <T, P> List<P> copyColumns(List<T> originalObjects, Class<P> poClazz) {
+    public static <T, P> List<P> copyColumns(List<T> originalObjects, Class<P> poClazz) {
         if (null == originalObjects) {
             return null;
         }
@@ -250,12 +250,12 @@ public class EntityConverter {
      * @param clazz 类
      * @return "字段-Getter方法"Map
      */
-    private Map<String, Method> getFieldGetterMethods(Class clazz) {
+    private static Map<String, Method> getFieldGetterMethods(Class<?> clazz) {
         Map<String, Method> fieldGetterMethods = new HashMap<>();
         int depth = 0;
         while (isContinue(clazz, depth)) {
             depth++;
-            Class finalClazz = clazz;
+            Class<?> finalClazz = clazz;
             Arrays.stream(finalClazz.getDeclaredFields())
                     .filter(field -> field.isAnnotationPresent(DbColumn.class) || field.isAnnotationPresent(DbId.class))
                     .forEach(field -> fieldGetterMethods.put(field.getName(), MethodUtils.getGetterMethod(finalClazz, field)));
@@ -270,12 +270,12 @@ public class EntityConverter {
      * @param clazz 类
      * @return "字段-Setter方法"Map
      */
-    private Map<String, Method> getFieldSetterMethods(Class clazz) {
+    private static Map<String, Method> getFieldSetterMethods(Class<?> clazz) {
         Map<String, Method> fieldGetterMethods = new HashMap<>();
         int depth = 0;
         while (isContinue(clazz, depth)) {
             depth++;
-            Class finalClazz = clazz;
+            Class<?> finalClazz = clazz;
             Arrays.stream(finalClazz.getDeclaredFields())
                     .filter(field -> field.isAnnotationPresent(DbColumn.class) || field.isAnnotationPresent(DbId.class))
                     .forEach(field -> fieldGetterMethods.put(field.getName(), MethodUtils.getSetterMethod(finalClazz, field)));
@@ -292,7 +292,7 @@ public class EntityConverter {
      * @param fieldGetterMethods 字段的Getter方法
      * @return 字段-值Map
      */
-    private Map<String, Object> getFieldValues(Object objectToConvert, Map<String, Method> fieldGetterMethods) {
+    private static Map<String, Object> getFieldValues(Object objectToConvert, Map<String, Method> fieldGetterMethods) {
         Map<String, Object> result = new HashMap<>();
         fieldGetterMethods.forEach((field, method) -> {
             if (null != method) {
@@ -315,7 +315,7 @@ public class EntityConverter {
      * @param <P>                实体类型
      * @return 实例
      */
-    private <P> P convert2Object(Class<P> poClazz, Map<String, Method> fieldSetterMethods
+    private static <P> P convert2Object(Class<P> poClazz, Map<String, Method> fieldSetterMethods
             , Map<String, Object> fieldValues) {
         try {
             P result = poClazz.newInstance();
@@ -343,12 +343,12 @@ public class EntityConverter {
      * @param returnNullValue 是否返回null的字段
      * @return 列更新信息
      */
-    public TableColumnSetValues getTableColumnValues(Object entity,
+    public static TableColumnSetValues getTableColumnValues(Object entity,
                                                      boolean returnNullValue) {
-        Class clazz = entity.getClass();
+        Class<?> clazz = entity.getClass();
         checkEntityClazz(clazz);
 
-        DbTable table = (DbTable) clazz.getAnnotation(DbTable.class);
+        DbTable table = clazz.getAnnotation(DbTable.class);
         Table dbTable = new Table(table.name(), table.alias());
         int depth = 0;
         Map<String, ColumnSetValue> columnValueMap = new LinkedHashMap<>();
@@ -401,11 +401,11 @@ public class EntityConverter {
      * @param orderList 列排序列表（指定列）
      * @return 表-列值信息
      */
-    public TableColumnSetValues getTableColumnValues(Object entity, List<Column> orderList) {
-        Class clazz = entity.getClass();
+    public static TableColumnSetValues getTableColumnValues(Object entity, List<Column> orderList) {
+        Class<?> clazz = entity.getClass();
         checkEntityClazz(clazz);
 
-        DbTable table = (DbTable) clazz.getAnnotation(DbTable.class);
+        DbTable table = clazz.getAnnotation(DbTable.class);
         Table dbTable = new Table(table.name(), table.alias());
         if (CollectionUtils.isEmpty(orderList)) {
             return new TableColumnSetValues(dbTable, Collections.emptyList());
@@ -463,7 +463,7 @@ public class EntityConverter {
      *
      * @param clazz 类
      */
-    private void checkEntityClazz(Class clazz) {
+    private static void checkEntityClazz(Class<?> clazz) {
         if (!isEntity(clazz)) {
             throw new SqlException(getNotEntityMessage(clazz.getName()));
         }
@@ -476,7 +476,7 @@ public class EntityConverter {
      * @param depth 当前层级
      * @return 判断结果
      */
-    private boolean isContinue(Class clazz, int depth) {
+    private static boolean isContinue(Class<?> clazz, int depth) {
         return clazz != Object.class && depth < MAX_DEPTH;
     }
 
@@ -486,7 +486,7 @@ public class EntityConverter {
      * @param clazz 类
      * @return 判断结果
      */
-    private boolean isEntity(Class clazz) {
+    private static boolean isEntity(Class<?> clazz) {
         return clazz.isAnnotationPresent(DbTable.class);
     }
 
@@ -496,7 +496,7 @@ public class EntityConverter {
      * @param clazzName 类名
      * @return 错误信息
      */
-    private String getNotEntityMessage(String clazzName) {
+    private static String getNotEntityMessage(String clazzName) {
         return "Class(" + clazzName + ") is not entity!";
     }
 }

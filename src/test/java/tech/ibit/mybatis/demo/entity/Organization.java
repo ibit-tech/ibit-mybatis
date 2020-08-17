@@ -1,6 +1,5 @@
 package tech.ibit.mybatis.demo.entity;
 
-import lombok.Data;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbColumn;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbId;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
@@ -10,7 +9,6 @@ import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
  *
  * @author IBIT程序猿
  */
-@Data
 @DbTable(name = "organization", alias = "o")
 public class Organization {
 
@@ -42,4 +40,79 @@ public class Organization {
     @DbColumn(name = "phone", nullable = true)
     private String phone;
 
+    /**
+     * Gets the value of cityCode
+     *
+     * @return the value of cityCode
+     */
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    /**
+     * Sets the cityCode
+     * <p>You can use getCityCode() to get the value of cityCode</p>
+     *
+     * @param cityCode cityCode
+     */
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    /**
+     * Gets the value of name
+     *
+     * @return the value of name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name
+     * <p>You can use getName() to get the value of name</p>
+     *
+     * @param name name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets the value of type
+     *
+     * @return the value of type
+     */
+    public Integer getType() {
+        return type;
+    }
+
+    /**
+     * Sets the type
+     * <p>You can use getType() to get the value of type</p>
+     *
+     * @param type type
+     */
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    /**
+     * Gets the value of phone
+     *
+     * @return the value of phone
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * Sets the phone
+     * <p>You can use getPhone() to get the value of phone</p>
+     *
+     * @param phone phone
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

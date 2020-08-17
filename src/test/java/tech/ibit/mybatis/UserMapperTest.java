@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNull;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
-public class UserMapperTest {
+public class UserMapperTest extends CommonTest {
 
 
     @Rule
@@ -45,7 +45,7 @@ public class UserMapperTest {
     public void setUp() {
         testUsers = new ArrayList<>();
 
-        SqlProvider.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
+        SqlProvider.setValueFormatter(new LinkedHashMap<Class<?>, Function<Object, Object>>() {{
             put(CommonEnum.class, o -> ((CommonEnum) o).getValue());
         }});
     }
@@ -84,7 +84,7 @@ public class UserMapperTest {
     @Test
     public void insert() {
         User user = insertUser();
-        assertEquals(user, userMapper.getById(user.getUserId()));
+        assetObjectEquals(user, userMapper.getById(user.getUserId()));
     }
 
 
@@ -237,7 +237,7 @@ public class UserMapperTest {
     public void getById() {
         User user = insertUser();
         User user1 = userMapper.getById(user.getUserId());
-        assertEquals(user, user1);
+        assetObjectEquals(user, user1);
     }
 
     @Test
@@ -246,8 +246,8 @@ public class UserMapperTest {
         User user1 = insertUser();
 
         List<User> users = userMapper.getByIds(Arrays.asList(user0.getUserId(), user1.getUserId()));
-        assertEquals(user0, users.get(0));
-        assertEquals(user1, users.get(1));
+        assetObjectEquals(user0, users.get(0));
+        assetObjectEquals(user1, users.get(1));
     }
 
     @Test

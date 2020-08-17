@@ -1,7 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
 import tech.ibit.mybatis.RawMapper;
 import tech.ibit.mybatis.sqlbuilder.*;
@@ -21,8 +19,6 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-@Getter
-@Setter
 public class CountSqlImpl extends SqlLogImpl
         implements CountSql,
         DefaultDistinctSupport<CountSql>,
@@ -55,7 +51,6 @@ public class CountSqlImpl extends SqlLogImpl
      */
     private ListField<Criteria> where = new ListField<>();
 
-
     /**
      * group by
      */
@@ -75,9 +70,10 @@ public class CountSqlImpl extends SqlLogImpl
     /**
      * 基础mapper
      */
-    private RawMapper mapper;
+    private final RawMapper<?> mapper;
 
-    public CountSqlImpl(RawMapper mapper) {
+
+    public CountSqlImpl(RawMapper<?> mapper) {
         this.mapper = mapper;
     }
 
@@ -136,5 +132,110 @@ public class CountSqlImpl extends SqlLogImpl
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
         return mapper.rawCount(statement);
+    }
+
+    @Override
+    public BooleanField getDistinct() {
+        return distinct;
+    }
+
+    /**
+     * Sets the distinct
+     * <p>You can use getDistinct() to get the value of distinct</p>
+     *
+     * @param distinct distinct
+     */
+    public void setDistinct(BooleanField distinct) {
+        this.distinct = distinct;
+    }
+
+    @Override
+    public ListField<Table> getFrom() {
+        return from;
+    }
+
+    /**
+     * Sets the from
+     * <p>You can use getFrom() to get the value of from</p>
+     *
+     * @param from from
+     */
+    public void setFrom(ListField<Table> from) {
+        this.from = from;
+    }
+
+    @Override
+    public ListField<JoinOn> getJoinOn() {
+        return joinOn;
+    }
+
+    /**
+     * Sets the joinOn
+     * <p>You can use getJoinOn() to get the value of joinOn</p>
+     *
+     * @param joinOn joinOn
+     */
+    public void setJoinOn(ListField<JoinOn> joinOn) {
+        this.joinOn = joinOn;
+    }
+
+    @Override
+    public ListField<Criteria> getWhere() {
+        return where;
+    }
+
+    /**
+     * Sets the where
+     * <p>You can use getWhere() to get the value of where</p>
+     *
+     * @param where where
+     */
+    public void setWhere(ListField<Criteria> where) {
+        this.where = where;
+    }
+
+    @Override
+    public ListField<Column> getGroupBy() {
+        return groupBy;
+    }
+
+    /**
+     * Sets the groupBy
+     * <p>You can use getGroupBy() to get the value of groupBy</p>
+     *
+     * @param groupBy groupBy
+     */
+    public void setGroupBy(ListField<Column> groupBy) {
+        this.groupBy = groupBy;
+    }
+
+    @Override
+    public ListField<Criteria> getHaving() {
+        return having;
+    }
+
+    /**
+     * Sets the having
+     * <p>You can use getHaving() to get the value of having</p>
+     *
+     * @param having having
+     */
+    public void setHaving(ListField<Criteria> having) {
+        this.having = having;
+    }
+
+    @Override
+    public ListField<IColumn> getColumn() {
+        return column;
+    }
+
+    /**
+     * Sets the column
+     * <p>You can use getColumn() to get the value of column</p>
+     *
+     * @param column column
+     */
+    public void setColumn(ListField<IColumn> column) {
+        this.column = column;
     }
 }

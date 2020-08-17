@@ -1,12 +1,12 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import tech.ibit.mybatis.sqlbuilder.column.support.IColumnAggregateSupport;
 import tech.ibit.mybatis.sqlbuilder.column.support.IColumnCriteriaItemSupport;
 import tech.ibit.mybatis.sqlbuilder.column.support.IColumnOrderBySupport;
 import tech.ibit.mybatis.sqlbuilder.column.support.IColumnSetItemSupport;
+
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * 列定义
@@ -14,9 +14,6 @@ import tech.ibit.mybatis.sqlbuilder.column.support.IColumnSetItemSupport;
  * @author IBIT程序猿
  * @version 1.0
  */
-@Getter
-@Setter
-@AllArgsConstructor
 public class Column implements IColumn,
         IColumnCriteriaItemSupport, IColumnAggregateSupport, IColumnSetItemSupport, IColumnOrderBySupport {
 
@@ -31,11 +28,16 @@ public class Column implements IColumn,
     private String name;
 
     /**
-     * 重写equals方法
+     * 构造函数
      *
-     * @param o 比较对象
-     * @return 是否相等
+     * @param table 表
+     * @param name  列名
      */
+    public Column(Table table, String name) {
+        this.table = table;
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -44,25 +46,22 @@ public class Column implements IColumn,
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         Column column = (Column) o;
-
-        if (!table.equals(column.table)) {
-            return false;
-        }
-        return name.equals(column.name);
+        return Objects.equals(getTable(), column.getTable())
+                && Objects.equals(getName(), column.getName());
     }
 
-    /**
-     * 重写hashCode的计算
-     *
-     * @return hashCode
-     */
     @Override
     public int hashCode() {
-        int result = table.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
+        return Objects.hash(getTable(), getName());
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Column.class.getSimpleName() + "[", "]")
+                .add("table=" + table)
+                .add("name='" + name + "'")
+                .toString();
     }
 
     /**
@@ -89,5 +88,39 @@ public class Column implements IColumn,
     @Override
     public IColumn getColumn() {
         return this;
+    }
+
+    /**
+     * Gets the value of table
+     *
+     * @return the value of table
+     */
+    public Table getTable() {
+        return table;
+    }
+
+    /**
+     * Sets the table
+     * <p>You can use getTable() to get the value of table</p>
+     *
+     * @param table table
+     */
+    public void setTable(Table table) {
+        this.table = table;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name
+     * <p>You can use getName() to get the value of name</p>
+     *
+     * @param name name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 }

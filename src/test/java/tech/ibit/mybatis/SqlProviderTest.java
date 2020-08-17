@@ -45,7 +45,7 @@ public class SqlProviderTest extends CommonTest {
     @Test
     public void execute2() {
         // 测试设置枚举类型
-        SqlProvider.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>() {{
+        SqlProvider.setValueFormatter(new LinkedHashMap<Class<?>, Function<Object, Object>>() {{
             put(CommonEnum.class, o -> ((CommonEnum) o).getValue());
         }});
 

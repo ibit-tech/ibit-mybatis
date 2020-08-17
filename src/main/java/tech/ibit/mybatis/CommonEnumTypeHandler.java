@@ -18,7 +18,7 @@ public class CommonEnumTypeHandler<E extends CommonEnum> extends BaseTypeHandler
     /**
      * 枚举类
      */
-    private Class<E> type;
+    private final Class<E> type;
 
     /**
      * 构造函数

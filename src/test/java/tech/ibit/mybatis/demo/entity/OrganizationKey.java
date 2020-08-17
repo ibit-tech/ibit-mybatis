@@ -1,9 +1,6 @@
 package tech.ibit.mybatis.demo.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import tech.ibit.mybatis.sqlbuilder.MultiId;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbId;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
@@ -13,9 +10,6 @@ import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
  *
  * @author IBIT程序猿
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @DbTable(name = "organization", alias = "o")
 public class OrganizationKey implements MultiId {
 
@@ -33,4 +27,49 @@ public class OrganizationKey implements MultiId {
     @DbId(name = "name")
     private String name;
 
+    public OrganizationKey(String cityCode, String name) {
+        this.cityCode = cityCode;
+        this.name = name;
+    }
+
+    public OrganizationKey() {
+    }
+
+    /**
+     * Gets the value of cityCode
+     *
+     * @return the value of cityCode
+     */
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    /**
+     * Sets the cityCode
+     * <p>You can use getCityCode() to get the value of cityCode</p>
+     *
+     * @param cityCode cityCode
+     */
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    /**
+     * Gets the value of name
+     *
+     * @return the value of name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name
+     * <p>You can use getName() to get the value of name</p>
+     *
+     * @param name name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 }

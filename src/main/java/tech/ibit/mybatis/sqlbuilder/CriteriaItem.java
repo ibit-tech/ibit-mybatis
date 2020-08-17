@@ -1,8 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import tech.ibit.mybatis.sqlbuilder.enums.CriteriaItemValueTypeEnum;
 import tech.ibit.mybatis.sqlbuilder.enums.OperatorEnum;
 
@@ -18,39 +16,60 @@ import java.util.stream.Collectors;
  * @author IBIT程序猿
  * @version 1.0
  */
-@Getter
-@AllArgsConstructor
 public class CriteriaItem implements PrepareStatementSupplier {
 
     /**
      * 第一列
      */
-    private IColumn column;
+    private final IColumn column;
 
     /**
      * 操作符
      */
-    private OperatorEnum operator;
+    private final OperatorEnum operator;
 
     /**
      * 第二列
      */
-    private IColumn secondColumn;
+    private final IColumn secondColumn;
 
     /**
      * 第一个值
      */
-    private Object value;
+    private final Object value;
 
     /**
      * 第二个值
      */
-    private Object secondValue;
+    private final Object secondValue;
 
     /**
      * 值类型
      */
-    private CriteriaItemValueTypeEnum valueType;
+    private final CriteriaItemValueTypeEnum valueType;
+
+    /**
+     * 条件对象
+     *
+     * @param column       列
+     * @param operator     操作符
+     * @param secondColumn 第二列
+     * @param value        值
+     * @param secondValue  第二个值
+     * @param valueType    值类型
+     */
+    public CriteriaItem(IColumn column,
+                        OperatorEnum operator,
+                        IColumn secondColumn,
+                        Object value, Object secondValue,
+                        CriteriaItemValueTypeEnum valueType) {
+        this.column = column;
+        this.operator = operator;
+        this.secondColumn = secondColumn;
+        this.value = value;
+        this.secondValue = secondValue;
+        this.valueType = valueType;
+    }
 
     /**
      * 构造无值条件
@@ -211,4 +230,57 @@ public class CriteriaItem implements PrepareStatementSupplier {
         return new PrepareStatement(sql, keyValuePairs);
     }
 
+    /**
+     * Gets the value of column
+     *
+     * @return the value of column
+     */
+    public IColumn getColumn() {
+        return column;
+    }
+
+    /**
+     * Gets the value of operator
+     *
+     * @return the value of operator
+     */
+    public OperatorEnum getOperator() {
+        return operator;
+    }
+
+    /**
+     * Gets the value of secondColumn
+     *
+     * @return the value of secondColumn
+     */
+    public IColumn getSecondColumn() {
+        return secondColumn;
+    }
+
+    /**
+     * Gets the value of value
+     *
+     * @return the value of value
+     */
+    public Object getValue() {
+        return value;
+    }
+
+    /**
+     * Gets the value of secondValue
+     *
+     * @return the value of secondValue
+     */
+    public Object getSecondValue() {
+        return secondValue;
+    }
+
+    /**
+     * Gets the value of valueType
+     *
+     * @return the value of valueType
+     */
+    public CriteriaItemValueTypeEnum getValueType() {
+        return valueType;
+    }
 }

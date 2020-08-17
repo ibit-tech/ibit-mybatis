@@ -1,14 +1,11 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import lombok.Data;
-
 /**
  * 列（带别名）
  *
  * @author IBIT程序猿
  * @version 1.0
  */
-@Data
 public class ColumnAs extends Column {
 
     /**
@@ -25,6 +22,26 @@ public class ColumnAs extends Column {
      */
     public ColumnAs(Column column, String nameAs) {
         super(column.getTable(), column.getName());
+        this.nameAs = nameAs;
+    }
+
+    /**
+     * Gets the value of nameAs
+     *
+     * @return the value of nameAs
+     */
+    @Override
+    public String getNameAs() {
+        return nameAs;
+    }
+
+    /**
+     * Sets the nameAs
+     * <p>You can use getNameAs() to get the value of nameAs</p>
+     *
+     * @param nameAs nameAs
+     */
+    public void setNameAs(String nameAs) {
         this.nameAs = nameAs;
     }
 }

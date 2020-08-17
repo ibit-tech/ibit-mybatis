@@ -15,10 +15,10 @@
         <gpg.skip>false</gpg.skip>
         <javadoc.skip>false</javadoc.skip>
         <common-lang.version>2.6</common-lang.version>
-        <lombok.version>1.16.20</lombok.version>
         <structlog4j.version>1.3</structlog4j.version>
         <mybatis.version>3.5.5</mybatis.version>
 
+        <test.fastjson.version>1.2.68</test.fastjson.version>
         <test.junit.version>4.12</test.junit.version>
         <test.mybatis-spring-boot-starter.version>1.3.0</test.mybatis-spring-boot-starter.version>
         <test.commons-logging-api.version>1.1</test.commons-logging-api.version>
@@ -80,13 +80,6 @@
             <version>${structlog4j.version}</version>
         </dependency>
 
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-        </dependency>
-
         <!--mybatis-->
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -99,6 +92,13 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${test.h2.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${test.fastjson.version}</version>
             <scope>test</scope>
         </dependency>
 

@@ -1,7 +1,5 @@
 package tech.ibit.mybatis.demo.entity.type;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import tech.ibit.mybatis.CommonEnum;
 
 /**
@@ -10,8 +8,6 @@ import tech.ibit.mybatis.CommonEnum;
  * @author IBIT程序猿
  * mailto: ibit_tech@aliyun.com
  */
-@Getter
-@AllArgsConstructor
 public enum UserType implements CommonEnum {
 
     u1(1),
@@ -19,5 +15,21 @@ public enum UserType implements CommonEnum {
     u3(3),
     ;
 
-    private int value;
+    private final int value;
+
+    UserType(int value) {
+        this.value = value;
+    }
+
+    /**
+     * Gets the value of value
+     *
+     * @return the value of value
+     */
+    @Override
+    public int getValue() {
+        return value;
+    }
+
+
 }

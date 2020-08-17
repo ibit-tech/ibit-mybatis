@@ -1,6 +1,5 @@
 package tech.ibit.mybatis.demo.entity;
 
-import lombok.Data;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbColumn;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
 
@@ -11,7 +10,6 @@ import java.util.Date;
  *
  * @author IBIT程序猿
  */
-@Data
 @DbTable(name = "user_login_record", alias = "ulr")
 public class UserLoginRecord {
 
@@ -29,4 +27,41 @@ public class UserLoginRecord {
     @DbColumn(name = "login_time")
     private Date loginTime;
 
+    /**
+     * Gets the value of userId
+     *
+     * @return the value of userId
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+
+    /**
+     * Sets the userId
+     * <p>You can use getUserId() to get the value of userId</p>
+     *
+     * @param userId userId
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * Gets the value of loginTime
+     *
+     * @return the value of loginTime
+     */
+    public Date getLoginTime() {
+        return loginTime;
+    }
+
+    /**
+     * Sets the loginTime
+     * <p>You can use getLoginTime() to get the value of loginTime</p>
+     *
+     * @param loginTime loginTime
+     */
+    public void setLoginTime(Date loginTime) {
+        this.loginTime = loginTime;
+    }
 }

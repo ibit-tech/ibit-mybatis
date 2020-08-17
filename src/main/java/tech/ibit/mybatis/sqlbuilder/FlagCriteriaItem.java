@@ -1,7 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder;
 
 
-import lombok.Data;
 import tech.ibit.mybatis.sqlbuilder.enums.CriteriaItemValueTypeEnum;
 
 import java.util.Collections;
@@ -12,7 +11,6 @@ import java.util.Collections;
  * @author IBIT程序猿
  * @version 1.0
  */
-@Data
 public class FlagCriteriaItem extends CriteriaItem {
 
     /**
@@ -96,5 +94,24 @@ public class FlagCriteriaItem extends CriteriaItem {
             default:
         }
         return new PrepareStatement(whereSql.toString(), Collections.singletonList(new ColumnValue(getColumn(), getValue())));
+    }
+
+    /**
+     * Gets the value of containsType
+     *
+     * @return the value of containsType
+     */
+    public ContainsType getContainsType() {
+        return containsType;
+    }
+
+    /**
+     * Sets the containsType
+     * <p>You can use getContainsType() to get the value of containsType</p>
+     *
+     * @param containsType containsType
+     */
+    public void setContainsType(ContainsType containsType) {
+        this.containsType = containsType;
     }
 }

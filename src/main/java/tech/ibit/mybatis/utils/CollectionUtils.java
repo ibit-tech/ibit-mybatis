@@ -1,7 +1,5 @@
 package tech.ibit.mybatis.utils;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.Collection;
 
 /**
@@ -10,9 +8,10 @@ import java.util.Collection;
  * @author IBIT程序猿
  * @version 1.0
  */
-@UtilityClass
 public class CollectionUtils {
 
+    private CollectionUtils() {
+    }
 
     /**
      * 判断集合是否为空
@@ -20,7 +19,7 @@ public class CollectionUtils {
      * @param collection 集合
      * @return 是否为空
      */
-    public boolean isEmpty(Collection<?> collection) {
+    public static boolean isEmpty(Collection<?> collection) {
         return null == collection || collection.isEmpty();
     }
 
@@ -30,7 +29,7 @@ public class CollectionUtils {
      * @param collection 集合
      * @return 是否为非空
      */
-    public boolean isNotEmpty(Collection<?> collection) {
+    public static boolean isNotEmpty(Collection<?> collection) {
         return !isEmpty(collection);
     }
 

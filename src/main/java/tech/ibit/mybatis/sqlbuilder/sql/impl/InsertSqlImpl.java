@@ -1,6 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
-import lombok.Getter;
 import tech.ibit.mybatis.RawMapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.sql.InsertSql;
@@ -19,7 +18,6 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-@Getter
 public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
         DefaultInsertTableSupport<InsertSql>,
         DefaultValuesSupport<InsertSql>,
@@ -28,24 +26,24 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
     /**
      * fromDefault
      */
-    private ListField<Table> insertTable = new ListField<>();
+    private final ListField<Table> insertTable = new ListField<>();
 
     /**
      * column
      */
-    private ListField<Column> column = new ListField<>();
+    private final ListField<Column> column = new ListField<>();
 
     /**
      * value
      */
-    private ListField<Object> value = new ListField<>();
+    private final ListField<Object> value = new ListField<>();
 
     /**
      * 基础mapper
      */
-    private RawMapper mapper;
+    private final RawMapper<?> mapper;
 
-    public InsertSqlImpl(RawMapper mapper) {
+    public InsertSqlImpl(RawMapper<?> mapper) {
         this.mapper = mapper;
     }
 
@@ -95,5 +93,20 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
         return mapper.rawInsertWithGenerateKeys(statement, key);
+    }
+
+    @Override
+    public ListField<Table> getInsertTable() {
+        return insertTable;
+    }
+
+    @Override
+    public ListField<Column> getColumn() {
+        return column;
+    }
+
+    @Override
+    public ListField<Object> getValue() {
+        return value;
     }
 }

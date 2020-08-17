@@ -14,7 +14,7 @@ public class SqlLogImpl {
     /**
      * 日志对象
      */
-    private Logger logger = StructLoggerFactory.getLogger(SqlLogImpl.class);
+    private final Logger logger = StructLoggerFactory.getLogger(SqlLogImpl.class);
 
 
     /**
@@ -27,6 +27,5 @@ public class SqlLogImpl {
             logger.debug("Generate SQL", "sql", statement.getPrepareSql(), "params", statement.getParams());
         }
     }
-
 
 }

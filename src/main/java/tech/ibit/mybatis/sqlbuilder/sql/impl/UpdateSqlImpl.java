@@ -1,6 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
-import lombok.Getter;
 import tech.ibit.mybatis.RawMapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
@@ -18,7 +17,6 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-@Getter
 public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
         DefaultUpdateTableSupport<UpdateSql>,
         DefaultJoinOnSupport<UpdateSql>,
@@ -29,29 +27,29 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
     /**
      * fromDefault
      */
-    private ListField<Table> updateTable = new ListField<>();
+    private final ListField<Table> updateTable = new ListField<>();
 
     /**
      * join on
      */
-    private ListField<JoinOn> joinOn = new ListField<>();
+    private final ListField<JoinOn> joinOn = new ListField<>();
 
     /**
      * set
      */
-    private ListField<SetItem> set = new ListField<>();
+    private final ListField<SetItem> set = new ListField<>();
 
     /**
      * where
      */
-    private ListField<Criteria> where = new ListField<>();
+    private final ListField<Criteria> where = new ListField<>();
 
     /**
      * 基础mapper
      */
-    private RawMapper mapper;
+    private final RawMapper<?> mapper;
 
-    public UpdateSqlImpl(RawMapper mapper) {
+    public UpdateSqlImpl(RawMapper<?> mapper) {
         this.mapper = mapper;
     }
 
@@ -101,5 +99,50 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
         return mapper.rawUpdate(statement);
+    }
+
+    /**
+     * Gets the value of updateTable
+     *
+     * @return the value of updateTable
+     */
+    public ListField<Table> getUpdateTable() {
+        return updateTable;
+    }
+
+    /**
+     * Gets the value of joinOn
+     *
+     * @return the value of joinOn
+     */
+    public ListField<JoinOn> getJoinOn() {
+        return joinOn;
+    }
+
+    /**
+     * Gets the value of set
+     *
+     * @return the value of set
+     */
+    public ListField<SetItem> getSet() {
+        return set;
+    }
+
+    /**
+     * Gets the value of where
+     *
+     * @return the value of where
+     */
+    public ListField<Criteria> getWhere() {
+        return where;
+    }
+
+    /**
+     * Gets the value of mapper
+     *
+     * @return the value of mapper
+     */
+    public RawMapper<?> getMapper() {
+        return mapper;
     }
 }

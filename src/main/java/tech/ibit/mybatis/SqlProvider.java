@@ -1,7 +1,5 @@
 package tech.ibit.mybatis;
 
-import lombok.Getter;
-import lombok.Setter;
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 
@@ -36,10 +34,10 @@ public class SqlProvider {
      */
     public static final String METHOD_EXECUTE = "execute";
 
-
-    @Setter
-    @Getter
-    private static Map<Class, Function<Object, Object>> valueFormatter;
+    /**
+     * 值转换器
+     */
+    private static Map<Class<?>, Function<Object, Object>> valueFormatter;
 
 
     /**
@@ -93,12 +91,31 @@ public class SqlProvider {
             return null;
         }
         if (null != valueFormatter && !valueFormatter.isEmpty()) {
-            for (Map.Entry<Class, Function<Object, Object>> entry : valueFormatter.entrySet()) {
+            for (Map.Entry<Class<?>, Function<Object, Object>> entry : valueFormatter.entrySet()) {
                 if (entry.getKey().isAssignableFrom(value.getClass())) {
                     return entry.getValue().apply(value);
                 }
             }
         }
         return value;
+    }
+
+    /**
+     * Gets the value of valueFormatter
+     *
+     * @return the value of valueFormatter
+     */
+    public static Map<Class<?>, Function<Object, Object>> getValueFormatter() {
+        return valueFormatter;
+    }
+
+    /**
+     * Sets the valueFormatter
+     * <p>You can use getValueFormatter() to get the value of valueFormatter</p>
+     *
+     * @param valueFormatter valueFormatter
+     */
+    public static void setValueFormatter(Map<Class<?>, Function<Object, Object>> valueFormatter) {
+        SqlProvider.valueFormatter = valueFormatter;
     }
 }
