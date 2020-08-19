@@ -49,17 +49,4 @@ public class UserServiceImpl implements UserService {
                 .orderBy(UserProperties.userId.orderBy())
                 .executeQueryDefaultPage();
     }
-
-    /**
-     * 通过用id获取用户po
-     *
-     * @param userId 用户id
-     * @return 用户po
-     */
-    @Override
-    public UserPo getPoById(Integer userId) {
-        return MapperUtils.getPoById(mapper, UserPo.class, userId);
-    }
-
-
 }

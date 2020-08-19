@@ -2,7 +2,6 @@ package tech.ibit.mybatis.sqlbuilder.utils;
 
 import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.MultipleIdMapper;
-import tech.ibit.mybatis.RawMapper;
 import tech.ibit.mybatis.SingleIdMapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.converter.ColumnSetValue;
@@ -128,7 +127,7 @@ public class IdSqlUtils {
      * @see QuerySql
      * @see MultiId
      */
-    public static <T, K extends MultiId> QuerySql<T> getByMultiIds(MultipleIdMapper<T, K> mapper, List<K> idValues) {
+    public static <T, K extends MultiId> QuerySql<T> getByMultiIds(MultipleIdMapper<T, K> mapper, Collection<K> idValues) {
         return getByMultiIds(mapper, mapper.getPoClazz(), idValues);
     }
 
@@ -144,7 +143,7 @@ public class IdSqlUtils {
      * @see QuerySql
      * @see MultiId
      */
-    public static <T, K extends MultiId> QuerySql<T> getByMultiIds(MultipleIdMapper<T, K> mapper, Class<?> poClazz, List<K> idValues) {
+    public static <T, K extends MultiId> QuerySql<T> getByMultiIds(MultipleIdMapper<T, K> mapper, Class<?> poClazz, Collection<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
@@ -200,7 +199,7 @@ public class IdSqlUtils {
      * @see QuerySql
      * @see MultiId
      */
-    public static <T, K extends MultiId> QuerySql<T> getByMultiId(MultipleIdMapper<T, K> mapper, Class poClazz, K idValue) {
+    public static <T, K extends MultiId> QuerySql<T> getByMultiId(MultipleIdMapper<T, K> mapper, Class<?> poClazz, K idValue) {
         return getByMultiIds(mapper, poClazz, null == idValue ? null : Collections.singletonList(idValue));
     }
 
@@ -249,7 +248,7 @@ public class IdSqlUtils {
      * @see DeleteSql
      * @see MultiId
      */
-    public static <T, K extends MultiId> DeleteSql deleteByMultiIds(MultipleIdMapper<T, K> mapper, List<K> idValues) {
+    public static <T, K extends MultiId> DeleteSql deleteByMultiIds(MultipleIdMapper<T, K> mapper, Collection<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
@@ -259,16 +258,7 @@ public class IdSqlUtils {
 
         //没有主键
         if (firstIdValues.getColumnValues().isEmpty()) {
-
             throw SqlException.idNotFound(firstIdValues.getTable().getName());
-
-        } else if (1 == firstIdValues.getColumnValues().size()) {
-            //single id
-            Column id = (Column) firstIdValues.getColumnValues().get(0).getColumn();
-            List<Object> actualIdValues = getIdValues(idValueList);
-            return mapper.createDelete()
-                    .deleteFromDefault()
-                    .andWhere(id.in(actualIdValues));
         }
 
         DeleteSql sql = mapper.createDelete().deleteFromDefault();
@@ -405,7 +395,7 @@ public class IdSqlUtils {
      * @return SQL参数对象
      * @see UpdateSql
      */
-    public static <T> UpdateSql updateById(RawMapper<T> mapper, T updateObject, List<Column> updateColumns) {
+    public static <T> UpdateSql updateById(Mapper<T> mapper, T updateObject, List<Column> updateColumns) {
         TableColumnInfo idEntity = getAndCheckTableIdInfo(updateObject.getClass());
         if (null != updateColumns) {
             if (updateColumns.isEmpty()) {
@@ -484,7 +474,7 @@ public class IdSqlUtils {
         UpdateSql sql = mapper
                 .createUpdate()
                 .updateDefault();
-        addSetsSql(mapper.getDefaultTable(), tableColumnValues, sql);
+        addSetsSql(tableColumnValues, sql);
         sql.andWhere(mapper.getId().in(idValues));
         return sql;
     }
@@ -501,7 +491,7 @@ public class IdSqlUtils {
      * @see UpdateSql
      * @see MultiId
      */
-    public static <T, K extends MultiId> UpdateSql updateByMultiIds(MultipleIdMapper<T, K> mapper, T updateObject, List<K> idValues) {
+    public static <T, K extends MultiId> UpdateSql updateByMultiIds(MultipleIdMapper<T, K> mapper, T updateObject, Collection<K> idValues) {
         return updateByMultiIds(mapper, updateObject, null, idValues);
     }
 
@@ -520,7 +510,7 @@ public class IdSqlUtils {
      * @see MultiId
      */
     public static <T, K extends MultiId> UpdateSql updateByMultiIds(MultipleIdMapper<T, K> mapper, T updateObject
-            , List<Column> updateColumns, List<K> idValues) {
+            , List<Column> updateColumns, Collection<K> idValues) {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
@@ -538,18 +528,11 @@ public class IdSqlUtils {
                 ? EntityConverter.getTableColumnValues(updateObject, false)
                 : EntityConverter.getTableColumnValues(updateObject, updateColumns);
 
-        UpdateSql sql = SqlFactory
-                .createUpdate(mapper)
+        UpdateSql sql = mapper
+                .createUpdate()
                 .update(table);
-        addSetsSql(table, tableColumnValues, sql);
-
-        //只有一个id
-        if (1 == firstIdValues.getColumnValues().size()) {
-            Column id = (Column) firstIdValues.getColumnValues().get(0).getColumn();
-            sql.andWhere(id.in(getIdValues(idValueList)));
-        } else {
-            appendWhereSql(idValueList, sql);
-        }
+        addSetsSql(tableColumnValues, sql);
+        appendWhereSql(idValueList, sql);
         return sql;
     }
 
@@ -578,20 +561,19 @@ public class IdSqlUtils {
     /**
      * 扩展`set`语句
      *
-     * @param table             表
      * @param tableColumnValues 表列-值信息
      * @param sql               SQL对象
      */
-    private static void addSetsSql(Table table, TableColumnSetValues tableColumnValues, SetSupport sql) {
+    public static void addSetsSql(TableColumnSetValues tableColumnValues, SetSupport<?> sql) {
         for (ColumnSetValue cv : tableColumnValues.getColumnValues()) {
             Column column = (Column) cv.getColumn();
             Object value = cv.getValue();
             //id不能更新
             if (cv.isId()) {
-                throw SqlException.idInvalidUpdate(table.getName(), column.getName());
+                throw SqlException.idInvalidUpdate(((Column) cv.getColumn()).getTable().getName(), column.getName());
             } else {
                 if (!cv.isNullable() && null == value) {
-                    throw SqlException.columnNullPointer(table.getName(), column.getName());
+                    throw SqlException.columnNullPointer(((Column) cv.getColumn()).getTable().getName(), column.getName());
                 }
                 sql.set(column.set(value));
             }
@@ -618,27 +600,40 @@ public class IdSqlUtils {
     }
 
     /**
-     * 获取单个主键值列表
-     *
-     * @param columnValuesList 列-值列表
-     * @return 主键值列表
-     */
-    private static List<Object> getIdValues(List<TableColumnSetValues> columnValuesList) {
-        List<Object> idValues = new ArrayList<>(columnValuesList.size());
-        for (TableColumnSetValues aColumnValuesList : columnValuesList) {
-            idValues.add(aColumnValuesList.getColumnValues().get(0).getValue());
-
-        }
-        return idValues;
-    }
-
-    /**
      * 扩展`where`语句
      *
      * @param columnValuesList 列-值列表
      * @param sql              Sql对象
      */
-    private static void appendWhereSql(List<TableColumnSetValues> columnValuesList, WhereSupport sql) {
+    private static void appendWhereSql(List<TableColumnSetValues> columnValuesList, WhereSupport<?> sql) {
+
+        // 优化只有一个值
+        if (columnValuesList.size() == 1) {
+            List<ColumnSetValue> cvs = columnValuesList.get(0).getColumnValues();
+            if (CollectionUtils.isNotEmpty(cvs)) {
+                cvs.stream().filter(Objects::nonNull).forEach(
+                        cv ->
+                                sql.andWhere(
+                                        null == cv.getValue()
+                                                ? ((Column) cv.getColumn()).isNull()
+                                                : ((Column) cv.getColumn()).eq(cv.getValue()))
+                );
+            }
+            return;
+        }
+
+        TableColumnSetValues firstIdValues = columnValuesList.get(0);
+
+        // 优化只有一个column
+        if (firstIdValues.getColumnValues().size() == 1) {
+            Column id = (Column) firstIdValues.getColumnValues().get(0).getColumn();
+            List<Object> values = getIdValues(id, columnValuesList);
+            sql.andWhere(values.size() == 1
+                    ? (null == values.get(0) ? id.isNull() : id.eq(values.get(0)))
+                    : id.in(values));
+            return;
+        }
+
         for (TableColumnSetValues columnValues : columnValuesList) {
             List<ColumnSetValue> cvs = columnValues.getColumnValues();
             if (CollectionUtils.isNotEmpty(cvs)) {

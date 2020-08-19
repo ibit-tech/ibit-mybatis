@@ -113,4 +113,28 @@ public interface SingleIdMapper<T, K> extends Mapper<T> {
     default List<T> getByIds(Collection<K> ids) {
         return MapperUtils.getByIds(this, ids);
     }
+
+    /**
+     * 通过主键获取
+     *
+     * @param id      主键
+     * @param poClazz 返回类
+     * @param <P>     返回类型
+     * @return 相应的对象
+     */
+    default <P> P getPoById(Class<P> poClazz, K id) {
+        return MapperUtils.getPoById(this, poClazz, id);
+    }
+
+    /**
+     * 通过主键批量获取
+     *
+     * @param ids     主键列表
+     * @param poClazz 返回类
+     * @param <P>     返回类型
+     * @return 相应的对象列表
+     */
+    default <P> List<P> getPoByIds(Class<P> poClazz, Collection<K> ids) {
+        return MapperUtils.getPoByIds(this, poClazz, ids);
+    }
 }

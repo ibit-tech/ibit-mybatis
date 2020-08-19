@@ -11,6 +11,7 @@ import tech.ibit.mybatis.demo.entity.type.UserType;
 import tech.ibit.mybatis.sqlbuilder.KeyValuePair;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.SqlFactory;
+import tech.ibit.mybatis.sqlbuilder.UniqueKey;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.QuerySql;
 import tech.ibit.mybatis.utils.MapperUtils;
@@ -20,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * 工具类测试
@@ -175,7 +175,7 @@ public class MapperUtilsTest extends CommonTest {
             @Override
             public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
-                        "DELETE FROM organization WHERE (city_code = ? AND name = ?)",
+                        "DELETE FROM organization WHERE city_code = ? AND name = ?",
                         Arrays.asList(
                                 OrganizationProperties.cityCode.value("001"),
                                 OrganizationProperties.name.value("001")
@@ -225,7 +225,7 @@ public class MapperUtilsTest extends CommonTest {
             @Override
             public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
-                        "DELETE FROM organization WHERE (city_code = ? AND name = ?)",
+                        "DELETE FROM organization WHERE city_code = ? AND name = ?",
                         Arrays.asList(
                                 OrganizationProperties.cityCode.value("001"),
                                 OrganizationProperties.name.value("001")
@@ -717,7 +717,7 @@ public class MapperUtilsTest extends CommonTest {
             @Override
             public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
-                        "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?)",
+                        "UPDATE organization o SET o.type = ? WHERE o.city_code = ? AND o.name = ?",
                         Arrays.asList(
                                 OrganizationProperties.type.value(1),
                                 OrganizationProperties.cityCode.value("0001"),
@@ -752,7 +752,7 @@ public class MapperUtilsTest extends CommonTest {
             @Override
             public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
-                        "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?)",
+                        "UPDATE organization o SET o.type = ? WHERE o.city_code = ? AND o.name = ?",
                         Arrays.asList(
                                 OrganizationProperties.type.value(1),
                                 OrganizationProperties.cityCode.value("0001"),
@@ -769,7 +769,7 @@ public class MapperUtilsTest extends CommonTest {
             @Override
             public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
-                        "UPDATE organization o SET o.phone = ?, o.type = ? WHERE (o.city_code = ? AND o.name = ?)",
+                        "UPDATE organization o SET o.phone = ?, o.type = ? WHERE o.city_code = ? AND o.name = ?",
                         Arrays.asList(
                                 OrganizationProperties.phone.value(null),
                                 OrganizationProperties.type.value(1),
@@ -848,7 +848,7 @@ public class MapperUtilsTest extends CommonTest {
     public void getById() {
         MapperUtils.getById(new UserTestMapper() {
             @Override
-            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public User rawSelectOne(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id = ? LIMIT ?, ?",
@@ -858,7 +858,7 @@ public class MapperUtilsTest extends CommonTest {
                                 getLimitColumn().value(1)
                         ),
                         sqlParams);
-                return Collections.singletonList(getUser1());
+                return getUser1();
             }
         }, 1);
     }
@@ -905,7 +905,7 @@ public class MapperUtilsTest extends CommonTest {
         UserKey uKey1 = new UserKey(1);
         MapperUtils.getByMultiId(new User2TestMapper() {
             @Override
-            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public User rawSelectOne(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u "
                                 + "WHERE u.user_id = ? LIMIT ?, ?",
@@ -915,7 +915,7 @@ public class MapperUtilsTest extends CommonTest {
                                 getLimitColumn().value(1)
                         ),
                         sqlParams);
-                return Collections.singletonList(getUser1());
+                return getUser1();
             }
         }, uKey1);
 
@@ -923,10 +923,10 @@ public class MapperUtilsTest extends CommonTest {
         OrganizationKey oKey1 = new OrganizationKey("001", "001");
         MapperUtils.getByMultiId(new OrganizationTestMapper() {
             @Override
-            public List<Organization> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+            public Organization rawSelectOne(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
                 assertPrepareStatementEquals(
                         "SELECT o.city_code, o.name, o.type, o.phone FROM organization o "
-                                + "WHERE (o.city_code = ? AND o.name = ?) LIMIT ?, ?",
+                                + "WHERE o.city_code = ? AND o.name = ? LIMIT ?, ?",
                         Arrays.asList(
                                 OrganizationProperties.cityCode.value("001"),
                                 OrganizationProperties.name.value("001"),
@@ -934,7 +934,7 @@ public class MapperUtilsTest extends CommonTest {
                                 getLimitColumn().value(1)
                         ),
                         sqlParams);
-                return Collections.emptyList();
+                return null;
             }
         }, oKey1);
     }
@@ -1084,7 +1084,7 @@ public class MapperUtilsTest extends CommonTest {
     @Test
     public void addKeywords() {
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1123,7 +1123,7 @@ public class MapperUtilsTest extends CommonTest {
 
     @Test
     public void addExactKeywords() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1191,24 +1191,437 @@ public class MapperUtilsTest extends CommonTest {
 
     }
 
-    private void assertUser(User expectedUser, User user) {
-        assertNotNull(user);
-        assertEquals(expectedUser.getUserId(), user.getUserId());
-        assertEquals(expectedUser.getLoginId(), user.getLoginId());
-        assertEquals(expectedUser.getName(), user.getName());
-        assertEquals(expectedUser.getEmail(), user.getEmail());
-        assertEquals(expectedUser.getPassword(), user.getPassword());
-        assertEquals(expectedUser.getMobilePhone(), user.getMobilePhone());
-        assertEquals(expectedUser.getType(), user.getType());
+    @Test
+    public void getByUniqueKey() {
+        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
+        MapperUtils.getByUniqueKey(new User2TestMapper() {
+            @Override
+            public User rawSelectOne(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u "
+                                + "WHERE u.user_id = ? LIMIT ?, ?",
+                        Arrays.asList(
+                                UserProperties.userId.value(1),
+                                getStartColumn().value(0),
+                                getLimitColumn().value(1)
+                        ),
+                        sqlParams);
+                return getUser1();
+            }
+        }, uKey1);
+
+
+        UniqueKey oKey1 = new UniqueKey(OrganizationProperties.cityCode.value("001"), OrganizationProperties.name.value("001"));
+        MapperUtils.getByUniqueKey(new OrganizationTestMapper() {
+            @Override
+            public Organization rawSelectOne(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "SELECT o.city_code, o.name, o.type, o.phone FROM organization o "
+                                + "WHERE o.city_code = ? AND o.name = ? LIMIT ?, ?",
+                        Arrays.asList(
+                                OrganizationProperties.cityCode.value("001"),
+                                OrganizationProperties.name.value("001"),
+                                getStartColumn().value(0),
+                                getLimitColumn().value(1)
+                        ),
+                        sqlParams);
+                return null;
+            }
+        }, oKey1);
     }
 
-    private void assertUserPo(UserPo expectedUserPo, UserPo actualUserPo) {
-        assertNotNull(actualUserPo);
-        assertEquals(expectedUserPo.getUserId(), actualUserPo.getUserId());
-        assertEquals(expectedUserPo.getLoginId(), actualUserPo.getLoginId());
-        assertEquals(expectedUserPo.getEmail(), actualUserPo.getEmail());
-        assertEquals(expectedUserPo.getMobilePhone(), actualUserPo.getMobilePhone());
-        assertEquals(expectedUserPo.getType(), actualUserPo.getType());
+    @Test
+    public void getByUniqueKeys() {
+        UserKey uKey1 = new UserKey(1);
+        UserKey uKey2 = new UserKey(2);
+        MapperUtils.getByMultiIds(new User2TestMapper() {
+            @Override
+            public List<User> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u "
+                                + "WHERE u.user_id IN(?, ?) LIMIT ?, ?",
+                        Arrays.asList(
+                                UserProperties.userId.value(1),
+                                UserProperties.userId.value(2),
+                                getStartColumn().value(0),
+                                getLimitColumn().value(2)
+                        ),
+                        sqlParams);
+                return Collections.emptyList();
+            }
+        }, Arrays.asList(uKey1, uKey2));
+
+        OrganizationKey oKey1 = new OrganizationKey("001", "001");
+        OrganizationKey oKey2 = new OrganizationKey("001", "002");
+        MapperUtils.getByMultiIds(new OrganizationTestMapper() {
+            @Override
+            public List<Organization> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "SELECT o.city_code, o.name, o.type, o.phone FROM organization o "
+                                + "WHERE (o.city_code = ? AND o.name = ?) OR (o.city_code = ? AND o.name = ?) LIMIT ?, ?",
+                        Arrays.asList(
+                                OrganizationProperties.cityCode.value("001"),
+                                OrganizationProperties.name.value("001"),
+                                OrganizationProperties.cityCode.value("001"),
+                                OrganizationProperties.name.value("002"),
+                                getStartColumn().value(0),
+                                getLimitColumn().value(2)
+                        ),
+                        sqlParams);
+                return Collections.emptyList();
+            }
+        }, Arrays.asList(oKey1, oKey2));
+
+        MapperUtils.getByMultiIds(new OrganizationTestMapper() {
+            @Override
+            public List<Organization> rawSelect(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "SELECT o.city_code, o.name, o.type, o.phone FROM organization o "
+                                + "WHERE o.city_code = ? AND o.name = ? LIMIT ?, ?",
+                        Arrays.asList(
+                                OrganizationProperties.cityCode.value("001"),
+                                OrganizationProperties.name.value("001"),
+                                getStartColumn().value(0),
+                                getLimitColumn().value(1)
+                        ),
+                        sqlParams);
+                return Collections.emptyList();
+            }
+        }, Collections.singletonList(oKey1));
+    }
+
+    @Test
+    public void deleteByUniqueKey() {
+        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
+
+        MapperUtils.deleteByUniqueKey(new User2TestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "DELETE FROM user WHERE user_id = ?",
+                        Collections.singletonList(
+                                UserProperties.userId.value(1)
+                        ),
+                        sqlParams);
+                return 1;
+            }
+        }, uKey1);
+
+        UniqueKey oKey1 = new UniqueKey(OrganizationProperties.cityCode.value("001"), OrganizationProperties.name.value("001"));
+        MapperUtils.deleteByUniqueKey(new OrganizationTestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "DELETE FROM organization WHERE city_code = ? AND name = ?",
+                        Arrays.asList(
+                                OrganizationProperties.cityCode.value("001"),
+                                OrganizationProperties.name.value("001")
+                        ),
+                        sqlParams);
+                return 1;
+            }
+        }, oKey1);
+    }
+
+
+    @Test
+    public void deleteByUniqueKeys() {
+        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
+        UniqueKey uKey2 = new UniqueKey(UserProperties.userId.value(2));
+        MapperUtils.deleteByUniqueKeys(new User2TestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "DELETE FROM user WHERE user_id = ?",
+                        Collections.singletonList(
+                                UserProperties.userId.value(1)
+                        ),
+                        sqlParams);
+                return 1;
+            }
+        }, Collections.singletonList(uKey1));
+
+        MapperUtils.deleteByUniqueKeys(new User2TestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "DELETE FROM user WHERE user_id IN(?, ?)",
+                        Arrays.asList(
+                                UserProperties.userId.value(1),
+                                UserProperties.userId.value(2)
+                        ),
+                        sqlParams);
+                return 2;
+            }
+        }, Arrays.asList(uKey1, uKey2));
+
+
+        UniqueKey oKey1 = new UniqueKey(OrganizationProperties.cityCode.value("001"), OrganizationProperties.name.value("001"));
+        UniqueKey oKey2 = new UniqueKey(OrganizationProperties.cityCode.value("001"), OrganizationProperties.name.value("002"));
+
+        MapperUtils.deleteByUniqueKeys(new OrganizationTestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "DELETE FROM organization WHERE city_code = ? AND name = ?",
+                        Arrays.asList(
+                                OrganizationProperties.cityCode.value("001"),
+                                OrganizationProperties.name.value("001")
+                        ),
+                        sqlParams);
+                return 1;
+            }
+        }, Collections.singletonList(oKey1));
+
+        MapperUtils.deleteByUniqueKeys(new OrganizationTestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "DELETE FROM organization WHERE (city_code = ? AND name = ?) OR (city_code = ? AND name = ?)",
+                        Arrays.asList(
+                                OrganizationProperties.cityCode.value("001"),
+                                OrganizationProperties.name.value("001"),
+                                OrganizationProperties.cityCode.value("001"),
+                                OrganizationProperties.name.value("002")
+                        ),
+                        sqlParams);
+                return 2;
+            }
+        }, Arrays.asList(oKey1, oKey2));
+    }
+
+    @Test
+    public void updateByUniqueKeys() {
+        User user = new User();
+        user.setType(UserType.u1);
+        user.setPassword("12345678");
+
+        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
+        UniqueKey uKey2 = new UniqueKey(UserProperties.userId.value(2));
+        UniqueKey uKey3 = new UniqueKey(UserProperties.userId.value(3));
+
+        MapperUtils.updateByUniqueKeys(new User2TestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE user u SET u.password = ?, u.type = ? WHERE u.user_id IN(?, ?, ?)",
+                        Arrays.asList(
+                                UserProperties.password.value("12345678"),
+                                UserProperties.type.value(UserType.u1),
+                                UserProperties.userId.value(1),
+                                UserProperties.userId.value(2),
+                                UserProperties.userId.value(3)
+                        ),
+                        sqlParams);
+                return 3;
+            }
+        }, user, Arrays.asList(uKey1, uKey2, uKey3));
+
+        MapperUtils.updateByUniqueKeys(new User2TestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE user u SET u.password = ?, u.type = ? WHERE u.user_id = ?",
+                        Arrays.asList(
+                                UserProperties.password.value("12345678"),
+                                UserProperties.type.value(UserType.u1),
+                                UserProperties.userId.value(1)
+                        ),
+                        sqlParams);
+                return 1;
+            }
+        }, user, Collections.singletonList(uKey1));
+
+        MapperUtils.updateByUniqueKeys(new User2TestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE user u SET u.type = ? WHERE u.user_id IN(?, ?, ?)",
+                        Arrays.asList(
+                                UserProperties.type.value(UserType.u1),
+                                UserProperties.userId.value(1),
+                                UserProperties.userId.value(2),
+                                UserProperties.userId.value(3)
+                        ),
+                        sqlParams);
+                return 3;
+            }
+        }, user, Collections.singletonList(UserProperties.type), Arrays.asList(uKey1, uKey2, uKey3));
+
+        MapperUtils.updateByUniqueKeys(new User2TestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE user u SET u.type = ?, u.password = ? WHERE u.user_id IN(?, ?, ?)",
+                        Arrays.asList(
+                                UserProperties.type.value(UserType.u1),
+                                UserProperties.password.value("12345678"),
+                                UserProperties.userId.value(1),
+                                UserProperties.userId.value(2),
+                                UserProperties.userId.value(3)
+                        ),
+                        sqlParams);
+                return 3;
+            }
+        }, user, Arrays.asList(UserProperties.type, UserProperties.password), Arrays.asList(uKey1, uKey2, uKey3));
+
+
+        MapperUtils.updateByUniqueKeys(new User2TestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE user u SET u.type = ?, u.password = ?, u.login_id = ? WHERE u.user_id IN(?, ?, ?)",
+                        Arrays.asList(
+                                UserProperties.type.value(UserType.u1),
+                                UserProperties.password.value("12345678"),
+                                UserProperties.loginId.value(null),
+                                UserProperties.userId.value(1),
+                                UserProperties.userId.value(2),
+                                UserProperties.userId.value(3)
+                        ),
+                        sqlParams);
+                return 3;
+            }
+        }, user, Arrays.asList(UserProperties.type, UserProperties.password, UserProperties.loginId), Arrays.asList(uKey1, uKey2, uKey3));
+
+        Organization org = new Organization();
+        org.setType(1);
+
+        UniqueKey oKey1 = new UniqueKey(OrganizationProperties.cityCode.value("0001"), OrganizationProperties.name.value("广州市"));
+        UniqueKey oKey2 = new UniqueKey(OrganizationProperties.cityCode.value("0002"), OrganizationProperties.name.value("深圳市"));
+        UniqueKey oKey3 = new UniqueKey(OrganizationProperties.cityCode.value("0003"), OrganizationProperties.name.value("中山市"));
+
+        MapperUtils.updateByUniqueKeys(new OrganizationTestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE organization o SET o.type = ? WHERE o.city_code = ? AND o.name = ?",
+                        Arrays.asList(
+                                OrganizationProperties.type.value(1),
+                                OrganizationProperties.cityCode.value("0001"),
+                                OrganizationProperties.name.value("广州市")
+                        ),
+                        sqlParams);
+                return 1;
+            }
+        }, org, Collections.singletonList(oKey1));
+
+        MapperUtils.updateByUniqueKeys(new OrganizationTestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?) "
+                                + "OR (o.city_code = ? AND o.name = ?) OR (o.city_code = ? AND o.name = ?)",
+                        Arrays.asList(
+                                OrganizationProperties.type.value(1),
+                                OrganizationProperties.cityCode.value("0001"),
+                                OrganizationProperties.name.value("广州市"),
+                                OrganizationProperties.cityCode.value("0002"),
+                                OrganizationProperties.name.value("深圳市"),
+                                OrganizationProperties.cityCode.value("0003"),
+                                OrganizationProperties.name.value("中山市")
+                        ),
+                        sqlParams);
+                return 3;
+            }
+        }, org, Arrays.asList(oKey1, oKey2, oKey3));
+
+        MapperUtils.updateByUniqueKeys(new OrganizationTestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE organization o SET o.type = ? WHERE o.city_code = ? AND o.name = ?",
+                        Arrays.asList(
+                                OrganizationProperties.type.value(1),
+                                OrganizationProperties.cityCode.value("0001"),
+                                OrganizationProperties.name.value("广州市")
+                        ),
+                        sqlParams
+                );
+                return 1;
+            }
+        }, org, Collections.singletonList(OrganizationProperties.type), Collections.singletonList(oKey1));
+
+
+        MapperUtils.updateByUniqueKeys(new OrganizationTestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE organization o SET o.phone = ?, o.type = ? WHERE o.city_code = ? AND o.name = ?",
+                        Arrays.asList(
+                                OrganizationProperties.phone.value(null),
+                                OrganizationProperties.type.value(1),
+                                OrganizationProperties.cityCode.value("0001"),
+                                OrganizationProperties.name.value("广州市")
+                        ),
+                        sqlParams);
+                return 1;
+            }
+        }, org, Arrays.asList(OrganizationProperties.phone, OrganizationProperties.type), Collections.singletonList(oKey1));
+
+        MapperUtils.updateByUniqueKeys(new OrganizationTestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?) "
+                                + "OR (o.city_code = ? AND o.name = ?) OR (o.city_code = ? AND o.name = ?)",
+                        Arrays.asList(
+                                OrganizationProperties.type.value(1),
+                                OrganizationProperties.cityCode.value("0001"),
+                                OrganizationProperties.name.value("广州市"),
+                                OrganizationProperties.cityCode.value("0002"),
+                                OrganizationProperties.name.value("深圳市"),
+                                OrganizationProperties.cityCode.value("0003"),
+                                OrganizationProperties.name.value("中山市")
+                        ),
+                        sqlParams);
+                return 3;
+            }
+        }, org, Collections.singletonList(OrganizationProperties.type), Arrays.asList(oKey1, oKey2, oKey3));
+
+        MapperUtils.updateByUniqueKeys(new OrganizationTestMapper() {
+            @Override
+            public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
+                assertPrepareStatementEquals(
+                        "UPDATE organization o SET o.phone = ?, o.type = ? WHERE (o.city_code = ? AND o.name = ?)"
+                                + " OR (o.city_code = ? AND o.name = ?) OR (o.city_code = ? AND o.name = ?)",
+                        Arrays.asList(
+                                OrganizationProperties.phone.value(null),
+                                OrganizationProperties.type.value(1),
+                                OrganizationProperties.cityCode.value("0001"),
+                                OrganizationProperties.name.value("广州市"),
+                                OrganizationProperties.cityCode.value("0002"),
+                                OrganizationProperties.name.value("深圳市"),
+                                OrganizationProperties.cityCode.value("0003"),
+                                OrganizationProperties.name.value("中山市")
+                        ),
+                        sqlParams);
+                return 3;
+            }
+        }, org, Arrays.asList(OrganizationProperties.phone, OrganizationProperties.type), Arrays.asList(oKey1, oKey2, oKey3));
+    }
+
+    //测试没有id值的情况
+    @Test
+    public void updateByUniqueKeys1() {
+        Organization org = new Organization();
+        org.setType(1);
+        thrown.expect(SqlException.class);
+        thrown.expectMessage("Unique key value not found");
+        assertEquals(0, MapperUtils.updateByUniqueKeys(new OrganizationTestMapper(), org, Collections.emptyList()));
+    }
+
+    //测试设置某个不允许为null的列为null
+    @Test
+    public void updateByUniqueKeys2() {
+        Organization org = new Organization();
+
+        UniqueKey oKey1 = new UniqueKey(OrganizationProperties.cityCode.value("0001"), OrganizationProperties.name.value("广州市"));
+        UniqueKey oKey2 = new UniqueKey(OrganizationProperties.cityCode.value("0002"), OrganizationProperties.name.value("深圳市"));
+        thrown.expect(SqlException.class);
+        thrown.expectMessage("Table(organization)'s column(type) is null!");
+        MapperUtils.updateByUniqueKeys(new OrganizationTestMapper(), org,
+                Collections.singletonList(OrganizationProperties.type), Arrays.asList(oKey1, oKey2));
     }
 
     private User getUser1() {

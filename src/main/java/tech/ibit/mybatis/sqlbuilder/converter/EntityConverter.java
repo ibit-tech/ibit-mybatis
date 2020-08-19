@@ -118,7 +118,7 @@ public class EntityConverter {
      * @return "列-值"信息列表
      * @see TableColumnValues
      */
-    public static List<TableColumnSetValues> getTableColumnValuesList(List<?> pos, boolean returnNullValue) {
+    public static List<TableColumnSetValues> getTableColumnValuesList(Collection<?> pos, boolean returnNullValue) {
         if (null == pos || pos.isEmpty()) {
             return Collections.emptyList();
         }
@@ -134,7 +134,7 @@ public class EntityConverter {
      * @param columnsOrder 指定列
      * @return "列-值"信息列表
      */
-    public static List<TableColumnSetValues> getTableColumnValuesList(List<?> pos, List<Column> columnsOrder) {
+    public static List<TableColumnSetValues> getTableColumnValuesList(Collection<?> pos, List<Column> columnsOrder) {
         if (null == pos || pos.isEmpty()) {
             return Collections.emptyList();
         }
@@ -344,7 +344,7 @@ public class EntityConverter {
      * @return 列更新信息
      */
     public static TableColumnSetValues getTableColumnValues(Object entity,
-                                                     boolean returnNullValue) {
+                                                            boolean returnNullValue) {
         Class<?> clazz = entity.getClass();
         checkEntityClazz(clazz);
 

@@ -15,6 +15,7 @@ import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.demo.entity.type.UserType;
 import tech.ibit.mybatis.demo.mapper.UserMapper;
 import tech.ibit.mybatis.demo.service.UserService;
+import tech.ibit.mybatis.sqlbuilder.UniqueKey;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.Page;
 import tech.ibit.mybatis.utils.CollectionUtils;
@@ -251,6 +252,184 @@ public class UserMapperTest extends CommonTest {
     }
 
     @Test
+    public void deleteByUniqueKey() {
+        int result = userMapper.deleteByUniqueKey(new UniqueKey(UserProperties.userId.value(100)));
+        assertEquals(0, result);
+
+        User user = insertUser();
+        result = userMapper.deleteByUniqueKey(new UniqueKey(UserProperties.userId.value(user.getUserId())));
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void deleteByUniqueKeys() {
+        int result = userMapper.deleteByUniqueKeys(
+                Arrays.asList(
+                        new UniqueKey(UserProperties.userId.value(-1)),
+                        new UniqueKey(UserProperties.userId.value(-2))
+                )
+        );
+        assertEquals(0, result);
+
+        User user1 = insertUser();
+        User user2 = insertUser();
+        result = userMapper.deleteByUniqueKeys(
+                Arrays.asList(
+                        new UniqueKey(UserProperties.userId.value(user1.getUserId())),
+                        new UniqueKey(UserProperties.userId.value(user2.getUserId()))
+                )
+        );
+        assertEquals(2, result);
+    }
+
+    @Test
+    public void updateByUniqueKey() {
+        User user = insertUser();
+
+        User userUpdate = new User();
+        userUpdate.setName("dev-haha");
+        userMapper.updateByUniqueKey(userUpdate, new UniqueKey(UserProperties.userId.value(user.getUserId())));
+
+        user = userMapper.getByUniqueKey(new UniqueKey(UserProperties.userId.value(user.getUserId())));
+        assertEquals("dev-haha", user.getName());
+
+
+        userUpdate = new User();
+        userUpdate.setMobilePhone("109");
+        userMapper.updateByUniqueKey(userUpdate, new UniqueKey(UserProperties.userId.value(user.getUserId())));
+        user = userMapper.getByUniqueKey(new UniqueKey(UserProperties.userId.value(user.getUserId())));
+        assertEquals("109", user.getMobilePhone());
+
+    }
+
+    @Test
+    public void updateByUniqueKey1() {
+        User user = insertUser();
+
+        Integer userId = user.getUserId();
+        String mobilePhone = user.getMobilePhone();
+        String email = user.getEmail();
+
+        user.setMobilePhone(mobilePhone + "0");
+        user.setEmail(email + "0");
+        userMapper.updateByUniqueKeyWithColumns(user,
+                Collections.singletonList(UserProperties.mobilePhone),
+                new UniqueKey(UserProperties.userId.value(userId))
+        );
+        user = userMapper.getByUniqueKey(new UniqueKey(UserProperties.userId.value(userId)));
+        assertEquals(email, user.getEmail());
+        assertEquals(mobilePhone + "0", user.getMobilePhone());
+
+        User userUpdate = new User();
+        userUpdate.setUserId(userId);
+        userUpdate.setEmail(email + "0");
+        userMapper.updateByUniqueKeyWithColumns(
+                userUpdate,
+                Arrays.asList(UserProperties.loginId, UserProperties.email),
+                new UniqueKey(UserProperties.userId.value(userId)));
+        user = userMapper.getByUniqueKey(new UniqueKey(UserProperties.userId.value(userId)));
+        assertNull(user.getLoginId());
+        assertEquals(email + "0", user.getEmail());
+    }
+
+    @Test
+    public void updateByUniqueKeyException1() {
+        User user = insertUser();
+        user.setName(null);
+        thrown.expect(SqlException.class);
+        thrown.expectMessage("Table(user)'s column(name) is null!");
+        userMapper.updateByUniqueKeyWithColumns(user, Collections.singletonList(UserProperties.name),
+                new UniqueKey(UserProperties.userId.value(user.getUserId())));
+    }
+
+    @Test
+    public void updateUniqueKeys() {
+        User user1 = insertUser();
+        User user2 = insertUser();
+
+        User userUpdate = new User();
+        userUpdate.setType(UserType.u3);
+        userMapper.updateByUniqueKeys(userUpdate,
+                Arrays.asList(
+                        new UniqueKey(UserProperties.userId.value(user1.getUserId())),
+                        new UniqueKey(UserProperties.userId.value(user2.getUserId()))
+                )
+        );
+
+        user1 = userMapper.getByUniqueKey(new UniqueKey(UserProperties.userId.value(user1.getUserId())));
+        user2 = userMapper.getByUniqueKey(new UniqueKey(UserProperties.userId.value(user2.getUserId())));
+        assertEquals(UserType.u3, user1.getType());
+        assertEquals(UserType.u3, user2.getType());
+
+    }
+
+    @Test
+    public void updateByUniqueKeys1() {
+
+        User user1 = insertUser();
+        User user2 = insertUser();
+
+        User userUpdate = new User();
+        userUpdate.setType(UserType.u3);
+        userMapper.updateByUniqueKeysWithColumns(userUpdate,
+                Arrays.asList(UserProperties.loginId, UserProperties.type),
+                Arrays.asList(
+                        new UniqueKey(UserProperties.userId.value(user1.getUserId())),
+                        new UniqueKey(UserProperties.userId.value(user2.getUserId()))
+                )
+        );
+
+        user1 = userMapper.getById(user1.getUserId());
+        user2 = userMapper.getById(user2.getUserId());
+        assertNull(user1.getLoginId());
+        assertNull(user2.getLoginId());
+        assertEquals(UserType.u3, user1.getType());
+        assertEquals(UserType.u3, user2.getType());
+    }
+
+
+    @Test
+    public void updateByUniqueKeysException1() {
+
+        User user1 = insertUser();
+        User user2 = insertUser();
+
+        User userUpdate = new User();
+        userUpdate.setType(UserType.u3);
+        thrown.expect(SqlException.class);
+        thrown.expectMessage("Table(user)'s column(name) is null!");
+        userMapper.updateByUniqueKeysWithColumns(userUpdate,
+                Arrays.asList(UserProperties.name, UserProperties.loginId, UserProperties.type),
+                Arrays.asList(
+                        new UniqueKey(UserProperties.userId.value(user1.getUserId())),
+                        new UniqueKey(UserProperties.userId.value(user2.getUserId()))
+                )
+        );
+    }
+
+    @Test
+    public void getByUniqueKey() {
+        User user = insertUser();
+        User user1 = userMapper.getByUniqueKey(new UniqueKey(UserProperties.userId.value(user.getUserId())));
+        assetObjectEquals(user, user1);
+    }
+
+    @Test
+    public void getByUniqueKeys() {
+        User user0 = insertUser();
+        User user1 = insertUser();
+
+        List<User> users = userMapper.getByUniqueKeys(
+                Arrays.asList(
+                        new UniqueKey(UserProperties.userId.value(user0.getUserId())),
+                        new UniqueKey(UserProperties.userId.value(user1.getUserId()))
+                )
+        );
+        assetObjectEquals(user0, users.get(0));
+        assetObjectEquals(user1, users.get(1));
+    }
+
+    @Test
     public void listUserIds() {
         User user0 = insertUser();
         User user1 = insertUser();
@@ -272,7 +451,7 @@ public class UserMapperTest extends CommonTest {
     @Test
     public void getPoById() {
         User user = insertUser();
-        UserPo userPo = userExtMapper.getPoById(user.getUserId());
+        UserPo userPo = userMapper.getPoById(UserPo.class, user.getUserId());
         assertEquals(user.getUserId(), userPo.getUserId());
         assertEquals(user.getLoginId(), userPo.getLoginId());
         assertEquals(user.getEmail(), userPo.getEmail());

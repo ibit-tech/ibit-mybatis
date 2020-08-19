@@ -14,6 +14,7 @@ import tech.ibit.mybatis.demo.entity.Organization;
 import tech.ibit.mybatis.demo.entity.OrganizationKey;
 import tech.ibit.mybatis.demo.entity.property.OrganizationProperties;
 import tech.ibit.mybatis.demo.mapper.OrganizationMapper;
+import tech.ibit.mybatis.sqlbuilder.UniqueKey;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
@@ -246,6 +247,244 @@ public class OrganizationMapperTest extends CommonTest {
                 Arrays.asList(
                         new OrganizationKey(organization0.getCityCode(), organization0.getName()),
                         new OrganizationKey(organization1.getCityCode(), organization1.getName())));
+        assetObjectEquals(organization0, organizations.get(0));
+        assetObjectEquals(organization1, organizations.get(1));
+    }
+
+    @Test
+    public void deleteUniqueKey() {
+
+        int result = organizationMapper.deleteByUniqueKey(
+                new UniqueKey(OrganizationProperties.cityCode.value("0000"), OrganizationProperties.name.value(""))
+        );
+        assertEquals(0, result);
+
+        Organization organization = insertOrganization();
+        result = organizationMapper.deleteByUniqueKey(
+                new UniqueKey(
+                        OrganizationProperties.cityCode.value(organization.getCityCode()),
+                        OrganizationProperties.name.value(organization.getName()))
+        );
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void deleteByUniqueKeys() {
+        int result = organizationMapper.deleteByUniqueKeys(
+                Arrays.asList(
+                        new UniqueKey(OrganizationProperties.cityCode.value("0000"), OrganizationProperties.name.value("0001")),
+                        new UniqueKey(OrganizationProperties.cityCode.value("0000"), OrganizationProperties.name.value("0002"))
+                )
+        );
+        assertEquals(0, result);
+
+        Organization organization = insertOrganization();
+        result = organizationMapper.deleteByUniqueKeys(
+                Arrays.asList(
+                        new UniqueKey(OrganizationProperties.cityCode.value("0000"), OrganizationProperties.name.value("0001")),
+                        new UniqueKey(OrganizationProperties.cityCode.value(organization.getCityCode()), OrganizationProperties.name.value(organization.getName()))
+                )
+        );
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void updateByUniqueKey() {
+        Organization organization = insertOrganization();
+
+        Organization organizationUpdate = new Organization();
+        organizationUpdate.setPhone("1190");
+        organizationMapper.updateByUniqueKey(
+                organizationUpdate,
+                new UniqueKey(
+                        OrganizationProperties.cityCode.value(organization.getCityCode()),
+                        OrganizationProperties.name.value(organization.getName())
+                )
+        );
+
+        Organization organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
+        organization.setPhone("1190");
+        assetObjectEquals(organization, organization1);
+    }
+
+    @Test
+    public void updateByUniqueKey1() {
+
+        Organization organization = insertOrganization();
+
+        Organization organizationUpdate = new Organization();
+        organizationUpdate.setType(3);
+        organizationUpdate.setPhone("1190");
+        organizationMapper.updateByUniqueKeyWithColumns(
+                organizationUpdate,
+                Collections.singletonList(OrganizationProperties.type),
+                new UniqueKey(
+                        OrganizationProperties.cityCode.value(organization.getCityCode()),
+                        OrganizationProperties.name.value(organization.getName())
+                )
+        );
+
+        Organization organization1 = organizationMapper.getById(new OrganizationKey(organization.getCityCode(), organization.getName()));
+        organization.setType(3);
+        assetObjectEquals(organization, organization1);
+
+        organizationUpdate.setPhone(null);
+        organizationMapper.updateByUniqueKeyWithColumns(
+                organizationUpdate, Arrays.asList(OrganizationProperties.phone, OrganizationProperties.type),
+                new UniqueKey(
+                        OrganizationProperties.cityCode.value(organization.getCityCode()),
+                        OrganizationProperties.name.value(organization.getName())
+                )
+        );
+
+        organization1 = organizationMapper.getByUniqueKey(
+                new UniqueKey(
+                        OrganizationProperties.cityCode.value(organization.getCityCode()),
+                        OrganizationProperties.name.value(organization.getName())
+                )
+        );
+        organization.setPhone(""); // h2会将值为NULL的字符串转为""
+        assetObjectEquals(organization, organization1);
+    }
+
+
+    @Test
+    public void updateByUniqueKeyException2() {
+
+        Organization organization = insertOrganization();
+
+        Organization organizationUpdate = new Organization();
+        organizationUpdate.setCityCode(organization.getCityCode());
+        organizationUpdate.setName(null);
+
+        thrown.expect(SqlException.class);
+        organizationMapper.updateByUniqueKeyWithColumns(
+                organizationUpdate, Collections.singletonList(OrganizationProperties.name),
+                new UniqueKey(
+                        OrganizationProperties.cityCode.value(organization.getCityCode()),
+                        OrganizationProperties.name.value(organization.getName())
+                )
+        );
+    }
+
+
+    @Test
+    public void updateByUniqueKeyException3() {
+
+        Organization organization = insertOrganization();
+
+        Organization organizationUpdate = new Organization();
+        organizationUpdate.setCityCode(organization.getCityCode());
+        organizationUpdate.setName(organization.getName());
+
+        thrown.expect(SqlException.class);
+        thrown.expectMessage("Table(organization)'s column(type) is null!");
+        organizationMapper.updateByUniqueKeyWithColumns(
+                organizationUpdate, Collections.singletonList(OrganizationProperties.type),
+                new UniqueKey(
+                        OrganizationProperties.cityCode.value(organization.getCityCode()),
+                        OrganizationProperties.name.value(organization.getName())
+                )
+        );
+    }
+
+
+    @Test
+    public void updateByUniqueKeys() {
+        Organization organization0 = insertOrganization();
+        Organization organization1 = insertOrganization1();
+
+
+        Organization organizationUpdate = new Organization();
+        organizationUpdate.setType(3);
+        organizationMapper.updateByUniqueKeys(organizationUpdate,
+                Arrays.asList(
+                        new UniqueKey(
+                                OrganizationProperties.cityCode.value(organization0.getCityCode()),
+                                OrganizationProperties.name.value(organization0.getName())
+                        ),
+                        new UniqueKey(
+                                OrganizationProperties.cityCode.value(organization1.getCityCode()),
+                                OrganizationProperties.name.value(organization1.getName()))
+                )
+        );
+
+        List<Organization> organizations = organizationMapper.getByUniqueKeys(
+                Arrays.asList(
+                        new UniqueKey(
+                                OrganizationProperties.cityCode.value(organization0.getCityCode()),
+                                OrganizationProperties.name.value(organization0.getName())
+                        ),
+                        new UniqueKey(
+                                OrganizationProperties.cityCode.value(organization1.getCityCode()),
+                                OrganizationProperties.name.value(organization1.getName()))
+                )
+        );
+        organization0.setType(3);
+        organization1.setType(3);
+        assetObjectEquals(organization0, organizations.get(0));
+        assetObjectEquals(organization1, organizations.get(1));
+    }
+
+    @Test
+    public void updateByUniqueKeys1() {
+
+        Organization organization0 = insertOrganization();
+        Organization organization1 = insertOrganization1();
+
+        Organization organizationUpdate = new Organization();
+        organizationUpdate.setType(3);
+        organizationMapper.updateByUniqueKeysWithColumns(organizationUpdate,
+                Collections.singletonList(OrganizationProperties.phone),
+                Arrays.asList(
+                        new UniqueKey(
+                                OrganizationProperties.cityCode.value(organization0.getCityCode()),
+                                OrganizationProperties.name.value(organization0.getName())
+                        ),
+                        new UniqueKey(
+                                OrganizationProperties.cityCode.value(organization1.getCityCode()),
+                                OrganizationProperties.name.value(organization1.getName()))
+                )
+        );
+        List<Organization> organizations = organizationMapper.getByUniqueKeys(
+                Arrays.asList(
+                        new UniqueKey(
+                                OrganizationProperties.cityCode.value(organization0.getCityCode()),
+                                OrganizationProperties.name.value(organization0.getName())
+                        ),
+                        new UniqueKey(
+                                OrganizationProperties.cityCode.value(organization1.getCityCode()),
+                                OrganizationProperties.name.value(organization1.getName()))
+                )
+        );
+        organization0.setPhone("");
+        organization1.setPhone("");
+        assetObjectEquals(organization0, organizations.get(0));
+        assetObjectEquals(organization1, organizations.get(1));
+    }
+
+    @Test
+    public void getByUniqueKey() {
+        Organization organization = insertOrganization();
+        Organization organization1 = organizationMapper.getByUniqueKey(
+                        new UniqueKey(
+                                OrganizationProperties.cityCode.value(organization.getCityCode()),
+                                OrganizationProperties.name.value(organization.getName())
+                        )
+        );
+        assetObjectEquals(organization, organization1);
+    }
+
+    @Test
+    public void getByUniqueKeys() {
+        Organization organization0 = insertOrganization();
+        Organization organization1 = insertOrganization1();
+
+        List<Organization> organizations = organizationMapper.getByIds(
+                Arrays.asList(
+                        new OrganizationKey(organization0.getCityCode(), organization0.getName()),
+                        new OrganizationKey(organization1.getCityCode(), organization1.getName()))
+        );
         assetObjectEquals(organization0, organizations.get(0));
         assetObjectEquals(organization1, organizations.get(1));
     }

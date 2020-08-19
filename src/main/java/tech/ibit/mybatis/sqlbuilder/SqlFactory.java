@@ -1,6 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import tech.ibit.mybatis.RawMapper;
+import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.sql.*;
 import tech.ibit.mybatis.sqlbuilder.sql.impl.*;
 
@@ -25,7 +25,7 @@ public class SqlFactory {
      * @param mapper mapper对象
      * @return 搜索sql
      */
-    public static <T> QuerySql<T> createQuery(RawMapper<T> mapper) {
+    public static <T> QuerySql<T> createQuery(Mapper<T> mapper) {
         return new QuerySqlImpl<>(mapper);
     }
 
@@ -35,7 +35,7 @@ public class SqlFactory {
      * @param mapper mapper对象
      * @return 计数sql
      */
-    public static CountSql createCount(RawMapper<?> mapper) {
+    public static CountSql createCount(Mapper<?> mapper) {
         return new CountSqlImpl(mapper);
     }
 
@@ -45,7 +45,7 @@ public class SqlFactory {
      * @param mapper mapper对象
      * @return 删除sql
      */
-    public static DeleteSql createDelete(RawMapper<?> mapper) {
+    public static DeleteSql createDelete(Mapper<?> mapper) {
         return new DeleteSqlImpl(mapper);
     }
 
@@ -55,7 +55,7 @@ public class SqlFactory {
      * @param mapper mapper对象
      * @return 插入sql
      */
-    public static InsertSql createInsert(RawMapper<?> mapper) {
+    public static InsertSql createInsert(Mapper<?> mapper) {
         return new InsertSqlImpl(mapper);
     }
 
@@ -65,7 +65,7 @@ public class SqlFactory {
      * @param mapper mapper对象
      * @return 更新sql
      */
-    public static UpdateSql createUpdate(RawMapper<?> mapper) {
+    public static UpdateSql createUpdate(Mapper<?> mapper) {
         return new UpdateSqlImpl(mapper);
     }
 

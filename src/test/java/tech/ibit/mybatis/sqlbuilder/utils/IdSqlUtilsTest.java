@@ -125,7 +125,7 @@ public class IdSqlUtilsTest extends CommonTest {
         OrganizationKey oKey1 = new OrganizationKey("001", "001");
         prepareStatement = IdSqlUtils.getByMultiId(organizationMapper, oKey1).getPrepareStatement();
         assertPrepareStatementEquals(
-                "SELECT o.city_code, o.name, o.type, o.phone FROM organization o WHERE (o.city_code = ? AND o.name = ?) LIMIT ?, ?",
+                "SELECT o.city_code, o.name, o.type, o.phone FROM organization o WHERE o.city_code = ? AND o.name = ? LIMIT ?, ?",
                 Arrays.asList(
                         OrganizationProperties.cityCode.value("001"),
                         OrganizationProperties.name.value("001"),
@@ -187,7 +187,7 @@ public class IdSqlUtilsTest extends CommonTest {
 
         prepareStatement = IdSqlUtils.deleteByMultiIds(organizationMapper, Collections.singletonList(oKey1)).getPrepareStatement();
         assertPrepareStatementEquals(
-                "DELETE FROM organization WHERE (city_code = ? AND name = ?)",
+                "DELETE FROM organization WHERE city_code = ? AND name = ?",
                 Arrays.asList(
                         OrganizationProperties.cityCode.value("001"),
                         OrganizationProperties.name.value("001")
@@ -217,7 +217,7 @@ public class IdSqlUtilsTest extends CommonTest {
         OrganizationKey oKey1 = new OrganizationKey("001", "001");
         prepareStatement = IdSqlUtils.deleteByMultiId(organizationMapper, oKey1).getPrepareStatement();
         assertPrepareStatementEquals(
-                "DELETE FROM organization WHERE (city_code = ? AND name = ?)",
+                "DELETE FROM organization WHERE city_code = ? AND name = ?",
                 Arrays.asList(
                         OrganizationProperties.cityCode.value("001"),
                         OrganizationProperties.name.value("001")
@@ -574,7 +574,7 @@ public class IdSqlUtilsTest extends CommonTest {
 
         prepareStatement = IdSqlUtils.updateByMultiIds(organizationMapper, org, Collections.singletonList(oKey1)).getPrepareStatement();
         assertPrepareStatementEquals(
-                "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?)",
+                "UPDATE organization o SET o.type = ? WHERE o.city_code = ? AND o.name = ?",
                 Arrays.asList(
                         OrganizationProperties.type.value(1),
                         OrganizationProperties.cityCode.value("0001"),
@@ -598,7 +598,7 @@ public class IdSqlUtilsTest extends CommonTest {
         prepareStatement = IdSqlUtils.updateByMultiIds(organizationMapper, org, Collections.singletonList(OrganizationProperties.type),
                 Collections.singletonList(oKey1)).getPrepareStatement();
         assertPrepareStatementEquals(
-                "UPDATE organization o SET o.type = ? WHERE (o.city_code = ? AND o.name = ?)",
+                "UPDATE organization o SET o.type = ? WHERE o.city_code = ? AND o.name = ?",
                 Arrays.asList(
                         OrganizationProperties.type.value(1),
                         OrganizationProperties.cityCode.value("0001"),
@@ -608,7 +608,7 @@ public class IdSqlUtilsTest extends CommonTest {
         prepareStatement = IdSqlUtils.updateByMultiIds(organizationMapper, org, Arrays.asList(OrganizationProperties.phone, OrganizationProperties.type),
                 Collections.singletonList(oKey1)).getPrepareStatement();
         assertPrepareStatementEquals(
-                "UPDATE organization o SET o.phone = ?, o.type = ? WHERE (o.city_code = ? AND o.name = ?)",
+                "UPDATE organization o SET o.phone = ?, o.type = ? WHERE o.city_code = ? AND o.name = ?",
                 Arrays.asList(
                         OrganizationProperties.phone.value(null),
                         OrganizationProperties.type.value(1),
@@ -653,7 +653,7 @@ public class IdSqlUtilsTest extends CommonTest {
         org.setType(1);
         thrown.expect(SqlException.class);
         thrown.expectMessage("Id value not found");
-        IdSqlUtils.updateByMultiIds(null, org, Collections.emptyList()).getPrepareStatement();
+        IdSqlUtils.updateByMultiIds(organizationMapper, org, Collections.emptyList()).getPrepareStatement();
     }
 
     //测试设置某个不允许为null的列为null
@@ -665,7 +665,7 @@ public class IdSqlUtilsTest extends CommonTest {
         OrganizationKey oKey2 = new OrganizationKey("0002", "深圳市");
         thrown.expect(SqlException.class);
         thrown.expectMessage("Table(organization)'s column(type) is null!");
-        IdSqlUtils.updateByMultiIds(null, org, Collections.singletonList(OrganizationProperties.type),
+        IdSqlUtils.updateByMultiIds(organizationMapper, org, Collections.singletonList(OrganizationProperties.type),
                 Arrays.asList(oKey1, oKey2)).getPrepareStatement();
     }
 

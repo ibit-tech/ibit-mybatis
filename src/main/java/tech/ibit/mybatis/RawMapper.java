@@ -3,10 +3,6 @@ package tech.ibit.mybatis;
 import org.apache.ibatis.annotations.*;
 import tech.ibit.mybatis.sqlbuilder.KeyValuePair;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
-import tech.ibit.mybatis.sqlbuilder.Table;
-import tech.ibit.mybatis.sqlbuilder.exception.OperationNotSupportedException;
-import tech.ibit.mybatis.sqlbuilder.sql.*;
-import tech.ibit.mybatis.sqlbuilder.sql.impl.*;
 
 import java.util.List;
 
@@ -84,68 +80,5 @@ public interface RawMapper<T> {
      */
     @InsertProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
     int rawInsert(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
-
-    /**
-     * 创建搜索
-     *
-     * @return 搜索sql
-     */
-    default QuerySql<T> createQuery() {
-        return new QuerySqlImpl<>(this);
-    }
-
-    /**
-     * 创建计数
-     *
-     * @return 计数sql
-     */
-    default CountSql createCount() {
-        return new CountSqlImpl(this);
-    }
-
-    /**
-     * 创建删除
-     *
-     * @return 删除sql
-     */
-    default DeleteSql createDelete() {
-        return new DeleteSqlImpl(this);
-    }
-
-    /**
-     * 创建插入
-     *
-     * @return 插入sql
-     */
-    default InsertSql createInsert() {
-        return new InsertSqlImpl(this);
-    }
-
-    /**
-     * 创建更新
-     *
-     * @return 更新sql
-     */
-    default UpdateSql createUpdate() {
-        return new UpdateSqlImpl(this);
-    }
-
-    /**
-     * 获取实体类型
-     *
-     * @return 实体类型
-     */
-    default Class<T> getPoClazz() {
-        throw new OperationNotSupportedException("Method getPoClazz needs to override!");
-    }
-
-    /**
-     * 获取默认的表对象
-     *
-     * @return 表对象
-     */
-    default Table getDefaultTable() {
-        throw new OperationNotSupportedException("Method getDefaultTable needs to override!");
-    }
 
 }

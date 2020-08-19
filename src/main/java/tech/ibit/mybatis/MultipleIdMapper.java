@@ -5,6 +5,7 @@ import tech.ibit.mybatis.sqlbuilder.MultiId;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.utils.MapperUtils;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public interface MultipleIdMapper<T, K extends MultiId> extends Mapper<T> {
      * @param ids 主键列表
      * @return 删除条数
      */
-    default int deleteByIds(List<K> ids) {
+    default int deleteByIds(Collection<K> ids) {
         return MapperUtils.deleteByMultiIds(this, ids);
     }
 
@@ -103,5 +104,29 @@ public interface MultipleIdMapper<T, K extends MultiId> extends Mapper<T> {
      */
     default List<T> getByIds(List<K> ids) {
         return MapperUtils.getByMultiIds(this, ids);
+    }
+
+    /**
+     * 通过主键获取
+     *
+     * @param id      主键
+     * @param poClazz 返回类
+     * @param <P>     返回类型
+     * @return 相应的对象
+     */
+    default <P> P getPoById(Class<P> poClazz, K id) {
+        return MapperUtils.getPoByMultiId(this, poClazz, id);
+    }
+
+    /**
+     * 通过主键批量获取
+     *
+     * @param ids     主键列表
+     * @param poClazz 返回类
+     * @param <P>     返回类型
+     * @return 相应的对象列表
+     */
+    default <P> List<P> getPoByIds(Class<P> poClazz, List<K> ids) {
+        return MapperUtils.getPoByMultiIds(this, poClazz, ids);
     }
 }

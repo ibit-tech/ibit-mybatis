@@ -1,6 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
-import tech.ibit.mybatis.RawMapper;
+import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.DeleteSql;
@@ -48,9 +48,9 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
     /**
      * 基础mapper
      */
-    private final RawMapper<?> mapper;
+    private final Mapper<?> mapper;
 
-    public DeleteSqlImpl(RawMapper<?> mapper) {
+    public DeleteSqlImpl(Mapper<?> mapper) {
         this.mapper = mapper;
     }
 

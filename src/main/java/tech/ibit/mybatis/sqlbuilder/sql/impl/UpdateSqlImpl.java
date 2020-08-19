@@ -1,6 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
-import tech.ibit.mybatis.RawMapper;
+import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.UpdateSql;
@@ -47,9 +47,9 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
     /**
      * 基础mapper
      */
-    private final RawMapper<?> mapper;
+    private final Mapper<?> mapper;
 
-    public UpdateSqlImpl(RawMapper<?> mapper) {
+    public UpdateSqlImpl(Mapper<?> mapper) {
         this.mapper = mapper;
     }
 
@@ -101,48 +101,23 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
         return mapper.rawUpdate(statement);
     }
 
-    /**
-     * Gets the value of updateTable
-     *
-     * @return the value of updateTable
-     */
+    @Override
     public ListField<Table> getUpdateTable() {
         return updateTable;
     }
 
-    /**
-     * Gets the value of joinOn
-     *
-     * @return the value of joinOn
-     */
+    @Override
     public ListField<JoinOn> getJoinOn() {
         return joinOn;
     }
 
-    /**
-     * Gets the value of set
-     *
-     * @return the value of set
-     */
+    @Override
     public ListField<SetItem> getSet() {
         return set;
     }
 
-    /**
-     * Gets the value of where
-     *
-     * @return the value of where
-     */
+    @Override
     public ListField<Criteria> getWhere() {
         return where;
-    }
-
-    /**
-     * Gets the value of mapper
-     *
-     * @return the value of mapper
-     */
-    public RawMapper<?> getMapper() {
-        return mapper;
     }
 }

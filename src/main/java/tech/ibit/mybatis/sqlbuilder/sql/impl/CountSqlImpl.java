@@ -1,7 +1,7 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
 import org.apache.commons.lang.StringUtils;
-import tech.ibit.mybatis.RawMapper;
+import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.CountSql;
@@ -70,10 +70,10 @@ public class CountSqlImpl extends SqlLogImpl
     /**
      * 基础mapper
      */
-    private final RawMapper<?> mapper;
+    private final Mapper<?> mapper;
 
 
-    public CountSqlImpl(RawMapper<?> mapper) {
+    public CountSqlImpl(Mapper<?> mapper) {
         this.mapper = mapper;
     }
 

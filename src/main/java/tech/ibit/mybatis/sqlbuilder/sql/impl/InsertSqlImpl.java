@@ -1,6 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
-import tech.ibit.mybatis.RawMapper;
+import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.sql.InsertSql;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
@@ -41,9 +41,9 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
     /**
      * 基础mapper
      */
-    private final RawMapper<?> mapper;
+    private final Mapper<?> mapper;
 
-    public InsertSqlImpl(RawMapper<?> mapper) {
+    public InsertSqlImpl(Mapper<?> mapper) {
         this.mapper = mapper;
     }
 

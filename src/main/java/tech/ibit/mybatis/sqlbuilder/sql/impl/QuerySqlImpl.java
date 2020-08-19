@@ -1,6 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
-import tech.ibit.mybatis.RawMapper;
+import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
 import tech.ibit.mybatis.sqlbuilder.sql.CountSql;
@@ -86,9 +86,9 @@ public class QuerySqlImpl<T> extends SqlLogImpl
     /**
      * 基础mapper
      */
-    private RawMapper<T> mapper;
+    private final Mapper<T> mapper;
 
-    public QuerySqlImpl(RawMapper<T> mapper) {
+    public QuerySqlImpl(Mapper<T> mapper) {
         this.mapper = mapper;
     }
 
@@ -349,24 +349,5 @@ public class QuerySqlImpl<T> extends SqlLogImpl
      */
     public void setColumn(ListField<IColumn> column) {
         this.column = column;
-    }
-
-    /**
-     * Gets the value of mapper
-     *
-     * @return the value of mapper
-     */
-    public RawMapper<T> getMapper() {
-        return mapper;
-    }
-
-    /**
-     * Sets the mapper
-     * <p>You can use getMapper() to get the value of mapper</p>
-     *
-     * @param mapper mapper
-     */
-    public void setMapper(RawMapper<T> mapper) {
-        this.mapper = mapper;
     }
 }

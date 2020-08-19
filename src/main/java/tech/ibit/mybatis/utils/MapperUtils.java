@@ -10,6 +10,7 @@ import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
 import tech.ibit.mybatis.sqlbuilder.sql.InsertSql;
 import tech.ibit.mybatis.sqlbuilder.sql.support.WhereSupport;
 import tech.ibit.mybatis.sqlbuilder.utils.IdSqlUtils;
+import tech.ibit.mybatis.sqlbuilder.utils.UniqueKeySqlUtils;
 import tech.ibit.structlog4j.Logger;
 import tech.ibit.structlog4j.StructLoggerFactory;
 
@@ -107,7 +108,7 @@ public class MapperUtils {
      * @param <K>    主键值类型
      * @return 删除条数
      */
-    public static <T, K extends MultiId> int deleteByMultiIds(MultipleIdMapper<T, K> mapper, List<K> ids) {
+    public static <T, K extends MultiId> int deleteByMultiIds(MultipleIdMapper<T, K> mapper, Collection<K> ids) {
         return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.deleteByMultiIds(mapper, ids).executeDelete();
     }
 
@@ -291,7 +292,7 @@ public class MapperUtils {
      * @param <K>    主键值类型
      * @return 更新条数
      */
-    public static <T, K extends MultiId> int updateByMultiIds(MultipleIdMapper<T, K> mapper, T entity, List<K> ids) {
+    public static <T, K extends MultiId> int updateByMultiIds(MultipleIdMapper<T, K> mapper, T entity, Collection<K> ids) {
         return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByMultiIds(mapper, entity, ids).executeUpdate();
     }
 
@@ -306,7 +307,7 @@ public class MapperUtils {
      * @param <K>     主键值类型
      * @return 更新条数
      */
-    public static <T, K extends MultiId> int updateByMultiIds(MultipleIdMapper<T, K> mapper, T entity, List<Column> columns, List<K> ids) {
+    public static <T, K extends MultiId> int updateByMultiIds(MultipleIdMapper<T, K> mapper, T entity, List<Column> columns, Collection<K> ids) {
         return CollectionUtils.isEmpty(ids) ? 0 : IdSqlUtils.updateByMultiIds(mapper, entity, columns, ids).executeUpdate();
     }
 
@@ -358,10 +359,9 @@ public class MapperUtils {
      * @param <K>    主键值类型
      * @return 实体列表
      */
-    public static <T, K extends MultiId> List<T> getByMultiIds(MultipleIdMapper<T, K> mapper, List<K> ids) {
+    public static <T, K extends MultiId> List<T> getByMultiIds(MultipleIdMapper<T, K> mapper, Collection<K> ids) {
         return CollectionUtils.isEmpty(ids) ? Collections.emptyList() : IdSqlUtils.getByMultiIds(mapper, ids).executeQuery();
     }
-
 
     /**
      * 通过主键获取某个类型的持久化对象
@@ -419,8 +419,141 @@ public class MapperUtils {
      * @param <P>    持久化对象类类型
      * @return 持久化对象列表
      */
-    public static <T, K extends MultiId, P> List<P> getPoByMultiIds(MultipleIdMapper<T, K> mapper, Class<P> clazz, List<K> ids) {
+    public static <T, K extends MultiId, P> List<P> getPoByMultiIds(MultipleIdMapper<T, K> mapper, Class<P> clazz, Collection<K> ids) {
         return IdSqlUtils.getByMultiIds(mapper, ids).executeQuery(clazz);
+    }
+
+    /**
+     * 通过 unique key 获取实体
+     *
+     * @param mapper 实体对应mapper
+     * @param <T>    实体类类型
+     * @return 实体
+     */
+    public static <T> T getByUniqueKey(Mapper<T> mapper, UniqueKey uniqueKey) {
+        return UniqueKeySqlUtils.getByUniqueKey(mapper, mapper.getPoClazz(), uniqueKey).executeQueryOne();
+    }
+
+    /**
+     * 通过 unique key 批量获取实体
+     *
+     * @param mapper     实体对应mapper
+     * @param uniqueKeys 主键列表
+     * @param <T>        实体类类型
+     * @return 实体列表
+     */
+    public static <T> List<T> getByUniqueKeys(Mapper<T> mapper, Collection<UniqueKey> uniqueKeys) {
+        return UniqueKeySqlUtils.getByUniqueKeys(mapper, mapper.getPoClazz(), uniqueKeys).executeQuery();
+    }
+
+    /**
+     * 通过 unique key 获取某个类型的持久化对象
+     *
+     * @param mapper    实体对应的mapper
+     * @param clazz     持久化对象类
+     * @param uniqueKey 主键
+     * @param <T>       实体类类型
+     * @param <P>       持久化对象类类型
+     * @return 持久化对象
+     */
+    public static <T, P> P getPoByUniqueKey(Mapper<T> mapper, Class<P> clazz, UniqueKey uniqueKey) {
+        return UniqueKeySqlUtils.getByUniqueKey(mapper, clazz, uniqueKey).executeQueryOne(clazz);
+    }
+
+    /**
+     * 通过 unique key 批量获取某个类型的持久化对象
+     *
+     * @param mapper     实体对应的mapper
+     * @param clazz      持久化对象类
+     * @param uniqueKeys 主键列表
+     * @param <T>        实体类类型
+     * @param <P>        持久化对象类类型
+     * @return 持久化对象列表
+     */
+    public static <T, P> List<P> getPoByUniqueKeys(Mapper<T> mapper, Class<P> clazz, Collection<UniqueKey> uniqueKeys) {
+        return UniqueKeySqlUtils.getByUniqueKeys(mapper, clazz, uniqueKeys).executeQuery(clazz);
+    }
+
+    /**
+     * 通过 unique key 更新实体
+     *
+     * @param mapper    实体对应mapper
+     * @param entity    实体对象
+     * @param uniqueKey unique key
+     * @param <T>       实体类类型
+     * @return 更新条数
+     */
+    public static <T> int updateByUniqueKey(Mapper<T> mapper, T entity, UniqueKey uniqueKey) {
+        return updateByUniqueKeys(
+                mapper, entity, null == uniqueKey ? null : Collections.singletonList(uniqueKey)
+        );
+    }
+
+    /**
+     * 通过 unique key 更新实体指定列
+     *
+     * @param mapper    实体对应mapper
+     * @param entity    实体对象
+     * @param uniqueKey unique key
+     * @param columns   更新列
+     * @param <T>       实体类类型
+     * @return 更新条数
+     */
+    public static <T> int updateByUniqueKey(Mapper<T> mapper, T entity, List<Column> columns, UniqueKey uniqueKey) {
+        return updateByUniqueKeys(
+                mapper, entity, columns, null == uniqueKey ? null : Collections.singletonList(uniqueKey)
+        );
+    }
+
+    /**
+     * 通过 unique key 更新实体
+     *
+     * @param mapper     实体对应mapper
+     * @param entity     实体对象
+     * @param uniqueKeys unique key 列表
+     * @param <T>        实体类类型
+     * @return 更新条数
+     */
+    public static <T> int updateByUniqueKeys(Mapper<T> mapper, T entity, Collection<UniqueKey> uniqueKeys) {
+        return UniqueKeySqlUtils.updateByUniqueKeys(mapper, entity, uniqueKeys).executeUpdate();
+    }
+
+    /**
+     * 通过 unique key 更新实体指定列
+     *
+     * @param mapper     实体对应mapper
+     * @param entity     实体对象
+     * @param uniqueKeys unique key 列表
+     * @param columns    更新列
+     * @param <T>        实体类类型
+     * @return 更新条数
+     */
+    public static <T> int updateByUniqueKeys(Mapper<T> mapper, T entity, List<Column> columns, Collection<UniqueKey> uniqueKeys) {
+        return UniqueKeySqlUtils.updateByUniqueKeys(mapper, entity, columns, uniqueKeys).executeUpdate();
+    }
+
+    /**
+     * 通过 unique key 删除
+     *
+     * @param mapper    实体对应mapper
+     * @param uniqueKey 主键对象
+     * @param <T>       实体类类型
+     * @return 删除条数
+     */
+    public static <T> int deleteByUniqueKey(Mapper<T> mapper, UniqueKey uniqueKey) {
+        return UniqueKeySqlUtils.deleteByUniqueKey(mapper, uniqueKey).executeDelete();
+    }
+
+    /**
+     * 通过 unique key 批量删除
+     *
+     * @param mapper     实体对应mapper
+     * @param uniqueKeys 主键对象
+     * @param <T>        实体类类型
+     * @return 删除条数
+     */
+    public static <T> int deleteByUniqueKeys(Mapper<T> mapper, Collection<UniqueKey> uniqueKeys) {
+        return UniqueKeySqlUtils.deleteByUniqueKeys(mapper, uniqueKeys).executeDelete();
     }
 
 
@@ -436,7 +569,7 @@ public class MapperUtils {
      */
     private static <T> void updateAutoIncreaseId(T entity, AutoIncrementIdSetterMethod idSetterMethod, Number key)
             throws InvocationTargetException, IllegalAccessException {
-        Class type = idSetterMethod.getType();
+        Class<?> type = idSetterMethod.getType();
         if (Integer.class == type || int.class == type) {
             idSetterMethod.getMethod().invoke(entity, key.intValue());
         }
@@ -482,7 +615,7 @@ public class MapperUtils {
      * @param keyword       查询关键字
      * @param searchColumns 查询列
      */
-    public static void addKeywords(WhereSupport sql, String keyword, List<Column> searchColumns) {
+    public static void addKeywords(WhereSupport<?> sql, String keyword, List<Column> searchColumns) {
         if (StringUtils.isNotBlank(keyword) && (CollectionUtils.isNotEmpty(searchColumns))) {
             keyword = getKeyword(keyword);
             List<Criteria> criterion = new ArrayList<>();

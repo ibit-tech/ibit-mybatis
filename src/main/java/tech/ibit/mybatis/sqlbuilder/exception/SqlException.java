@@ -60,13 +60,21 @@ public class SqlException extends RuntimeException {
     }
 
     /**
-     * i
      * id不存在
      *
      * @return 错误消息
      */
     public static SqlException idValueNotFound() {
         return new SqlException("Id value not found");
+    }
+
+    /**
+     * Unique Key 信息不存在
+     *
+     * @return 错误消息
+     */
+    public static SqlException uniqueKeyValueNotFound() {
+        return new SqlException("Unique key value not found");
     }
 
 
