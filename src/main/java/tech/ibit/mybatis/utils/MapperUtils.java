@@ -427,6 +427,7 @@ public class MapperUtils {
      * 通过 unique key 获取实体
      *
      * @param mapper 实体对应mapper
+     * @param uniqueKey  unique key
      * @param <T>    实体类类型
      * @return 实体
      */
