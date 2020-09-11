@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface DefaultPrepareStatementSupport {
+public interface PrepareStatementBuildSupport {
 
 
     /**

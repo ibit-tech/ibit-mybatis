@@ -1,28 +1,54 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.Table;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.InsertTableSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 
 import java.util.List;
 
 /**
- * DefaultInsertTableSupport
+ * InsertTableSupport实现
  *
  * @author IBIT程序猿
  */
-public interface DefaultInsertTableSupport<T> extends DefaultSqlSupport<T>,
-        InsertTableSupport<T>, DefaultTableSupport {
+public class InsertTableSupportImpl<T> extends TableSupportImpl
+        implements SqlSupport<T>, InsertTableSupport<T> {
 
+    /**
+     * sql 对象
+     */
+    private final T sql;
+
+    /**
+     * insert table
+     */
+    private final ListField<Table> insertTable;
+
+    /**
+     * 构造函数
+     *
+     * @param sql sql对象
+     */
+    public InsertTableSupportImpl(T sql) {
+        this.sql = sql;
+        this.insertTable = new ListField<>();
+    }
 
     /**
      * 获取插入表
      *
      * @return 插入表
      */
-    ListField<Table> getInsertTable();
+    private ListField<Table> getInsertTable() {
+        return insertTable;
+    }
 
+    @Override
+    public T getSql() {
+        return sql;
+    }
 
     /**
      * `INSERT INTO table1 t1` 语句, t1表示"表别名"
@@ -32,7 +58,7 @@ public interface DefaultInsertTableSupport<T> extends DefaultSqlSupport<T>,
      * @see Table
      */
     @Override
-    default T insert(Table table) {
+    public T insert(Table table) {
         getInsertTable().addItem(table);
         return getSql();
     }
@@ -45,7 +71,7 @@ public interface DefaultInsertTableSupport<T> extends DefaultSqlSupport<T>,
      * @see Table
      */
     @Override
-    default T insert(List<Table> tables) {
+    public T insert(List<Table> tables) {
         getInsertTable().addItems(tables);
         return getSql();
     }
@@ -56,7 +82,7 @@ public interface DefaultInsertTableSupport<T> extends DefaultSqlSupport<T>,
      * @param useAlias 是否使用别名
      * @return 预查询SQL对象
      */
-    default PrepareStatement getInsertPrepareStatement(boolean useAlias) {
+    public PrepareStatement getInsertPrepareStatement(boolean useAlias) {
         return getTablePrepareStatement(getInsertTable(), "INSERT INTO ", useAlias);
     }
 }

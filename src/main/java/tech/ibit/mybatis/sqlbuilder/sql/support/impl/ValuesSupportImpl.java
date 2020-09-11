@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import org.apache.commons.lang.StringUtils;
 import tech.ibit.mybatis.sqlbuilder.Column;
@@ -6,6 +6,7 @@ import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.CriteriaMaker;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
+import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.ValuesSupport;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
@@ -13,26 +14,63 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DefaultValuesSupport
+ * publicValuesSupport
  *
  * @author IBIT程序猿
  */
-public interface DefaultValuesSupport<T> extends DefaultSqlSupport<T>,
-        ValuesSupport<T>, DefaultPrepareStatementSupport {
+public class ValuesSupportImpl<T> implements SqlSupport<T>,
+        ValuesSupport<T>, PrepareStatementBuildSupport {
+
+    /**
+     * sql 对象
+     */
+    private final T sql;
+
+    /**
+     * column
+     */
+    private final ListField<Column> column;
+
+    /**
+     * value
+     */
+    private final ListField<Object> value;
+
+    /**
+     * 构造函数
+     *
+     * @param sql sql对象
+     */
+    public ValuesSupportImpl(T sql) {
+        this.sql = sql;
+        this.column = new ListField<>();
+        this.value = new ListField<>();
+    }
+
 
     /**
      * 获取列
      *
      * @return 列
      */
-    ListField<Column> getColumn();
+    private ListField<Column> getColumn() {
+        return column;
+    }
 
     /**
      * 获取值
      *
      * @return 值
      */
-    ListField<Object> getValue();
+    public ListField<Object> getValue() {
+        return value;
+    }
+
+
+    @Override
+    public T getSql() {
+        return sql;
+    }
 
     /**
      * `(column1, column2, ...) VALUES(?, ?, ...)`语句
@@ -42,7 +80,7 @@ public interface DefaultValuesSupport<T> extends DefaultSqlSupport<T>,
      * @see ColumnValue
      */
     @Override
-    default T values(List<? extends ColumnValue> columnValues) {
+    public T values(List<? extends ColumnValue> columnValues) {
         columnValues.forEach(this::values);
         return getSql();
     }
@@ -55,7 +93,7 @@ public interface DefaultValuesSupport<T> extends DefaultSqlSupport<T>,
      * @see ColumnValue
      */
     @Override
-    default T values(ColumnValue columnValue) {
+    public T values(ColumnValue columnValue) {
         getColumn().addItem((Column) columnValue.getColumn());
         getValue().addItem(columnValue.getValue());
         return getSql();
@@ -70,7 +108,7 @@ public interface DefaultValuesSupport<T> extends DefaultSqlSupport<T>,
      * @see ColumnValue
      */
     @Override
-    default T values(List<Column> columns, List<Object> values) {
+    public T values(List<Column> columns, List<Object> values) {
         getColumn().addItems(columns);
         getValue().addItems(values);
         return getSql();
@@ -81,7 +119,7 @@ public interface DefaultValuesSupport<T> extends DefaultSqlSupport<T>,
      *
      * @return 预查询SQL
      */
-    default PrepareStatement getColumnPrepareStatement() {
+    public PrepareStatement getColumnPrepareStatement() {
         List<Column> columns = getColumn().getItems();
         if (CollectionUtils.isEmpty(columns)) {
             return PrepareStatement.empty();
@@ -94,7 +132,7 @@ public interface DefaultValuesSupport<T> extends DefaultSqlSupport<T>,
      *
      * @return 预查询SQL
      */
-    default PrepareStatement getValuePrepareStatement() {
+    public PrepareStatement getValuePrepareStatement() {
         List<Column> columns = getColumn().getItems();
         if (CollectionUtils.isEmpty(columns)) {
             return PrepareStatement.empty();
@@ -128,7 +166,7 @@ public interface DefaultValuesSupport<T> extends DefaultSqlSupport<T>,
      * @param totalSize  总参数数量
      * @return ? 列表
      */
-    default List<String> getValueIns(int columnSize, int totalSize) {
+    public List<String> getValueIns(int columnSize, int totalSize) {
         List<String> valueIns = new ArrayList<>();
         int size = totalSize / columnSize;
         for (int i = 0; i < size; i++) {

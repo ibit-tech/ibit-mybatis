@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.Criteria;
@@ -6,27 +6,75 @@ import tech.ibit.mybatis.sqlbuilder.CriteriaItem;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.HavingSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DefaultHavingSupport
+ * HavingSupport实现
  *
  * @author IBIT程序猿
  */
-public interface DefaultHavingSupport<T> extends DefaultSqlSupport<T>,
-        HavingSupport<T>, DefaultCriteriaSupport {
+public class HavingSupportImpl<T> extends CriteriaSupportImpl
+        implements SqlSupport<T>, HavingSupport<T> {
 
+    /**
+     * sql 对象
+     */
+    private final T sql;
+
+    /**
+     * Having
+     */
+    private final ListField<Criteria> having;
+
+    /**
+     * 构造函数
+     *
+     * @param sql sql对象
+     */
+    public HavingSupportImpl(T sql) {
+        this(sql, new ListField<>());
+    }
+
+
+    /**
+     * 构造函数
+     *
+     * @param sql    sql对象
+     * @param having having对象
+     */
+    private HavingSupportImpl(T sql, ListField<Criteria> having) {
+        this.sql = sql;
+        this.having = having;
+    }
+
+    /**
+     * 对象复制（浅复制）
+     *
+     * @param sql sql对象
+     * @param <K> sql对象模板
+     * @return 复制后的对象
+     */
+    public <K> HavingSupportImpl<K> copy(K sql) {
+        return new HavingSupportImpl<>(sql, having);
+    }
 
     /**
      * Having
      *
      * @return Having
      */
-    ListField<Criteria> getHaving();
+    private ListField<Criteria> getHaving() {
+        return having;
+    }
 
+    @Override
+    public T getSql() {
+        return sql;
+    }
 
     /**
      * `HAVING`语句
@@ -35,7 +83,7 @@ public interface DefaultHavingSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T having(Criteria having) {
+    public T having(Criteria having) {
         getHaving().addItem(having);
         return getSql();
     }
@@ -47,7 +95,7 @@ public interface DefaultHavingSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T having(List<Criteria> havings) {
+    public T having(List<Criteria> havings) {
         getHaving().addItems(havings);
         return getSql();
     }
@@ -59,7 +107,7 @@ public interface DefaultHavingSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T andHaving(CriteriaItem havingItem) {
+    public T andHaving(CriteriaItem havingItem) {
         having(havingItem.and());
         return getSql();
     }
@@ -71,7 +119,7 @@ public interface DefaultHavingSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T andHaving(List<Criteria> havings) {
+    public T andHaving(List<Criteria> havings) {
         having(Criteria.and(havings));
         return getSql();
     }
@@ -84,7 +132,7 @@ public interface DefaultHavingSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T orHaving(CriteriaItem havingItem) {
+    public T orHaving(CriteriaItem havingItem) {
         having(havingItem.or());
         return getSql();
     }
@@ -96,7 +144,7 @@ public interface DefaultHavingSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T orHaving(List<Criteria> havings) {
+    public T orHaving(List<Criteria> havings) {
         having(Criteria.or(havings));
         return getSql();
     }
@@ -107,7 +155,7 @@ public interface DefaultHavingSupport<T> extends DefaultSqlSupport<T>,
      * @param useAlias 是否使用别名
      * @return 预查询SQL对象
      */
-    default PrepareStatement getHavingPrepareStatement(boolean useAlias) {
+    public PrepareStatement getHavingPrepareStatement(boolean useAlias) {
         List<Criteria> criterion = getHaving().getItems();
         if (CollectionUtils.isEmpty(criterion)) {
             return PrepareStatement.empty();

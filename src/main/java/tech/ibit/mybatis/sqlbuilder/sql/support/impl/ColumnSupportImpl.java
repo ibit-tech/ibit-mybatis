@@ -1,28 +1,82 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.ColumnSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.List;
 
 /**
- * DefaultColumnSupport
+ * ColumnSupport实现
  *
  * @author IBIT程序猿
  */
-public interface DefaultColumnSupport<T>
-        extends DefaultSqlSupport<T>, ColumnSupport<T>, DefaultPrepareStatementSupport {
+public class ColumnSupportImpl<T>
+        implements SqlSupport<T>, ColumnSupport<T>, PrepareStatementBuildSupport {
+
+    /**
+     * sql 对象
+     */
+    private final T sql;
+
+    /**
+     * 列
+     */
+    private final ListField<IColumn> column;
+
+    /**
+     * 构造函数
+     *
+     * @param sql sql对象
+     */
+    public ColumnSupportImpl(T sql) {
+        this(sql, new ListField<>());
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param sql    sql对象
+     * @param column 列
+     */
+    private ColumnSupportImpl(T sql, ListField<IColumn> column) {
+        this.sql = sql;
+        this.column = column;
+    }
+
+    /**
+     * 对象复制（浅复制）
+     *
+     * @param sql sql对象
+     * @param <K> sql对象模板
+     * @return 复制后的对象
+     */
+    public <K> ColumnSupportImpl<K> copy(K sql) {
+        return new ColumnSupportImpl<>(sql, column);
+    }
 
     /**
      * 获取列
      *
      * @return 列
      */
-    ListField<IColumn> getColumn();
+    private ListField<IColumn> getColumn() {
+        return column;
+    }
+
+    /**
+     * 返回sql
+     *
+     * @return sql
+     */
+    @Override
+    public T getSql() {
+        return sql;
+    }
 
     /**
      * `t.column1, t.column2, ...`语句, "t": 为表的别名
@@ -32,7 +86,7 @@ public interface DefaultColumnSupport<T>
      * @see IColumn
      */
     @Override
-    default T column(List<? extends IColumn> columns) {
+    public T column(List<? extends IColumn> columns) {
         getColumn().addItems(columns);
         return getSql();
     }
@@ -45,7 +99,7 @@ public interface DefaultColumnSupport<T>
      * @see IColumn
      */
     @Override
-    default T column(IColumn column) {
+    public T column(IColumn column) {
         getColumn().addItem(column);
         return getSql();
     }
@@ -57,7 +111,7 @@ public interface DefaultColumnSupport<T>
      * @return SQL对象
      */
     @Override
-    default T columnPo(Class poClass) {
+    public T columnPo(Class<?> poClass) {
         getColumn().addItems(EntityConverter.getColumns(poClass));
         return getSql();
     }
@@ -69,7 +123,7 @@ public interface DefaultColumnSupport<T>
      * @param useAlias 是否使用别名
      * @return 预查询SQL对象
      */
-    default PrepareStatement getColumnPrepareStatement(boolean useAlias) {
+    public PrepareStatement getColumnPrepareStatement(boolean useAlias) {
         List<IColumn> columns = getColumn().getItems();
         if (CollectionUtils.isEmpty(columns)) {
             return PrepareStatement.empty();

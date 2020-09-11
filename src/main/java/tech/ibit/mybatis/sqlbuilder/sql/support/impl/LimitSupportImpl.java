@@ -1,29 +1,56 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.SimpleNameColumn;
 import tech.ibit.mybatis.sqlbuilder.sql.field.LimitField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.LimitSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * DefaultLimitSupport
+ * LimitSupport实现
  *
  * @author IBIT程序猿
  */
-public interface DefaultLimitSupport<T> extends DefaultSqlSupport<T>,
+public class LimitSupportImpl<T> implements SqlSupport<T>,
         LimitSupport<T> {
 
+    /**
+     * sql 对象
+     */
+    private final T sql;
+
+    /**
+     * limit
+     */
+    private final LimitField limit;
+
+    /**
+     * 构造函数
+     *
+     * @param sql sql对象
+     */
+    public LimitSupportImpl(T sql) {
+        this.sql = sql;
+        this.limit = new LimitField();
+    }
 
     /**
      * 获取limit相关参数
      *
      * @return limit相关参数
      */
-    LimitField getLimit();
+    public LimitField getLimit() {
+        return limit;
+    }
+
+    @Override
+    public T getSql() {
+        return sql;
+    }
 
     /**
      * `LIMIT #{start}, #{limit}` 语句
@@ -33,7 +60,7 @@ public interface DefaultLimitSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T limit(int start, int limit) {
+    public T limit(int start, int limit) {
         getLimit().limit(start, limit);
         return getSql();
     }
@@ -45,7 +72,7 @@ public interface DefaultLimitSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T limit(int limit) {
+    public T limit(int limit) {
         getLimit().limit(limit);
         return getSql();
     }
@@ -55,7 +82,7 @@ public interface DefaultLimitSupport<T> extends DefaultSqlSupport<T>,
      *
      * @return 预查询SQL对象
      */
-    default PrepareStatement getLimitPrepareStatement() {
+    public PrepareStatement getLimitPrepareStatement() {
         LimitField limitField = getLimit();
         int limit = limitField.getLimit();
         if (limit < 0) {

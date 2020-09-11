@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.Table;
@@ -8,12 +8,12 @@ import tech.ibit.mybatis.utils.CollectionUtils;
 import java.util.List;
 
 /**
- * From Support
+ * TableSupport实现
  *
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface DefaultTableSupport extends DefaultPrepareStatementSupport {
+public class TableSupportImpl implements PrepareStatementBuildSupport {
 
     /**
      * 获取预查询SQL对象
@@ -23,7 +23,7 @@ public interface DefaultTableSupport extends DefaultPrepareStatementSupport {
      * @param hook     前缀
      * @return 预查询SQL对象
      */
-    default PrepareStatement getTablePrepareStatement(ListField<Table> table, String hook, boolean useAlias) {
+    public PrepareStatement getTablePrepareStatement(ListField<Table> table, String hook, boolean useAlias) {
 
         List<Table> froms = table.getItems();
         if (CollectionUtils.isEmpty(froms)) {

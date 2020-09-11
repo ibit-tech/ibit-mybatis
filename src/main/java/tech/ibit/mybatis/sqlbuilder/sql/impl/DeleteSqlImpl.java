@@ -4,46 +4,41 @@ import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.DeleteSql;
-import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.*;
+import tech.ibit.mybatis.sqlbuilder.sql.support.UseAliasSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.impl.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * DeleteSqlImpl
+ * DeleteSql实现
  *
  * @author IBIT程序猿
  * @version 2.0
  */
 public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
-        DefaultDeleteSupport<DeleteSql>,
-        DefaultFromSupport<DeleteSql>,
-        DefaultJoinOnSupport<DeleteSql>,
-        DefaultWhereSupport<DeleteSql>,
-        DefaultUseAliasSupport {
+        UseAliasSupport, PrepareStatementBuildSupport {
 
     /**
-     * 删除项
+     * delete 支持
      */
-    private final ListField<Table> deleteItem = new ListField<>();
+    private final DeleteSupportImpl<DeleteSql> deleteSupport;
 
     /**
-     * 表
+     * From 支持
      */
-    private final ListField<Table> from = new ListField<>();
+    private final FromSupportImpl<DeleteSql> fromSupport;
 
     /**
-     * Join on
+     * where 支持
      */
-    private final ListField<JoinOn> joinOn = new ListField<>();
+    private final WhereSupportImpl<DeleteSql> whereSupport;
 
     /**
-     * where语句
+     * join on 支持
      */
-    private final ListField<Criteria> where = new ListField<>();
-
+    private final JoinOnSupportImpl<DeleteSql> joinOnSupport;
 
     /**
      * 基础mapper
@@ -52,11 +47,115 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
 
     public DeleteSqlImpl(Mapper<?> mapper) {
         this.mapper = mapper;
+        this.deleteSupport = new DeleteSupportImpl<>(this);
+        this.fromSupport = new FromSupportImpl<>(this);
+        this.whereSupport = new WhereSupportImpl<>(this);
+        this.joinOnSupport = new JoinOnSupportImpl<>(this);
     }
 
     @Override
-    public DeleteSql getSql() {
-        return this;
+    public DeleteSql delete(Table table) {
+        return deleteSupport.delete(table);
+    }
+
+    @Override
+    public DeleteSql delete(List<Table> tables) {
+        return deleteSupport.delete(tables);
+    }
+
+    @Override
+    public DeleteSql from(Table table) {
+        return fromSupport.from(table);
+    }
+
+    @Override
+    public DeleteSql from(List<Table> tables) {
+        return fromSupport.from(tables);
+    }
+
+    @Override
+    public DeleteSql joinOn(JoinOn joinOn) {
+        return joinOnSupport.joinOn(joinOn);
+    }
+
+    @Override
+    public DeleteSql joinOn(List<JoinOn> joinOns) {
+        return joinOnSupport.joinOn(joinOns);
+    }
+
+    @Override
+    public DeleteSql joinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.joinOn(table, columnPairs);
+    }
+
+    @Override
+    public DeleteSql leftJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.leftJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public DeleteSql rightJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.rightJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public DeleteSql fullJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.fullJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public DeleteSql innerJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.innerJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public DeleteSql complexLeftJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexLeftJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public DeleteSql complexRightJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexRightJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public DeleteSql complexFullJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexFullJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public DeleteSql complexInnerJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexInnerJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public DeleteSql where(Criteria criteria) {
+        return whereSupport.where(criteria);
+    }
+
+    @Override
+    public DeleteSql where(List<Criteria> criterion) {
+        return whereSupport.where(criterion);
+    }
+
+    @Override
+    public DeleteSql andWhere(CriteriaItem item) {
+        return whereSupport.andWhere(item);
+    }
+
+    @Override
+    public DeleteSql andWhere(List<Criteria> criterion) {
+        return whereSupport.andWhere(criterion);
+    }
+
+    @Override
+    public DeleteSql orWhere(CriteriaItem item) {
+        return whereSupport.orWhere(item);
+    }
+
+    @Override
+    public DeleteSql orWhere(List<Criteria> criterion) {
+        return whereSupport.orWhere(criterion);
     }
 
     @Override
@@ -70,12 +169,12 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
      * @return 关联多张表
      */
     private boolean isMultiTables() {
-        return from.getItems().size() > 1 || joinOn.getItems().size() > 0;
+        return fromSupport.getFrom().getItems().size() > 1 || joinOnSupport.getJoinOn().getItems().size() > 0;
     }
 
     @Override
     public PrepareStatement getPrepareStatement() {
-        if (getWhere().getItems().isEmpty()) {
+        if (whereSupport.getWhere().getItems().isEmpty()) {
             throw new SqlException("Where cannot be empty when do deleting!");
         }
 
@@ -89,10 +188,10 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
 
         append(
                 Arrays.asList(
-                        getDeleteItemPrepareStatement(multiTables),
-                        getFromPrepareStatement(useAlias),
-                        getJoinOnPrepareStatement(useAlias),
-                        getWherePrepareStatement(useAlias)
+                        deleteSupport.getDeleteItemPrepareStatement(multiTables),
+                        fromSupport.getFromPrepareStatement(useAlias),
+                        joinOnSupport.getJoinOnPrepareStatement(useAlias),
+                        whereSupport.getWherePrepareStatement(useAlias)
                 ), prepareSql, values);
 
         return new PrepareStatement(prepareSql.toString(), values);
@@ -115,34 +214,14 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
     public DeleteSql deleteFrom(Table table) {
         delete(table);
         from(table);
-        return getSql();
+        return this;
     }
-
 
     @Override
     public DeleteSql deleteFrom(List<Table> tables) {
         delete(tables);
         from(tables);
-        return getSql();
+        return this;
     }
 
-    @Override
-    public ListField<Table> getDeleteItem() {
-        return deleteItem;
-    }
-
-    @Override
-    public ListField<Table> getFrom() {
-        return from;
-    }
-
-    @Override
-    public ListField<JoinOn> getJoinOn() {
-        return joinOn;
-    }
-
-    @Override
-    public ListField<Criteria> getWhere() {
-        return where;
-    }
 }

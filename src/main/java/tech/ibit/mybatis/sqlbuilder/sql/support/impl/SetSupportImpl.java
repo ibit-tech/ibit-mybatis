@@ -1,29 +1,58 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.SetItem;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.SetSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * DefaultSetSupport
+ * SetSupport实现
  *
  * @author IBIT程序猿
  */
-public interface DefaultSetSupport<T> extends DefaultSqlSupport<T>,
-        SetSupport<T>, DefaultPrepareStatementSupport {
+public class SetSupportImpl<T> implements SqlSupport<T>,
+        SetSupport<T>, PrepareStatementBuildSupport {
 
+    /**
+     * sql 对象
+     */
+    private final T sql;
+
+    /**
+     * set
+     */
+    private final ListField<SetItem> set;
+
+
+    /**
+     * 构造函数
+     *
+     * @param sql sql对象
+     */
+    public SetSupportImpl(T sql) {
+        this.sql = sql;
+        this.set = new ListField<>();
+    }
+
+    @Override
+    public T getSql() {
+        return sql;
+    }
 
     /**
      * 获取设置内容
      *
      * @return 设置内容
      */
-    ListField<SetItem> getSet();
+    public ListField<SetItem> getSet() {
+        return set;
+    }
+
 
     /**
      * 增加设置内容
@@ -32,7 +61,7 @@ public interface DefaultSetSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T set(SetItem item) {
+    public T set(SetItem item) {
         getSet().addItem(item);
         return getSql();
     }
@@ -44,7 +73,7 @@ public interface DefaultSetSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T set(List<SetItem> items) {
+    public T set(List<SetItem> items) {
         getSet().addItems(items);
         return getSql();
     }
@@ -55,7 +84,7 @@ public interface DefaultSetSupport<T> extends DefaultSqlSupport<T>,
      * @param useAlias 是否使用别名
      * @return 预查询SQL对象
      */
-    default PrepareStatement getSetItemPrepareStatement(boolean useAlias) {
+    public PrepareStatement getSetItemPrepareStatement(boolean useAlias) {
         List<SetItem> setItems = getSet().getItems();
         if (CollectionUtils.isEmpty(setItems)) {
             return new PrepareStatement("", Collections.emptyList());

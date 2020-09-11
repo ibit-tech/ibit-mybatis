@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.Criteria;
@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Criteria Support
+ * CriteriaSupport实现
  *
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface DefaultCriteriaSupport {
+public class CriteriaSupportImpl {
 
     /**
      * 扩展prepareSql和values
@@ -23,7 +23,7 @@ public interface DefaultCriteriaSupport {
      * @param prepareSql 预查询sql
      * @param values     值列表
      */
-    default void append(List<Criteria> criterion
+    void append(List<Criteria> criterion
             , boolean useAlias, StringBuilder prepareSql, List<ColumnValue> values) {
 
         for (int i = 0; i < criterion.size(); i++) {

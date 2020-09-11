@@ -1,19 +1,62 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.JoinOnSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.List;
 
 /**
- * DefaultJoinOnSupport
+ * JoinOnSupport实现
  *
  * @author IBIT程序猿
  */
-public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
-        JoinOnSupport<T>, DefaultPrepareStatementSupport {
+public class JoinOnSupportImpl<T> implements SqlSupport<T>,
+        JoinOnSupport<T>, PrepareStatementBuildSupport {
+
+    /**
+     * sql 对象
+     */
+    private final T sql;
+
+
+    /**
+     * Join on
+     */
+    private final ListField<JoinOn> joinOn;
+
+    /**
+     * 构造函数
+     *
+     * @param sql sql对象
+     */
+    public JoinOnSupportImpl(T sql) {
+        this(sql, new ListField<>());
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param sql    sql对象
+     * @param joinOn joinOn对象
+     */
+    private JoinOnSupportImpl(T sql, ListField<JoinOn> joinOn) {
+        this.sql = sql;
+        this.joinOn = joinOn;
+    }
+
+    /**
+     * 对象复制（浅复制）
+     *
+     * @param sql sql对象
+     * @param <K> sql对象模板
+     * @return 复制后的对象
+     */
+    public <K> JoinOnSupportImpl<K> copy(K sql) {
+        return new JoinOnSupportImpl<>(sql, joinOn);
+    }
 
 
     /**
@@ -21,7 +64,14 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      *
      * @return JoinOn
      */
-    ListField<JoinOn> getJoinOn();
+    public ListField<JoinOn> getJoinOn() {
+        return joinOn;
+    }
+
+    @Override
+    public T getSql() {
+        return sql;
+    }
 
     /**
      * JoinOn操作
@@ -30,7 +80,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T joinOn(JoinOn joinOn) {
+    public T joinOn(JoinOn joinOn) {
         getJoinOn().addItem(joinOn);
         return getSql();
     }
@@ -43,7 +93,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T joinOn(List<JoinOn> joinOns) {
+    public T joinOn(List<JoinOn> joinOns) {
         getJoinOn().addItems(joinOns);
         return getSql();
     }
@@ -57,7 +107,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @see Column
      */
     @Override
-    default T joinOn(Table table, List<Column> columnPairs) {
+    public T joinOn(Table table, List<Column> columnPairs) {
         joinOn(JoinOn.none(table, columnPairs));
         return getSql();
     }
@@ -71,7 +121,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @see Column
      */
     @Override
-    default T leftJoinOn(Table table, List<Column> columnPairs) {
+    public T leftJoinOn(Table table, List<Column> columnPairs) {
         joinOn(JoinOn.left(table, columnPairs));
         return getSql();
     }
@@ -85,7 +135,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @see Column
      */
     @Override
-    default T rightJoinOn(Table table, List<Column> columnPairs) {
+    public T rightJoinOn(Table table, List<Column> columnPairs) {
         joinOn(JoinOn.right(table, columnPairs));
         return getSql();
     }
@@ -99,7 +149,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @see Column
      */
     @Override
-    default T fullJoinOn(Table table, List<Column> columnPairs) {
+    public T fullJoinOn(Table table, List<Column> columnPairs) {
         joinOn(JoinOn.full(table, columnPairs));
         return getSql();
     }
@@ -113,7 +163,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @see Column
      */
     @Override
-    default T innerJoinOn(Table table, List<Column> columnPairs) {
+    public T innerJoinOn(Table table, List<Column> columnPairs) {
         joinOn(JoinOn.inner(table, columnPairs));
         return getSql();
     }
@@ -127,7 +177,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T complexLeftJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+    public T complexLeftJoinOn(Table table, List<CriteriaItem> criteriaItems) {
         joinOn(JoinOn.left(table, null, criteriaItems));
         return getSql();
     }
@@ -140,7 +190,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T complexRightJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+    public T complexRightJoinOn(Table table, List<CriteriaItem> criteriaItems) {
         joinOn(JoinOn.right(table, null, criteriaItems));
         return getSql();
     }
@@ -153,7 +203,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T complexFullJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+    public T complexFullJoinOn(Table table, List<CriteriaItem> criteriaItems) {
         joinOn(JoinOn.full(table, null, criteriaItems));
         return getSql();
     }
@@ -166,7 +216,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @return SQL对象
      */
     @Override
-    default T complexInnerJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+    public T complexInnerJoinOn(Table table, List<CriteriaItem> criteriaItems) {
         joinOn(JoinOn.inner(table, null, criteriaItems));
         return getSql();
     }
@@ -177,7 +227,7 @@ public interface DefaultJoinOnSupport<T> extends DefaultSqlSupport<T>,
      * @param useAlias 是否使用别名
      * @return 预查询SQL对象
      */
-    default PrepareStatement getJoinOnPrepareStatement(boolean useAlias) {
+    public PrepareStatement getJoinOnPrepareStatement(boolean useAlias) {
         List<JoinOn> joinOns = getJoinOn().getItems();
         if (CollectionUtils.isEmpty(joinOns)) {
             return PrepareStatement.empty();

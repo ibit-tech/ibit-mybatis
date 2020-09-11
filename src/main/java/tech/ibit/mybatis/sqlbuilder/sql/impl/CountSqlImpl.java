@@ -5,82 +5,250 @@ import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.CountSql;
-import tech.ibit.mybatis.sqlbuilder.sql.field.BooleanField;
-import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.*;
+import tech.ibit.mybatis.sqlbuilder.sql.support.UseAliasSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.impl.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * CountSqlImpl
+ * CountSql实现
  *
  * @author IBIT程序猿
  * @version 2.0
  */
 public class CountSqlImpl extends SqlLogImpl
         implements CountSql,
-        DefaultDistinctSupport<CountSql>,
-        DefaultColumnSupport<CountSql>,
-        DefaultFromSupport<CountSql>,
-        DefaultJoinOnSupport<CountSql>,
-        DefaultWhereSupport<CountSql>,
-        DefaultGroupBySupport<CountSql>,
-        DefaultHavingSupport<CountSql>,
-        DefaultUseAliasSupport {
-
+        UseAliasSupport, PrepareStatementBuildSupport {
 
     /**
-     * 是否distinct
+     * distinct 支持
      */
-    private BooleanField distinct = new BooleanField(false);
+    private DistinctSupportImpl<CountSql> distinctSupport;
 
     /**
-     * form
+     * 列支持
      */
-    private ListField<Table> from = new ListField<>();
+    private ColumnSupportImpl<CountSql> columnSupport;
 
     /**
-     * Join on
+     * From 支持
      */
-    private ListField<JoinOn> joinOn = new ListField<>();
+    private FromSupportImpl<CountSql> fromSupport;
 
     /**
-     * where
+     * join on 支持
      */
-    private ListField<Criteria> where = new ListField<>();
+    private JoinOnSupportImpl<CountSql> joinOnSupport;
 
     /**
-     * group by
+     * where 支持
      */
-    private ListField<Column> groupBy = new ListField<>();
+    private WhereSupportImpl<CountSql> whereSupport;
 
     /**
-     * Having
+     * group by 支持
      */
-    private ListField<Criteria> having = new ListField<>();
+    private GroupBySupportImpl<CountSql> groupBySupport;
 
     /**
-     * 列
+     * having 支持
      */
-    private ListField<IColumn> column = new ListField<>();
-
+    private HavingSupportImpl<CountSql> havingSupport;
 
     /**
      * 基础mapper
      */
     private final Mapper<?> mapper;
 
-
+    /**
+     * 构造函数
+     *
+     * @param mapper mapper
+     */
     public CountSqlImpl(Mapper<?> mapper) {
+        this(mapper, true);
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param mapper     mapper
+     * @param needToInit 是否初始化
+     */
+    public CountSqlImpl(Mapper<?> mapper, boolean needToInit) {
         this.mapper = mapper;
+        if (needToInit) {
+            this.columnSupport = new ColumnSupportImpl<>(this);
+            this.fromSupport = new FromSupportImpl<>(this);
+            this.distinctSupport = new DistinctSupportImpl<>(this);
+            this.joinOnSupport = new JoinOnSupportImpl<>(this);
+            this.whereSupport = new WhereSupportImpl<>(this);
+            this.groupBySupport = new GroupBySupportImpl<>(this);
+            this.havingSupport = new HavingSupportImpl<>(this);
+        }
     }
 
 
     @Override
-    public CountSql getSql() {
-        return this;
+    public CountSql column(List<? extends IColumn> columns) {
+        return columnSupport.column(columns);
+    }
+
+    @Override
+    public CountSql column(IColumn column) {
+        return columnSupport.column(column);
+    }
+
+    @Override
+    public CountSql columnPo(Class<?> poClass) {
+        return columnSupport.columnPo(poClass);
+    }
+
+    @Override
+    public CountSql from(Table table) {
+        return fromSupport.from(table);
+    }
+
+    @Override
+    public CountSql from(List<Table> tables) {
+        return fromSupport.from(tables);
+    }
+
+    @Override
+    public CountSql distinct() {
+        return distinctSupport.distinct();
+    }
+
+    @Override
+    public CountSql distinct(boolean distinct) {
+        return distinctSupport.distinct(distinct);
+    }
+
+    @Override
+    public CountSql having(Criteria having) {
+        return havingSupport.having(having);
+    }
+
+    @Override
+    public CountSql having(List<Criteria> havings) {
+        return havingSupport.having(havings);
+    }
+
+    @Override
+    public CountSql andHaving(CriteriaItem havingItem) {
+        return havingSupport.andHaving(havingItem);
+    }
+
+    @Override
+    public CountSql andHaving(List<Criteria> havings) {
+        return havingSupport.andHaving(havings);
+    }
+
+    @Override
+    public CountSql orHaving(CriteriaItem havingItem) {
+        return havingSupport.orHaving(havingItem);
+    }
+
+    @Override
+    public CountSql orHaving(List<Criteria> havings) {
+        return havingSupport.orHaving(havings);
+    }
+
+    @Override
+    public CountSql joinOn(JoinOn joinOn) {
+        return joinOnSupport.joinOn(joinOn);
+    }
+
+    @Override
+    public CountSql joinOn(List<JoinOn> joinOns) {
+        return joinOnSupport.joinOn(joinOns);
+    }
+
+    @Override
+    public CountSql joinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.joinOn(table, columnPairs);
+    }
+
+    @Override
+    public CountSql leftJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.leftJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public CountSql rightJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.rightJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public CountSql fullJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.fullJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public CountSql innerJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.innerJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public CountSql complexLeftJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexLeftJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public CountSql complexRightJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexRightJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public CountSql complexFullJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexFullJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public CountSql complexInnerJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexInnerJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public CountSql where(Criteria criteria) {
+        return whereSupport.where(criteria);
+    }
+
+    @Override
+    public CountSql where(List<Criteria> criterion) {
+        return whereSupport.where(criterion);
+    }
+
+    @Override
+    public CountSql andWhere(CriteriaItem item) {
+        return whereSupport.andWhere(item);
+    }
+
+    @Override
+    public CountSql andWhere(List<Criteria> criterion) {
+        return whereSupport.andWhere(criterion);
+    }
+
+    @Override
+    public CountSql orWhere(CriteriaItem item) {
+        return whereSupport.orWhere(item);
+    }
+
+    @Override
+    public CountSql orWhere(List<Criteria> criterion) {
+        return whereSupport.orWhere(criterion);
+    }
+
+    @Override
+    public CountSql groupBy(Column groupBy) {
+        return groupBySupport.groupBy(groupBy);
+    }
+
+    @Override
+    public CountSql groupBy(List<Column> groupBys) {
+        return groupBySupport.groupBy(groupBys);
     }
 
     @Override
@@ -94,13 +262,83 @@ public class CountSqlImpl extends SqlLogImpl
         return from(mapper.getDefaultTable());
     }
 
+    /**
+     * Sets the distinctSupport
+     * <p>You can use getDistinctSupport() to get the value of distinctSupport</p>
+     *
+     * @param distinctSupport distinctSupport
+     */
+    public void setDistinctSupport(DistinctSupportImpl<CountSql> distinctSupport) {
+        this.distinctSupport = distinctSupport;
+    }
+
+    /**
+     * Sets the columnSupport
+     * <p>You can use getColumnSupport() to get the value of columnSupport</p>
+     *
+     * @param columnSupport columnSupport
+     */
+    public void setColumnSupport(ColumnSupportImpl<CountSql> columnSupport) {
+        this.columnSupport = columnSupport;
+    }
+
+    /**
+     * Sets the fromSupport
+     * <p>You can use getFromSupport() to get the value of fromSupport</p>
+     *
+     * @param fromSupport fromSupport
+     */
+    public void setFromSupport(FromSupportImpl<CountSql> fromSupport) {
+        this.fromSupport = fromSupport;
+    }
+
+    /**
+     * Sets the joinOnSupport
+     * <p>You can use getJoinOnSupport() to get the value of joinOnSupport</p>
+     *
+     * @param joinOnSupport joinOnSupport
+     */
+    public void setJoinOnSupport(JoinOnSupportImpl<CountSql> joinOnSupport) {
+        this.joinOnSupport = joinOnSupport;
+    }
+
+    /**
+     * Sets the whereSupport
+     * <p>You can use getWhereSupport() to get the value of whereSupport</p>
+     *
+     * @param whereSupport whereSupport
+     */
+    public void setWhereSupport(WhereSupportImpl<CountSql> whereSupport) {
+        this.whereSupport = whereSupport;
+    }
+
+    /**
+     * Sets the groupBySupport
+     * <p>You can use getGroupBySupport() to get the value of groupBySupport</p>
+     *
+     * @param groupBySupport groupBySupport
+     */
+    public void setGroupBySupport(GroupBySupportImpl<CountSql> groupBySupport) {
+        this.groupBySupport = groupBySupport;
+    }
+
+    /**
+     * Sets the havingSupport
+     * <p>You can use getHavingSupport() to get the value of havingSupport</p>
+     *
+     * @param havingSupport havingSupport
+     */
+    public void setHavingSupport(HavingSupportImpl<CountSql> havingSupport) {
+        this.havingSupport = havingSupport;
+    }
+
     @Override
     public PrepareStatement getPrepareStatement() {
 
         boolean useAlias = isUseAlias();
-        boolean distinct = getDistinct().isValue();
+        boolean distinct = distinctSupport.getDistinct().isValue();
 
-        PrepareStatement columnPrepareStatement = getColumnPrepareStatement(useAlias);
+        PrepareStatement columnPrepareStatement = columnSupport.getColumnPrepareStatement(useAlias);
 
         String columnStr = columnPrepareStatement.getPrepareSql();
         if (StringUtils.isBlank(columnStr) && distinct) {
@@ -117,11 +355,11 @@ public class CountSqlImpl extends SqlLogImpl
 
         append(
                 Arrays.asList(
-                        getFromPrepareStatement(useAlias),
-                        getJoinOnPrepareStatement(useAlias),
-                        getWherePrepareStatement(useAlias),
-                        getGroupByPrepareStatement(useAlias),
-                        getHavingPrepareStatement(useAlias)
+                        fromSupport.getFromPrepareStatement(useAlias),
+                        joinOnSupport.getJoinOnPrepareStatement(useAlias),
+                        whereSupport.getWherePrepareStatement(useAlias),
+                        groupBySupport.getGroupByPrepareStatement(useAlias),
+                        havingSupport.getHavingPrepareStatement(useAlias)
                 ), prepareSql, values
         );
         return new PrepareStatement(prepareSql.toString(), values);
@@ -134,108 +372,4 @@ public class CountSqlImpl extends SqlLogImpl
         return mapper.rawCount(statement);
     }
 
-    @Override
-    public BooleanField getDistinct() {
-        return distinct;
-    }
-
-    /**
-     * Sets the distinct
-     * <p>You can use getDistinct() to get the value of distinct</p>
-     *
-     * @param distinct distinct
-     */
-    public void setDistinct(BooleanField distinct) {
-        this.distinct = distinct;
-    }
-
-    @Override
-    public ListField<Table> getFrom() {
-        return from;
-    }
-
-    /**
-     * Sets the from
-     * <p>You can use getFrom() to get the value of from</p>
-     *
-     * @param from from
-     */
-    public void setFrom(ListField<Table> from) {
-        this.from = from;
-    }
-
-    @Override
-    public ListField<JoinOn> getJoinOn() {
-        return joinOn;
-    }
-
-    /**
-     * Sets the joinOn
-     * <p>You can use getJoinOn() to get the value of joinOn</p>
-     *
-     * @param joinOn joinOn
-     */
-    public void setJoinOn(ListField<JoinOn> joinOn) {
-        this.joinOn = joinOn;
-    }
-
-    @Override
-    public ListField<Criteria> getWhere() {
-        return where;
-    }
-
-    /**
-     * Sets the where
-     * <p>You can use getWhere() to get the value of where</p>
-     *
-     * @param where where
-     */
-    public void setWhere(ListField<Criteria> where) {
-        this.where = where;
-    }
-
-    @Override
-    public ListField<Column> getGroupBy() {
-        return groupBy;
-    }
-
-    /**
-     * Sets the groupBy
-     * <p>You can use getGroupBy() to get the value of groupBy</p>
-     *
-     * @param groupBy groupBy
-     */
-    public void setGroupBy(ListField<Column> groupBy) {
-        this.groupBy = groupBy;
-    }
-
-    @Override
-    public ListField<Criteria> getHaving() {
-        return having;
-    }
-
-    /**
-     * Sets the having
-     * <p>You can use getHaving() to get the value of having</p>
-     *
-     * @param having having
-     */
-    public void setHaving(ListField<Criteria> having) {
-        this.having = having;
-    }
-
-    @Override
-    public ListField<IColumn> getColumn() {
-        return column;
-    }
-
-    /**
-     * Sets the column
-     * <p>You can use getColumn() to get the value of column</p>
-     *
-     * @param column column
-     */
-    public void setColumn(ListField<IColumn> column) {
-        this.column = column;
-    }
 }

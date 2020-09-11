@@ -36,6 +36,6 @@ public interface ColumnSupport<T> {
      * @param poClass 实体类
      * @return SQL对象
      */
-    T columnPo(Class poClass);
+    T columnPo(Class<?> poClass);
 
 }

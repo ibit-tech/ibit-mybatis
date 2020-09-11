@@ -1,11 +1,11 @@
-package tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl;
+package tech.ibit.mybatis.sqlbuilder.sql.support;
 
 /**
  * DefaultSqlSupport
  *
  * @author IBIT程序猿
  */
-public interface DefaultSqlSupport<T> {
+public interface SqlSupport<T> {
 
     /**
      * 返回sql

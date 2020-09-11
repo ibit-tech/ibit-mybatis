@@ -3,40 +3,33 @@ package tech.ibit.mybatis.sqlbuilder.sql.impl;
 import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.sql.InsertSql;
-import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultInsertTableSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultUseAliasSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.DefaultValuesSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.UseAliasSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.impl.InsertTableSupportImpl;
+import tech.ibit.mybatis.sqlbuilder.sql.support.impl.PrepareStatementBuildSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.impl.ValuesSupportImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * InsertSqlImpl
+ * InsertSql实现
  *
  * @author IBIT程序猿
  * @version 2.0
  */
 public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
-        DefaultInsertTableSupport<InsertSql>,
-        DefaultValuesSupport<InsertSql>,
-        DefaultUseAliasSupport {
+        UseAliasSupport, PrepareStatementBuildSupport {
 
     /**
-     * fromDefault
+     * insert table 支持
      */
-    private final ListField<Table> insertTable = new ListField<>();
+    private final InsertTableSupportImpl<InsertSql> insertTableSupport;
 
     /**
-     * column
+     * value 支持
      */
-    private final ListField<Column> column = new ListField<>();
-
-    /**
-     * value
-     */
-    private final ListField<Object> value = new ListField<>();
+    private final ValuesSupportImpl<InsertSql> valuesSupport;
 
     /**
      * 基础mapper
@@ -45,18 +38,40 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
 
     public InsertSqlImpl(Mapper<?> mapper) {
         this.mapper = mapper;
+        this.insertTableSupport = new InsertTableSupportImpl<>(this);
+        this.valuesSupport = new ValuesSupportImpl<>(this);
     }
 
+    @Override
+    public InsertSql insert(Table table) {
+        return insertTableSupport.insert(table);
+    }
+
+    @Override
+    public InsertSql insert(List<Table> tables) {
+        return insertTableSupport.insert(tables);
+    }
+
+    @Override
+    public InsertSql values(List<? extends ColumnValue> columnValues) {
+        return valuesSupport.values(columnValues);
+    }
+
+    @Override
+    public InsertSql values(ColumnValue columnValue) {
+        return valuesSupport.values(columnValue);
+    }
+
+    @Override
+    public InsertSql values(List<Column> columns, List<Object> values) {
+        return valuesSupport.values(columns, values);
+    }
 
     @Override
     public boolean isUseAlias() {
         return false;
     }
 
-    @Override
-    public InsertSql getSql() {
-        return this;
-    }
 
     @Override
     public InsertSql insertDefault() {
@@ -71,9 +86,9 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
 
         append(
                 Arrays.asList(
-                        getInsertPrepareStatement(isUseAlias()),
-                        getColumnPrepareStatement(),
-                        getValuePrepareStatement()
+                        insertTableSupport.getInsertPrepareStatement(isUseAlias()),
+                        valuesSupport.getColumnPrepareStatement(),
+                        valuesSupport.getValuePrepareStatement()
                 ), prepareSql, values);
 
 
@@ -95,18 +110,4 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
         return mapper.rawInsertWithGenerateKeys(statement, key);
     }
 
-    @Override
-    public ListField<Table> getInsertTable() {
-        return insertTable;
-    }
-
-    @Override
-    public ListField<Column> getColumn() {
-        return column;
-    }
-
-    @Override
-    public ListField<Object> getValue() {
-        return value;
-    }
 }

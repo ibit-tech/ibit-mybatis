@@ -4,45 +4,41 @@ import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.UpdateSql;
-import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.defaultimpl.*;
+import tech.ibit.mybatis.sqlbuilder.sql.support.UseAliasSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.impl.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * UpdateSqlImpl
+ * UpdateSql实现
  *
  * @author IBIT程序猿
  * @version 2.0
  */
-public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
-        DefaultUpdateTableSupport<UpdateSql>,
-        DefaultJoinOnSupport<UpdateSql>,
-        DefaultSetSupport<UpdateSql>,
-        DefaultWhereSupport<UpdateSql>,
-        DefaultUseAliasSupport {
+public class UpdateSqlImpl extends SqlLogImpl
+        implements UpdateSql, UseAliasSupport, PrepareStatementBuildSupport {
 
     /**
-     * fromDefault
+     * Update table 支持
      */
-    private final ListField<Table> updateTable = new ListField<>();
+    private final UpdateTableSupportImpl<UpdateSql> updateTableSupport;
 
     /**
-     * join on
+     * set 支持
      */
-    private final ListField<JoinOn> joinOn = new ListField<>();
+    private final SetSupportImpl<UpdateSql> setSupport;
 
     /**
-     * set
+     * join on 支持
      */
-    private final ListField<SetItem> set = new ListField<>();
+    private final JoinOnSupportImpl<UpdateSql> joinOnSupport;
 
     /**
-     * where
+     * where 支持
      */
-    private final ListField<Criteria> where = new ListField<>();
+    private final WhereSupportImpl<UpdateSql> whereSupport;
 
     /**
      * 基础mapper
@@ -51,6 +47,10 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
 
     public UpdateSqlImpl(Mapper<?> mapper) {
         this.mapper = mapper;
+        this.updateTableSupport = new UpdateTableSupportImpl<>(this);
+        this.setSupport = new SetSupportImpl<>(this);
+        this.joinOnSupport = new JoinOnSupportImpl<>(this);
+        this.whereSupport = new WhereSupportImpl<>(this);
     }
 
     @Override
@@ -59,10 +59,109 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
     }
 
     @Override
-    public UpdateSql getSql() {
-        return this;
+    public UpdateSql update(Table table) {
+        return updateTableSupport.update(table);
     }
 
+    @Override
+    public UpdateSql update(List<Table> tables) {
+        return updateTableSupport.update(tables);
+    }
+
+    @Override
+    public UpdateSql set(SetItem item) {
+        return setSupport.set(item);
+    }
+
+    @Override
+    public UpdateSql set(List<SetItem> items) {
+        return setSupport.set(items);
+    }
+
+    @Override
+    public UpdateSql joinOn(JoinOn joinOn) {
+        return joinOnSupport.joinOn(joinOn);
+    }
+
+    @Override
+    public UpdateSql joinOn(List<JoinOn> joinOns) {
+        return joinOnSupport.joinOn(joinOns);
+    }
+
+    @Override
+    public UpdateSql joinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.joinOn(table, columnPairs);
+    }
+
+    @Override
+    public UpdateSql leftJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.leftJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public UpdateSql rightJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.rightJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public UpdateSql fullJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.fullJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public UpdateSql innerJoinOn(Table table, List<Column> columnPairs) {
+        return joinOnSupport.innerJoinOn(table, columnPairs);
+    }
+
+    @Override
+    public UpdateSql complexLeftJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexLeftJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public UpdateSql complexRightJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexRightJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public UpdateSql complexFullJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexFullJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public UpdateSql complexInnerJoinOn(Table table, List<CriteriaItem> criteriaItems) {
+        return joinOnSupport.complexInnerJoinOn(table, criteriaItems);
+    }
+
+    @Override
+    public UpdateSql where(Criteria criteria) {
+        return whereSupport.where(criteria);
+    }
+
+    @Override
+    public UpdateSql where(List<Criteria> criterion) {
+        return whereSupport.where(criterion);
+    }
+
+    @Override
+    public UpdateSql andWhere(CriteriaItem item) {
+        return whereSupport.andWhere(item);
+    }
+
+    @Override
+    public UpdateSql andWhere(List<Criteria> criterion) {
+        return whereSupport.andWhere(criterion);
+    }
+
+    @Override
+    public UpdateSql orWhere(CriteriaItem item) {
+        return whereSupport.orWhere(item);
+    }
+
+    @Override
+    public UpdateSql orWhere(List<Criteria> criterion) {
+        return whereSupport.orWhere(criterion);
+    }
 
     @Override
     public UpdateSql updateDefault() {
@@ -71,11 +170,11 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
 
     @Override
     public PrepareStatement getPrepareStatement() {
-        if (getWhere().getItems().isEmpty()) {
+        if (whereSupport.getWhere().getItems().isEmpty()) {
             throw new SqlException("Where cannot be empty when do updating!");
         }
 
-        if (getSet().getItems().isEmpty()) {
+        if (setSupport.getSet().getItems().isEmpty()) {
             throw new SqlException("Set cannot be empty when do updating!");
         }
 
@@ -85,10 +184,10 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
 
         append(
                 Arrays.asList(
-                        getUpdatePrepareStatement(useAlias),
-                        getJoinOnPrepareStatement(useAlias),
-                        getSetItemPrepareStatement(useAlias),
-                        getWherePrepareStatement(useAlias)
+                        updateTableSupport.getUpdatePrepareStatement(useAlias),
+                        joinOnSupport.getJoinOnPrepareStatement(useAlias),
+                        setSupport.getSetItemPrepareStatement(useAlias),
+                        whereSupport.getWherePrepareStatement(useAlias)
                 ), prepareSql, values);
 
         return new PrepareStatement(prepareSql.toString(), values);
@@ -101,23 +200,5 @@ public class UpdateSqlImpl extends SqlLogImpl implements UpdateSql,
         return mapper.rawUpdate(statement);
     }
 
-    @Override
-    public ListField<Table> getUpdateTable() {
-        return updateTable;
-    }
 
-    @Override
-    public ListField<JoinOn> getJoinOn() {
-        return joinOn;
-    }
-
-    @Override
-    public ListField<SetItem> getSet() {
-        return set;
-    }
-
-    @Override
-    public ListField<Criteria> getWhere() {
-        return where;
-    }
 }
