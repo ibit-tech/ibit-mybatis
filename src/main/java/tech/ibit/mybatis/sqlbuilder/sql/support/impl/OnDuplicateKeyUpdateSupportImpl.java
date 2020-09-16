@@ -3,7 +3,7 @@ package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.SetItem;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.SetSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.OnDuplicateKeyUpdateSupport;
 
 import java.util.List;
 
@@ -12,14 +12,15 @@ import java.util.List;
  *
  * @author IBIT程序猿
  */
-public class SetSupportImpl<T> extends BaseSetSupportImpl<T> implements SetSupport<T> {
+public class OnDuplicateKeyUpdateSupportImpl<T>
+        extends BaseSetSupportImpl<T> implements OnDuplicateKeyUpdateSupport<T> {
 
     /**
      * 构造函数
      *
      * @param sql sql对象
      */
-    public SetSupportImpl(T sql) {
+    public OnDuplicateKeyUpdateSupportImpl(T sql) {
         super(sql, new ListField<>());
     }
 
@@ -30,7 +31,7 @@ public class SetSupportImpl<T> extends BaseSetSupportImpl<T> implements SetSuppo
      * @return SQL对象
      */
     @Override
-    public T set(SetItem item) {
+    public T onDuplicateKeyUpdate(SetItem item) {
         getSet().addItem(item);
         return getSql();
     }
@@ -42,7 +43,7 @@ public class SetSupportImpl<T> extends BaseSetSupportImpl<T> implements SetSuppo
      * @return SQL对象
      */
     @Override
-    public T set(List<SetItem> items) {
+    public T onDuplicateKeyUpdate(List<SetItem> items) {
         getSet().addItems(items);
         return getSql();
     }
@@ -53,7 +54,7 @@ public class SetSupportImpl<T> extends BaseSetSupportImpl<T> implements SetSuppo
      * @param useAlias 是否使用别名
      * @return 预查询SQL对象
      */
-    public PrepareStatement getSetItemPrepareStatement(boolean useAlias) {
-        return getSetItemPrepareStatement(" SET ", useAlias);
+    public PrepareStatement getOnDuplicateKeyUpdatePrepareStatement(boolean useAlias) {
+        return getSetItemPrepareStatement(" ON DUPLICATE KEY UPDATE ", useAlias);
     }
 }

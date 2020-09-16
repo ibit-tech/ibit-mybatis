@@ -4,28 +4,16 @@ import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.Table;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.FromSupport;
-import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 
 import java.util.List;
 
 /**
  * FromSupport实现
  *
+ * @param <T> 对象模板类型
  * @author IBIT程序猿
  */
-public class FromSupportImpl<T> extends TableSupportImpl
-        implements SqlSupport<T>,
-        FromSupport<T> {
-
-    /**
-     * sql 对象
-     */
-    private final T sql;
-
-    /**
-     * form
-     */
-    private final ListField<Table> from;
+public class FromSupportImpl<T> extends BaseTableSupportImpl<T> implements FromSupport<T> {
 
     /**
      * 构造函数
@@ -43,8 +31,7 @@ public class FromSupportImpl<T> extends TableSupportImpl
      * @param from from对象
      */
     private FromSupportImpl(T sql, ListField<Table> from) {
-        this.sql = sql;
-        this.from = from;
+        super(sql, from);
     }
 
     /**
@@ -55,21 +42,7 @@ public class FromSupportImpl<T> extends TableSupportImpl
      * @return 复制后的对象
      */
     public <K> FromSupportImpl<K> copy(K sql) {
-        return new FromSupportImpl<>(sql, from);
-    }
-
-    /**
-     * 获取from
-     *
-     * @return fromDefault
-     */
-    public ListField<Table> getFrom() {
-        return from;
-    }
-
-    @Override
-    public T getSql() {
-        return sql;
+        return new FromSupportImpl<>(sql, getTable());
     }
 
     /**
@@ -81,7 +54,7 @@ public class FromSupportImpl<T> extends TableSupportImpl
      */
     @Override
     public T from(Table table) {
-        getFrom().addItem(table);
+        getTable().addItem(table);
         return getSql();
     }
 
@@ -94,7 +67,7 @@ public class FromSupportImpl<T> extends TableSupportImpl
      */
     @Override
     public T from(List<Table> tables) {
-        getFrom().addItems(tables);
+        getTable().addItems(tables);
         return getSql();
     }
 
@@ -105,7 +78,7 @@ public class FromSupportImpl<T> extends TableSupportImpl
      * @return 预查询SQL对象
      */
     public PrepareStatement getFromPrepareStatement(boolean useAlias) {
-        return getTablePrepareStatement(getFrom(), " FROM ", useAlias);
+        return getTablePrepareStatement(" FROM ", useAlias);
     }
 
 }

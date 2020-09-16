@@ -5,6 +5,7 @@ import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.sql.InsertSql;
 import tech.ibit.mybatis.sqlbuilder.sql.support.UseAliasSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.InsertTableSupportImpl;
+import tech.ibit.mybatis.sqlbuilder.sql.support.impl.OnDuplicateKeyUpdateSupportImpl;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.PrepareStatementBuildSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.ValuesSupportImpl;
 
@@ -32,6 +33,11 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
     private final ValuesSupportImpl<InsertSql> valuesSupport;
 
     /**
+     * on duplicate key update 支持
+     */
+    private final OnDuplicateKeyUpdateSupportImpl<InsertSql> onDuplicateKeyUpdateSupport;
+
+    /**
      * 基础mapper
      */
     private final Mapper<?> mapper;
@@ -40,6 +46,7 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
         this.mapper = mapper;
         this.insertTableSupport = new InsertTableSupportImpl<>(this);
         this.valuesSupport = new ValuesSupportImpl<>(this);
+        this.onDuplicateKeyUpdateSupport = new OnDuplicateKeyUpdateSupportImpl<>(this);
     }
 
     @Override
@@ -68,6 +75,16 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
     }
 
     @Override
+    public InsertSql onDuplicateKeyUpdate(SetItem item) {
+        return onDuplicateKeyUpdateSupport.onDuplicateKeyUpdate(item);
+    }
+
+    @Override
+    public InsertSql onDuplicateKeyUpdate(List<SetItem> items) {
+        return onDuplicateKeyUpdateSupport.onDuplicateKeyUpdate(items);
+    }
+
+    @Override
     public boolean isUseAlias() {
         return false;
     }
@@ -88,7 +105,8 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
                 Arrays.asList(
                         insertTableSupport.getInsertPrepareStatement(isUseAlias()),
                         valuesSupport.getColumnPrepareStatement(),
-                        valuesSupport.getValuePrepareStatement()
+                        valuesSupport.getValuePrepareStatement(),
+                        onDuplicateKeyUpdateSupport.getOnDuplicateKeyUpdatePrepareStatement(isUseAlias())
                 ), prepareSql, values);
 
 

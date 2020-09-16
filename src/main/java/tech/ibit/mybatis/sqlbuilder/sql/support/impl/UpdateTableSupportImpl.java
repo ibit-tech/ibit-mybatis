@@ -3,28 +3,17 @@ package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.Table;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
-import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.UpdateTableSupport;
 
 import java.util.List;
 
 /**
- * DefaultUpdateTableSupport
+ * UpdateTableSupport实现
  *
+ * @param <T> 对象模板类型
  * @author IBIT程序猿
  */
-public class UpdateTableSupportImpl<T> extends TableSupportImpl implements SqlSupport<T>,
-        UpdateTableSupport<T> {
-
-    /**
-     * sql 对象
-     */
-    private final T sql;
-
-    /**
-     * fromDefault
-     */
-    private final ListField<Table> updateTable;
+public class UpdateTableSupportImpl<T> extends BaseTableSupportImpl<T> implements UpdateTableSupport<T> {
 
     /**
      * 构造函数
@@ -32,22 +21,7 @@ public class UpdateTableSupportImpl<T> extends TableSupportImpl implements SqlSu
      * @param sql sql对象
      */
     public UpdateTableSupportImpl(T sql) {
-        this.sql = sql;
-        this.updateTable = new ListField<>();
-    }
-
-    /**
-     * 获取更新表
-     *
-     * @return 插入表
-     */
-    private ListField<Table> getUpdateTable() {
-        return updateTable;
-    }
-
-    @Override
-    public T getSql() {
-        return sql;
+        super(sql, new ListField<>());
     }
 
     /**
@@ -59,7 +33,7 @@ public class UpdateTableSupportImpl<T> extends TableSupportImpl implements SqlSu
      */
     @Override
     public T update(Table table) {
-        getUpdateTable().addItem(table);
+        getTable().addItem(table);
         return getSql();
     }
 
@@ -72,7 +46,7 @@ public class UpdateTableSupportImpl<T> extends TableSupportImpl implements SqlSu
      */
     @Override
     public T update(List<Table> tables) {
-        getUpdateTable().addItems(tables);
+        getTable().addItems(tables);
         return getSql();
     }
 
@@ -83,7 +57,7 @@ public class UpdateTableSupportImpl<T> extends TableSupportImpl implements SqlSu
      * @return 预查询SQL对象
      */
     public PrepareStatement getUpdatePrepareStatement(boolean useAlias) {
-        return getTablePrepareStatement(getUpdateTable(), "UPDATE ", useAlias);
+        return getTablePrepareStatement("UPDATE ", useAlias);
     }
 
 }

@@ -25,7 +25,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void select() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -72,7 +72,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void selectDistinct() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .distinct()
                 .column(UserProperties.email)
                 .from(UserProperties.TABLE);
@@ -83,7 +83,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void selectPo() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .columnPo(UserPo.class)
                 .from(UserProperties.TABLE);
         assertPrepareStatementEquals(
@@ -94,7 +94,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void selectDistinctPo() {
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .distinct()
                 .columnPo(UserPo.class)
                 .from(UserProperties.TABLE).limit(1000);
@@ -256,6 +256,56 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
+        // on duplicate key update 支持
+        sql = SqlFactory
+                .createInsert(null)
+                .insert(UserProperties.TABLE)
+                .values(
+                        Arrays.asList(
+                                UserProperties.name.value("IBIT"),
+                                UserProperties.loginId.value("188"),
+                                UserProperties.avatarId.value(null)
+                        )
+                ).onDuplicateKeyUpdate(UserProperties.name.set("IBIT"));
+
+        assertPrepareStatementEquals(
+                "INSERT INTO user(name, login_id, avatar_id) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE name = ?",
+                Arrays.asList(
+                        UserProperties.name.value("IBIT"),
+                        UserProperties.loginId.value("188"),
+                        UserProperties.avatarId.value(null),
+                        UserProperties.name.value("IBIT")
+                ),
+                sql.getPrepareStatement());
+
+        // on duplicate key update 支持
+        sql = SqlFactory
+                .createInsert(null)
+                .insert(UserProperties.TABLE)
+                .values(
+                        Arrays.asList(
+                                UserProperties.name.value("IBIT"),
+                                UserProperties.loginId.value("188"),
+                                UserProperties.avatarId.value(null)
+                        )
+                ).onDuplicateKeyUpdate(
+                        Arrays.asList(
+                                UserProperties.name.set("IBIT"),
+                                UserProperties.loginId.set("188")
+                        )
+                );
+
+        assertPrepareStatementEquals(
+                "INSERT INTO user(name, login_id, avatar_id) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE name = ?, login_id = ?",
+                Arrays.asList(
+                        UserProperties.name.value("IBIT"),
+                        UserProperties.loginId.value("188"),
+                        UserProperties.avatarId.value(null),
+                        UserProperties.name.value("IBIT"),
+                        UserProperties.loginId.value("188")
+                ),
+                sql.getPrepareStatement());
+
     }
 
     @Test
@@ -289,7 +339,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void from() {
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 ProjectProperties.projectId,
@@ -321,7 +371,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void joinOn() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -344,7 +394,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void leftJoinOn() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -367,7 +417,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void rightJoinOn() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -390,7 +440,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void fullJoinOn() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -421,7 +471,7 @@ public class SqlTest extends CommonTest {
         Column parentRegionCode = new Column(parentRegion, "code");
         Column parentRegionName = new Column(parentRegion, "name");
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 parentRegionName,
@@ -445,7 +495,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void complexLeftJoinOn() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -490,7 +540,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void complexRightJoinOn() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -534,7 +584,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void complexFullJoinOn() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -588,7 +638,7 @@ public class SqlTest extends CommonTest {
         Column parentRegionCode = new Column(parentRegion, "code");
         Column parentRegionName = new Column(parentRegion, "name");
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 parentRegionName,
@@ -642,7 +692,7 @@ public class SqlTest extends CommonTest {
         CriteriaItem type1Item = UserProperties.type.eq(1);
         CriteriaItem type2Item = UserProperties.type.eq(2);
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -725,7 +775,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void andWhere() {
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -804,7 +854,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void orWhere() {
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -878,7 +928,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void orderBy() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -910,7 +960,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void customerOrderBy() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -948,7 +998,7 @@ public class SqlTest extends CommonTest {
         AggregateColumn minAge = UserProperties.age.min("min_age");
         AggregateColumn maxAge = UserProperties.age.max("max_age");
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,
@@ -979,7 +1029,7 @@ public class SqlTest extends CommonTest {
 
     @Test
     public void limit() {
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1077,7 +1127,7 @@ public class SqlTest extends CommonTest {
     @Test
     public void flag() {
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 UserProperties.userId,
@@ -1153,7 +1203,7 @@ public class SqlTest extends CommonTest {
         AggregateColumn minAge = UserProperties.age.min("min_age");
         AggregateColumn maxAge = UserProperties.age.max("max_age");
 
-        QuerySql sql = SqlFactory.createQuery(null)
+        QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
                         Arrays.asList(
                                 minAge,

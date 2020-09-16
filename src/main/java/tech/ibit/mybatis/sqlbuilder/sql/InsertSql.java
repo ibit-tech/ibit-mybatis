@@ -2,6 +2,7 @@ package tech.ibit.mybatis.sqlbuilder.sql;
 
 import tech.ibit.mybatis.sqlbuilder.KeyValuePair;
 import tech.ibit.mybatis.sqlbuilder.sql.support.InsertTableSupport;
+import tech.ibit.mybatis.sqlbuilder.sql.support.OnDuplicateKeyUpdateSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.PrepareStatementSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.ValuesSupport;
 
@@ -13,6 +14,7 @@ import tech.ibit.mybatis.sqlbuilder.sql.support.ValuesSupport;
  */
 public interface InsertSql extends InsertTableSupport<InsertSql>,
         ValuesSupport<InsertSql>,
+        OnDuplicateKeyUpdateSupport<InsertSql>,
         PrepareStatementSupport {
 
     /**

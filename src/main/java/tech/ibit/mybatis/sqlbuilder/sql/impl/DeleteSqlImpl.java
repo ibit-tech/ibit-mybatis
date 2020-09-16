@@ -169,7 +169,7 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
      * @return 关联多张表
      */
     private boolean isMultiTables() {
-        return fromSupport.getFrom().getItems().size() > 1 || joinOnSupport.getJoinOn().getItems().size() > 0;
+        return fromSupport.getTable().getItems().size() > 1 || joinOnSupport.getJoinOn().getItems().size() > 0;
     }
 
     @Override

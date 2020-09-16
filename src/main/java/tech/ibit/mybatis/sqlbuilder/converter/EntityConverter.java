@@ -195,16 +195,10 @@ public class EntityConverter {
         checkEntityClazz(originalObject.getClass());
         checkEntityClazz(poClazz);
 
-        DbTable oTable = originalObject.getClass().getAnnotation(DbTable.class);
-        DbTable poTable = poClazz.getAnnotation(DbTable.class);
-        if (!oTable.name().equals(poTable.name())) {
-            throw SqlException.tableNotMatched(oTable.name(), poTable.name());
-        }
+        FieldMethods fieldMethods = getFieldMethods(originalObject, poClazz);
 
-        Map<String, Method> fieldGetterMethods = getFieldGetterMethods(originalObject.getClass());
-        Map<String, Method> fieldSetterMethods = getFieldSetterMethods(poClazz);
-        Map<String, Object> columnValues = getFieldValues(originalObject, fieldGetterMethods);
-        return convert2Object(poClazz, fieldSetterMethods, columnValues);
+        Map<String, Object> columnValues = getFieldValues(originalObject, fieldMethods.getFieldGetterMethods());
+        return convert2Object(poClazz, fieldMethods.getFieldSetterMethods(), columnValues);
     }
 
     /**
@@ -227,6 +221,26 @@ public class EntityConverter {
         checkEntityClazz(poClazz);
 
         T covertObject = originalObjects.get(0);
+        FieldMethods fieldMethods = getFieldMethods(covertObject, poClazz);
+
+        List<P> result = new ArrayList<>();
+        originalObjects.forEach(obj -> {
+            Map<String, Object> fieldValues = getFieldValues(obj, fieldMethods.getFieldGetterMethods());
+            result.add(convert2Object(poClazz, fieldMethods.getFieldSetterMethods(), fieldValues));
+        });
+        return result;
+    }
+
+    /**
+     * 获取字段的方法
+     *
+     * @param covertObject 转化对象
+     * @param poClazz      po类
+     * @param <T>          转化对象类型
+     * @param <P>          po类型
+     * @return 字段方法
+     */
+    private static <T, P> FieldMethods getFieldMethods(T covertObject, Class<P> poClazz) {
         DbTable oTable = covertObject.getClass().getAnnotation(DbTable.class);
         DbTable poTable = poClazz.getAnnotation(DbTable.class);
         if (!oTable.name().equals(poTable.name())) {
@@ -235,12 +249,53 @@ public class EntityConverter {
 
         Map<String, Method> fieldGetterMethods = getFieldGetterMethods(covertObject.getClass());
         Map<String, Method> fieldSetterMethods = getFieldSetterMethods(poClazz);
-        List<P> result = new ArrayList<>();
-        originalObjects.forEach(obj -> {
-            Map<String, Object> fieldValues = getFieldValues(obj, fieldGetterMethods);
-            result.add(convert2Object(poClazz, fieldSetterMethods, fieldValues));
-        });
-        return result;
+
+        return new FieldMethods(fieldGetterMethods, fieldSetterMethods);
+    }
+
+    /**
+     * 字段方法
+     */
+    private static class FieldMethods {
+
+        /**
+         * 字段Getter方法
+         */
+        private final Map<String, Method> fieldGetterMethods;
+
+        /**
+         * 字段Setter方法
+         */
+        private final Map<String, Method> fieldSetterMethods;
+
+        /**
+         * 构造函数
+         *
+         * @param fieldGetterMethods 字段Getter方法
+         * @param fieldSetterMethods 字段Setter方法
+         */
+        public FieldMethods(Map<String, Method> fieldGetterMethods, Map<String, Method> fieldSetterMethods) {
+            this.fieldGetterMethods = fieldGetterMethods;
+            this.fieldSetterMethods = fieldSetterMethods;
+        }
+
+        /**
+         * Gets the value of fieldGetterMethods
+         *
+         * @return the value of fieldGetterMethods
+         */
+        public Map<String, Method> getFieldGetterMethods() {
+            return fieldGetterMethods;
+        }
+
+        /**
+         * Gets the value of fieldSetterMethods
+         *
+         * @return the value of fieldSetterMethods
+         */
+        public Map<String, Method> getFieldSetterMethods() {
+            return fieldSetterMethods;
+        }
     }
 
 
