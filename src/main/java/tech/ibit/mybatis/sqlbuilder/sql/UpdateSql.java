@@ -19,6 +19,7 @@ public interface UpdateSql extends UpdateTableSupport<UpdateSql>,
      *
      * @return SQL对象
      */
+    @Deprecated
     UpdateSql updateDefault();
 
     /**

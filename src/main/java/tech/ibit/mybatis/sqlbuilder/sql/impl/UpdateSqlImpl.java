@@ -6,6 +6,7 @@ import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.UpdateSql;
 import tech.ibit.mybatis.sqlbuilder.sql.support.UseAliasSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.*;
+import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -176,6 +177,11 @@ public class UpdateSqlImpl extends SqlLogImpl
 
         if (setSupport.getSet().getItems().isEmpty()) {
             throw new SqlException("Set cannot be empty when do updating!");
+        }
+
+        // 表名为空的时候，增加默认表
+        if (CollectionUtils.isEmpty(updateTableSupport.getTable().getItems())) {
+            update(mapper.getDefaultTable());
         }
 
         StringBuilder prepareSql = new StringBuilder();

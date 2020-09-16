@@ -8,6 +8,7 @@ import tech.ibit.mybatis.sqlbuilder.sql.support.impl.InsertTableSupportImpl;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.OnDuplicateKeyUpdateSupportImpl;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.PrepareStatementBuildSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.ValuesSupportImpl;
+import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,6 +98,12 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
 
     @Override
     public PrepareStatement getPrepareStatement() {
+
+
+        // 没有指定表，指定默认的
+        if (CollectionUtils.isEmpty(insertTableSupport.getTable().getItems())) {
+            insert(mapper.getDefaultTable());
+        }
 
         StringBuilder prepareSql = new StringBuilder();
         List<ColumnValue> values = new ArrayList<>();

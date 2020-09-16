@@ -64,7 +64,7 @@ public class ColumnSupportImpl<T>
      *
      * @return 列
      */
-    private ListField<IColumn> getColumn() {
+    public ListField<IColumn> getColumn() {
         return column;
     }
 

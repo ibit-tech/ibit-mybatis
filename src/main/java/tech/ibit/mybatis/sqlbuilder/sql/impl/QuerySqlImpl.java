@@ -8,6 +8,7 @@ import tech.ibit.mybatis.sqlbuilder.sql.Page;
 import tech.ibit.mybatis.sqlbuilder.sql.QuerySql;
 import tech.ibit.mybatis.sqlbuilder.sql.support.UseAliasSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.*;
+import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -277,6 +278,18 @@ public class QuerySqlImpl<T> extends SqlLogImpl
 
     @Override
     public PrepareStatement getPrepareStatement() {
+
+
+        // 列为空的时候，补充默认列
+        if (CollectionUtils.isEmpty(columnSupport.getColumn().getItems())) {
+            columnPo(mapper.getPoClazz());
+        }
+
+        // 表为空的时候，补充默认表
+        if (CollectionUtils.isEmpty(fromSupport.getTable().getItems())) {
+            from(mapper.getDefaultTable());
+        }
+
         boolean distinct = distinctSupport.getDistinct().isValue();
 
         StringBuilder prepareSql = new StringBuilder();

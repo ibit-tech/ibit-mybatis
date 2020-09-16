@@ -1,9 +1,11 @@
 package tech.ibit.mybatis.sqlbuilder;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import tech.ibit.mybatis.CommonTest;
+import tech.ibit.mybatis.UserTestMapper;
 import tech.ibit.mybatis.demo.entity.UserPo;
 import tech.ibit.mybatis.demo.entity.property.OrganizationProperties;
 import tech.ibit.mybatis.demo.entity.property.ProjectProperties;
@@ -22,6 +24,13 @@ public class SqlTest extends CommonTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    private UserTestMapper userTestMapper;
+
+    @Before
+    public void setUp() throws Exception {
+        userTestMapper = new UserTestMapper();
+    }
 
     @Test
     public void select() {
@@ -68,6 +77,49 @@ public class SqlTest extends CommonTest {
         assertPrepareStatementEquals(
                 "SELECT COUNT(u.user_id) AS user_id_total FROM user u",
                 sql.getPrepareStatement());
+
+        sql = SqlFactory.createQuery(userTestMapper)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId,
+                                UserProperties.name)
+                );
+        assertPrepareStatementEquals("SELECT u.user_id, u.name FROM user u", sql.getPrepareStatement());
+
+
+        sql = SqlFactory.createQuery(userTestMapper)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId.sum("user_id_sum"),
+                                UserProperties.userId.avg("user_id_avg")
+                        )
+                )
+                .groupBy(UserProperties.userId);
+        assertPrepareStatementEquals(
+                "SELECT SUM(u.user_id) AS user_id_sum, AVG(u.user_id) AS user_id_avg FROM user u GROUP BY u.user_id",
+                sql.getPrepareStatement());
+
+
+        sql = SqlFactory.createQuery(userTestMapper)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId.sum("user_id_sum"),
+                                UserProperties.userId.avg("user_id_avg"))
+                )
+                .groupBy(UserProperties.userId);
+        assertPrepareStatementEquals(
+                "SELECT SUM(u.user_id) AS user_id_sum, AVG(u.user_id) AS user_id_avg FROM user u GROUP BY u.user_id",
+                sql.getPrepareStatement());
+
+        sql = SqlFactory.createQuery(userTestMapper)
+                .column(
+                        Collections.singletonList(
+                                UserProperties.userId.count("user_id_total")
+                        )
+                );
+        assertPrepareStatementEquals(
+                "SELECT COUNT(u.user_id) AS user_id_total FROM user u",
+                sql.getPrepareStatement());
     }
 
     @Test
@@ -76,6 +128,13 @@ public class SqlTest extends CommonTest {
                 .distinct()
                 .column(UserProperties.email)
                 .from(UserProperties.TABLE);
+        assertPrepareStatementEquals(
+                "SELECT DISTINCT u.email FROM user u",
+                sql.getPrepareStatement());
+
+        sql = SqlFactory.createQuery(userTestMapper)
+                .distinct()
+                .column(UserProperties.email);
         assertPrepareStatementEquals(
                 "SELECT DISTINCT u.email FROM user u",
                 sql.getPrepareStatement());
@@ -112,6 +171,13 @@ public class SqlTest extends CommonTest {
         CountSql sql = SqlFactory.createCount(null)
                 .from(UserProperties.TABLE);
         assertPrepareStatementEquals("SELECT COUNT(*) FROM user u", sql.getPrepareStatement());
+
+
+        sql = SqlFactory.createCount(userTestMapper);
+        assertPrepareStatementEquals("SELECT COUNT(*) FROM user u", sql.getPrepareStatement());
+
+        sql = SqlFactory.createCount(userTestMapper).fromDefault();
+        assertPrepareStatementEquals("SELECT COUNT(*) FROM user u", sql.getPrepareStatement());
     }
 
     @Test
@@ -136,6 +202,49 @@ public class SqlTest extends CommonTest {
         assertPrepareStatementEquals(
                 "SELECT COUNT(DISTINCT u.name, u.email) FROM user u",
                 sql.getPrepareStatement());
+
+        // 默认的
+        sql = SqlFactory.createCount(userTestMapper)
+                .distinct()
+                .column(UserProperties.userId);
+        assertPrepareStatementEquals(
+                "SELECT COUNT(DISTINCT u.user_id) FROM user u",
+                sql.getPrepareStatement());
+
+        sql = SqlFactory.createCount(userTestMapper)
+                .distinct()
+                .column(
+                        Arrays.asList(
+                                UserProperties.name,
+                                UserProperties.email
+                        )
+                );
+        assertPrepareStatementEquals(
+                "SELECT COUNT(DISTINCT u.name, u.email) FROM user u",
+                sql.getPrepareStatement());
+
+        // 默认的
+        sql = SqlFactory.createCount(userTestMapper)
+                .distinct()
+                .column(UserProperties.userId)
+                .fromDefault();
+        assertPrepareStatementEquals(
+                "SELECT COUNT(DISTINCT u.user_id) FROM user u",
+                sql.getPrepareStatement());
+
+        sql = SqlFactory.createCount(userTestMapper)
+                .distinct()
+                .column(
+                        Arrays.asList(
+                                UserProperties.name,
+                                UserProperties.email
+                        )
+                )
+                .fromDefault();
+        assertPrepareStatementEquals(
+                "SELECT COUNT(DISTINCT u.name, u.email) FROM user u",
+                sql.getPrepareStatement());
+
     }
 
     @Test
@@ -204,6 +313,49 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
+
+        sql = SqlFactory.createDelete(userTestMapper)
+                .andWhere(UserProperties.userId.eq(1));
+        assertPrepareStatementEquals(
+                "DELETE FROM user WHERE user_id = ?",
+                Collections.singletonList(
+                        UserProperties.userId.value(1)
+                ),
+                sql.getPrepareStatement());
+
+        sql = SqlFactory.createDelete(userTestMapper)
+                .andWhere(UserProperties.userId.eq(1))
+                .leftJoinOn(
+                        OrganizationProperties.TABLE,
+                        Arrays.asList(
+                                UserProperties.orgId,
+                                OrganizationProperties.orgId
+                        )
+                );
+        assertPrepareStatementEquals(
+                "DELETE u.* FROM user u LEFT JOIN organization o ON u.org_id = o.org_id WHERE u.user_id = ?",
+                Collections.singletonList(
+                        UserProperties.userId.value(1)
+                ),
+                sql.getPrepareStatement());
+
+        sql = SqlFactory.createDelete(userTestMapper)
+                .delete(UserProperties.TABLE)
+                .from(
+                        Arrays.asList(
+                                UserProperties.TABLE,
+                                OrganizationProperties.TABLE
+                        )
+                )
+                .andWhere(OrganizationProperties.orgId.eq(UserProperties.orgId))
+                .andWhere(UserProperties.userId.eq(1));
+        assertPrepareStatementEquals(
+                "DELETE u.* FROM user u, organization o WHERE o.org_id = u.org_id AND u.user_id = ?",
+                Collections.singletonList(
+                        UserProperties.userId.value(1)
+                ),
+                sql.getPrepareStatement());
+
     }
 
     @Test
@@ -211,6 +363,16 @@ public class SqlTest extends CommonTest {
         UpdateSql sql = SqlFactory
                 .createUpdate(null)
                 .update(UserProperties.TABLE)
+                .set(UserProperties.name.set("IBIT"));
+        thrown.expect(RuntimeException.class);
+        thrown.expectMessage("Where cannot be empty when do updating!");
+        sql.getPrepareStatement();
+    }
+
+    @Test
+    public void update1() {
+        UpdateSql sql = SqlFactory
+                .createUpdate(userTestMapper)
                 .set(UserProperties.name.set("IBIT"));
         thrown.expect(RuntimeException.class);
         thrown.expectMessage("Where cannot be empty when do updating!");
@@ -232,6 +394,19 @@ public class SqlTest extends CommonTest {
                         UserProperties.userId.value(1)
                 ),
                 sql.getPrepareStatement());
+
+        sql = SqlFactory
+                .createUpdate(userTestMapper)
+                .set(UserProperties.name.set("IBIT"))
+                .andWhere(UserProperties.userId.eq(1));
+
+        assertPrepareStatementEquals(
+                "UPDATE user u SET u.name = ? WHERE u.user_id = ?",
+                Arrays.asList(
+                        UserProperties.name.value("IBIT"),
+                        UserProperties.userId.value(1)
+                ),
+                sql.getPrepareStatement());
     }
 
     @Test
@@ -239,6 +414,25 @@ public class SqlTest extends CommonTest {
         InsertSql sql = SqlFactory
                 .createInsert(null)
                 .insert(UserProperties.TABLE)
+                .values(
+                        Arrays.asList(
+                                UserProperties.name.value("IBIT"),
+                                UserProperties.loginId.value("188"),
+                                UserProperties.avatarId.value(null)
+                        )
+                );
+
+        assertPrepareStatementEquals(
+                "INSERT INTO user(name, login_id, avatar_id) VALUES(?, ?, ?)",
+                Arrays.asList(
+                        UserProperties.name.value("IBIT"),
+                        UserProperties.loginId.value("188"),
+                        UserProperties.avatarId.value(null)
+                ),
+                sql.getPrepareStatement());
+
+        sql = SqlFactory
+                .createInsert(userTestMapper)
                 .values(
                         Arrays.asList(
                                 UserProperties.name.value("IBIT"),
@@ -306,12 +500,59 @@ public class SqlTest extends CommonTest {
                 ),
                 sql.getPrepareStatement());
 
+
+        sql = SqlFactory
+                .createInsert(userTestMapper)
+                .values(
+                        Arrays.asList(
+                                UserProperties.name.value("IBIT"),
+                                UserProperties.loginId.value("188"),
+                                UserProperties.avatarId.value(null)
+                        )
+                ).onDuplicateKeyUpdate(
+                        Arrays.asList(
+                                UserProperties.name.set("IBIT"),
+                                UserProperties.loginId.set("188")
+                        )
+                );
+
+        assertPrepareStatementEquals(
+                "INSERT INTO user(name, login_id, avatar_id) VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE name = ?, login_id = ?",
+                Arrays.asList(
+                        UserProperties.name.value("IBIT"),
+                        UserProperties.loginId.value("188"),
+                        UserProperties.avatarId.value(null),
+                        UserProperties.name.value("IBIT"),
+                        UserProperties.loginId.value("188")
+                ),
+                sql.getPrepareStatement());
+
     }
 
     @Test
     public void set() {
         UpdateSql sql = SqlFactory.createUpdate(null)
                 .update(UserProperties.TABLE)
+                .set(
+                        Arrays.asList(
+                                UserProperties.name.set("IBIT"),
+                                UserProperties.loginId.set("188"),
+                                UserProperties.avatarId.set(null)
+                        )
+                ).andWhere(UserProperties.userId.eq(1));
+
+        assertPrepareStatementEquals(
+                "UPDATE user u SET u.name = ?, u.login_id = ?, u.avatar_id = ? WHERE u.user_id = ?",
+                Arrays.asList(
+                        UserProperties.name.value("IBIT"),
+                        UserProperties.loginId.value("188"),
+                        UserProperties.avatarId.value(null),
+                        UserProperties.userId.value(1)
+                ),
+                sql.getPrepareStatement());
+
+
+        sql = SqlFactory.createUpdate(userTestMapper)
                 .set(
                         Arrays.asList(
                                 UserProperties.name.set("IBIT"),

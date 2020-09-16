@@ -22,6 +22,7 @@ public interface InsertSql extends InsertTableSupport<InsertSql>,
      *
      * @return SQL对象
      */
+    @Deprecated
     InsertSql insertDefault();
 
     /**

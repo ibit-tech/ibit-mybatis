@@ -7,6 +7,7 @@ import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.CountSql;
 import tech.ibit.mybatis.sqlbuilder.sql.support.UseAliasSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.*;
+import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -342,7 +343,12 @@ public class CountSqlImpl extends SqlLogImpl
 
         String columnStr = columnPrepareStatement.getPrepareSql();
         if (StringUtils.isBlank(columnStr) && distinct) {
-            throw new SqlException("Columns cannot be empty while at distinct defaultimpl!");
+            throw new SqlException("Columns cannot be empty while at distinct statement!");
+        }
+
+        // 如果from为空的，则使用默认
+        if (CollectionUtils.isEmpty(fromSupport.getTable().getItems())) {
+            fromSupport.from(mapper.getDefaultTable());
         }
 
         // 构造count字段

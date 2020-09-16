@@ -54,7 +54,6 @@ public class UniqueKeySqlUtils {
         }
         QuerySql<T> sql = mapper.createQuery()
                 .columnPo(poClazz)
-                .fromDefault()
                 .limit(uniqueKeys.size());
         addWhere(sql, uniqueKeys);
         return sql;
@@ -74,9 +73,7 @@ public class UniqueKeySqlUtils {
         if (CollectionUtils.isEmpty(uniqueKeys)) {
             throw SqlException.uniqueKeyValueNotFound();
         }
-        DeleteSql sql = mapper
-                .createDelete()
-                .deleteFromDefault();
+        DeleteSql sql = mapper.createDelete();
         addWhere(sql, uniqueKeys);
         return sql;
     }
@@ -131,9 +128,7 @@ public class UniqueKeySqlUtils {
                 ? EntityConverter.getTableColumnValues(updateObject, false)
                 : EntityConverter.getTableColumnValues(updateObject, updateColumns);
 
-        UpdateSql sql = mapper
-                .createUpdate()
-                .updateDefault();
+        UpdateSql sql = mapper.createUpdate();
         IdSqlUtils.addSetsSql(tableColumnValues, sql);
         addWhere(sql, uniqueKeys);
         return sql;

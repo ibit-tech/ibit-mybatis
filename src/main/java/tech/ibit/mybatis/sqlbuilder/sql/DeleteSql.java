@@ -22,6 +22,7 @@ public interface DeleteSql extends DeleteSupport<DeleteSql>,
      *
      * @return SQL对象
      */
+    @Deprecated
     DeleteSql deleteFromDefault();
 
     /**

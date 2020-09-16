@@ -111,7 +111,6 @@ public class IdSqlUtils {
         return mapper
                 .createQuery()
                 .columnPo(poClazz)
-                .fromDefault()
                 .andWhere(id.in(idValues))
                 .limit(idValues.size());
     }
@@ -164,7 +163,6 @@ public class IdSqlUtils {
 
         QuerySql<T> sql = mapper.createQuery()
                 .columnPo(poClazz)
-                .fromDefault()
                 .limit(idValues.size());
 
         appendWhereSql(idValueList, sql);
@@ -219,7 +217,6 @@ public class IdSqlUtils {
             throw SqlException.idValueNotFound();
         }
         return mapper.createDelete()
-                .deleteFromDefault()
                 .andWhere(mapper.getId().in(idValues));
     }
 
@@ -261,7 +258,7 @@ public class IdSqlUtils {
             throw SqlException.idNotFound(firstIdValues.getTable().getName());
         }
 
-        DeleteSql sql = mapper.createDelete().deleteFromDefault();
+        DeleteSql sql = mapper.createDelete();
         appendWhereSql(idValueList, sql);
         return sql;
     }
@@ -309,7 +306,6 @@ public class IdSqlUtils {
 
         return mapper
                 .createInsert()
-                .insertDefault()
                 .values(columnValues2Insert);
     }
 
@@ -368,7 +364,6 @@ public class IdSqlUtils {
         BatchInsertItems batchInsertItems = getBatchInsertItems(pos, columns);
         return mapper
                 .createInsert()
-                .insertDefault()
                 .values(batchInsertItems.getColumns(), batchInsertItems.getValues());
     }
 
@@ -412,9 +407,7 @@ public class IdSqlUtils {
         //检查主键是否为空
         checkIdNotNull(idEntity.getIds(), tableColumnValues.getColumnValues());
 
-        UpdateSql sql = mapper
-                .createUpdate()
-                .updateDefault();
+        UpdateSql sql = mapper.createUpdate();
 
         for (ColumnSetValue cv : tableColumnValues.getColumnValues()) {
             Column column = (Column) cv.getColumn();
@@ -471,9 +464,7 @@ public class IdSqlUtils {
                 ? EntityConverter.getTableColumnValues(updateObject, false)
                 : EntityConverter.getTableColumnValues(updateObject, updateColumns);
 
-        UpdateSql sql = mapper
-                .createUpdate()
-                .updateDefault();
+        UpdateSql sql = mapper.createUpdate();
         addSetsSql(tableColumnValues, sql);
         sql.andWhere(mapper.getId().in(idValues));
         return sql;

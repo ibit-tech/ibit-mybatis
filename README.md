@@ -49,6 +49,7 @@
 | UpdateTableSupport | update | `UPDATE table1 t1[, table2 t2...]`语句，t1，t2表示"表别名" |
 | ValuesSupport | values | `(column1, column2, ...) VALUES(?, ?, ...)`语句 |
 | WhereSupport | where </br> andWhere </br> orWhere | `WHERE` 语句 |
+| OnDuplicateKeyUpdateSupport | onDuplicateKeyUpdate | `ON DUPLICATE KEY UPDATE column1 = ? [, column2= ?...]` 语句 | 
 
 #### sql 工厂类
 
@@ -57,14 +58,15 @@
 ### Mapper 说明
 
 #### Mapper 基础支持
-`ibit-mybatis` 定义了 4 种 Mapper，分别是 `RawMapper`，`NoIdMapper`，`SingleIdMapper`，`MultipleIdMapper`。以下分别说明。
+`ibit-mybatis` 定义了 5 种 Mapper，分别是 `RawMapper`，`Mapper`， `NoIdMapper`，`SingleIdMapper`，`MultipleIdMapper`。以下分别说明。
   
 | Mapper 类型 | 父接口 | 说明 |
 | --- | --- | --- |
-| RawMapper | / | 定义最原始的增、删、改、查和 Sql 实例创建 |
-| NoIdMapper | RawMapper |  扩展无主键表的增 |
-| SingleIdMapper | NoIdMapper | 扩展单主键表的根据id增、删、改、查 |
-| MultipleIdMapper | NoIdMapper | 扩展多主键表的根据id增、删、改、查 |
+| RawMapper | / | 基于注解方式增、删、改、查|
+| Mapper | RawMapper | 在 RawMapper 增加 Sql 实例创建，unique key 查询默认方法 |
+| NoIdMapper | Mapper |  扩展无主键表的增 |
+| SingleIdMapper | Mapper | 扩展单主键表的根据id增、删、改、查 |
+| MultipleIdMapper | Mapper | 扩展多主键表的根据id增、删、改、查 |
   
   
   使用 [ibit-mybatis-generator](https://github.com/ibit-tech/ibit-mybatis-generator) 2.x 版本，会根据表主键数量，继承不同的 Mapper。
@@ -94,6 +96,20 @@ public User getByUsername(String username) {
             .limit(1)
             .executeQueryOne();
 }
+
+// 如果 mapper 的实体类型为User，则可以简化为以下方式
+
+public User getByUsername(String username) {
+    if (StringUtils.isBlank(username)) {
+        return null;
+    }
+    return mapper
+            .createQuery()
+            .andWhere(UserProperties.username.eq(username))
+            .limit(1)
+            .executeQueryOne();
+}
+
 ```
 
 ## 用法
@@ -190,7 +206,7 @@ mybatis.configuration.default-enum-type-handler=tech.ibit.mybatis.CommonEnumType
 
 ### 版本升级说明
 
-ibit\-mybatis 从 2.0 升级到 2.1 需要做的事情，针对生成的 `mapper`
+ibit\-mybatis 从 2.0 升级到 2.1+ 需要做的事情，针对生成的 `mapper`
 
 继承 `SingleIdMapper`、`MultipleIdMapper` 和 `NoIdMapper` 的接口，需要重载以下方法
 

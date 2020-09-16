@@ -97,6 +97,7 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
      *
      * @return sql对象本身
      */
+    @Deprecated
     QuerySql<T> columnDefaultPo();
 
 
@@ -105,6 +106,7 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
      *
      * @return sql对象本身
      */
+    @Deprecated
     QuerySql<T> fromDefault();
 
 }

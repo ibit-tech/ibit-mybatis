@@ -22,6 +22,7 @@ public interface CountSql extends ColumnSupport<CountSql>,
      *
      * @return SQL对象本身
      */
+    @Deprecated
     CountSql fromDefault();
 
     /**

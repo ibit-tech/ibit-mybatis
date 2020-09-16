@@ -6,6 +6,7 @@ import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.DeleteSql;
 import tech.ibit.mybatis.sqlbuilder.sql.support.UseAliasSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.*;
+import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -176,6 +177,11 @@ public class DeleteSqlImpl extends SqlLogImpl implements DeleteSql,
     public PrepareStatement getPrepareStatement() {
         if (whereSupport.getWhere().getItems().isEmpty()) {
             throw new SqlException("Where cannot be empty when do deleting!");
+        }
+
+        // 补充默认的表
+        if (CollectionUtils.isEmpty(fromSupport.getTable().getItems())) {
+            deleteFrom(mapper.getDefaultTable());
         }
 
         StringBuilder prepareSql = new StringBuilder();
