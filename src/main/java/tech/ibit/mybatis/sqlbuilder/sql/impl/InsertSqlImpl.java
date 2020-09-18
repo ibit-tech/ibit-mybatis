@@ -71,6 +71,11 @@ public class InsertSqlImpl extends SqlLogImpl implements InsertSql,
     }
 
     @Override
+    public InsertSql values(Column column, Object value) {
+        return valuesSupport.values(column, value);
+    }
+
+    @Override
     public InsertSql values(List<Column> columns, List<Object> values) {
         return valuesSupport.values(columns, values);
     }

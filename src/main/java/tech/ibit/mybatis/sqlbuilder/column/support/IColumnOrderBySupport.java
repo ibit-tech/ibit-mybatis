@@ -1,7 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.column.support;
 
 import tech.ibit.mybatis.sqlbuilder.CustomOrderBy;
-import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.IOrderBy;
 import tech.ibit.mybatis.sqlbuilder.OrderBy;
 
@@ -13,14 +12,7 @@ import java.util.List;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface IColumnOrderBySupport {
-
-    /**
-     * 获取列
-     *
-     * @return 列
-     */
-    IColumn getColumn();
+public interface IColumnOrderBySupport extends IColumnSupport {
 
     /**
      * 构造OrderBy

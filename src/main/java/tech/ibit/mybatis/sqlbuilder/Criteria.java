@@ -138,12 +138,6 @@ public class Criteria implements PrepareStatementSupplier {
         return criterion;
     }
 
-    /**
-     * 获取预查询SQL对象
-     *
-     * @param useAlias 是否使用别名
-     * @return 预查询SQL对象
-     */
     @Override
     public PrepareStatement getPrepareStatement(boolean useAlias) {
         if (null == item && CollectionUtils.isEmpty(subCriterion)) {

@@ -76,73 +76,36 @@ public class HavingSupportImpl<T> extends CriteriaSupportImpl
         return sql;
     }
 
-    /**
-     * `HAVING`语句
-     *
-     * @param having having语句对象
-     * @return SQL对象
-     */
     @Override
     public T having(Criteria having) {
         getHaving().addItem(having);
         return getSql();
     }
 
-    /**
-     * `HAVING`语句
-     *
-     * @param havings having语句对象列表
-     * @return SQL对象
-     */
     @Override
     public T having(List<Criteria> havings) {
         getHaving().addItems(havings);
         return getSql();
     }
 
-    /**
-     * `HAVING AND item`语句
-     *
-     * @param havingItem having语句对象
-     * @return SQL对象
-     */
     @Override
     public T andHaving(CriteriaItem havingItem) {
         having(havingItem.and());
         return getSql();
     }
 
-    /**
-     * `HAVING AND (havings)`语句
-     *
-     * @param havings having语句对象列表
-     * @return SQL对象
-     */
     @Override
     public T andHaving(List<Criteria> havings) {
         having(Criteria.and(havings));
         return getSql();
     }
 
-
-    /**
-     * `HAVING OR item`语句
-     *
-     * @param havingItem having语句对象
-     * @return SQL对象
-     */
     @Override
     public T orHaving(CriteriaItem havingItem) {
         having(havingItem.or());
         return getSql();
     }
 
-    /**
-     * `HAVING OR (havings)`语句（多个OR关系）
-     *
-     * @param havings having语句对象列表
-     * @return SQL对象
-     */
     @Override
     public T orHaving(List<Criteria> havings) {
         having(Criteria.or(havings));

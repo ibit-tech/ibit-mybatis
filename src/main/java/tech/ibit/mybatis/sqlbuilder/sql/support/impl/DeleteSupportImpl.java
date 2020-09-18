@@ -52,26 +52,12 @@ public class DeleteSupportImpl<T> implements SqlSupport<T>,
     }
 
 
-    /**
-     * `DELETE t1.*` 语句, t1表示"表别名"
-     *
-     * @param table 表对象
-     * @return SQL对象
-     * @see Table
-     */
     @Override
     public T delete(Table table) {
         getDeleteItem().addItem(table);
         return getSql();
     }
 
-    /**
-     * `DELETE t1.*, t2.* ...` 语句, t1, t2表示"表别名"
-     *
-     * @param tables 表对象列表
-     * @return SQL对象
-     * @see Table
-     */
     @Override
     public T delete(List<Table> tables) {
         getDeleteItem().addItems(tables);

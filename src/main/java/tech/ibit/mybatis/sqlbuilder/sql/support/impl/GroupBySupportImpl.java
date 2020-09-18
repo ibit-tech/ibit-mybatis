@@ -1,7 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import tech.ibit.mybatis.sqlbuilder.Column;
-import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.GroupBySupport;
@@ -73,26 +72,12 @@ public class GroupBySupportImpl<T> implements SqlSupport<T>,
         return sql;
     }
 
-    /**
-     * `GROUP BY t1.column`语句
-     *
-     * @param groupBy 相关列a
-     * @return SQL对象
-     * @see IColumn
-     */
     @Override
     public T groupBy(Column groupBy) {
         getGroupBy().addItem(groupBy);
         return getSql();
     }
 
-    /**
-     * `GROUP BY t1.column1, t2.column2, ...`语句
-     *
-     * @param groupBys 相关列列表
-     * @return SQL对象
-     * @see IColumn
-     */
     @Override
     public T groupBy(List<Column> groupBys) {
         getGroupBy().addItems(groupBys);

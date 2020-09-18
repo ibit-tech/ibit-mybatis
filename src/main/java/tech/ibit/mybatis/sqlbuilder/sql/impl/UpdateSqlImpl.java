@@ -80,6 +80,21 @@ public class UpdateSqlImpl extends SqlLogImpl
     }
 
     @Override
+    public UpdateSql set(Column column, Object value) {
+        return setSupport.set(column, value);
+    }
+
+    @Override
+    public UpdateSql increaseSet(Column column, Number value) {
+        return setSupport.increaseSet(column, value);
+    }
+
+    @Override
+    public UpdateSql decreaseSet(Column column, Number value) {
+        return setSupport.decreaseSet(column, value);
+    }
+
+    @Override
     public UpdateSql joinOn(JoinOn joinOn) {
         return joinOnSupport.joinOn(joinOn);
     }

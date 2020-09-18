@@ -45,26 +45,12 @@ public class FromSupportImpl<T> extends BaseTableSupportImpl<T> implements FromS
         return new FromSupportImpl<>(sql, getTable());
     }
 
-    /**
-     * `FROM table1 t1` 语句, t1表示"表别名"
-     *
-     * @param table 表对象
-     * @return SQL对象
-     * @see Table
-     */
     @Override
     public T from(Table table) {
         getTable().addItem(table);
         return getSql();
     }
 
-    /**
-     * `FROM table1 t1, table2 t2...` 语句, t1, t2表示"表别名"
-     *
-     * @param tables 表对象列表
-     * @return SQL对象
-     * @see Table
-     */
     @Override
     public T from(List<Table> tables) {
         getTable().addItems(tables);

@@ -1,5 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support;
 
+import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.SetItem;
 
 import java.util.List;
@@ -27,5 +28,32 @@ public interface SetSupport<T> {
      * @return SQL对象
      */
     T set(List<SetItem> items);
+
+    /**
+     * 设置具体值
+     *
+     * @param column 列
+     * @param value  值
+     * @return 设置item
+     */
+    T set(Column column, Object value);
+
+    /**
+     * 设置自增长
+     *
+     * @param column 列
+     * @param value  值
+     * @return 自增长item
+     */
+    T increaseSet(Column column, Number value);
+
+    /**
+     * 设置自减
+     *
+     * @param column 列
+     * @param value  值
+     * @return 自减item
+     */
+    T decreaseSet(Column column, Number value);
 
 }

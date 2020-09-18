@@ -53,11 +53,7 @@ public class OrderBy implements IOrderBy {
         return new PrepareStatement(prepareSql, Collections.emptyList());
     }
 
-    /**
-     * Gets the value of column
-     *
-     * @return the value of column
-     */
+    @Override
     public IColumn getColumn() {
         return column;
     }
@@ -72,11 +68,7 @@ public class OrderBy implements IOrderBy {
         this.column = column;
     }
 
-    /**
-     * Gets the value of desc
-     *
-     * @return the value of desc
-     */
+    @Override
     public boolean isDesc() {
         return desc;
     }

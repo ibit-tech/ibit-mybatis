@@ -1193,7 +1193,7 @@ public class MapperUtilsTest extends CommonTest {
 
     @Test
     public void getByUniqueKey() {
-        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
+        UniqueKey uKey1 = UserProperties.userId.uniqueKey(1);
         MapperUtils.getByUniqueKey(new User2TestMapper() {
             @Override
             public User rawSelectOne(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
@@ -1292,7 +1292,7 @@ public class MapperUtilsTest extends CommonTest {
 
     @Test
     public void deleteByUniqueKey() {
-        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
+        UniqueKey uKey1 = UserProperties.userId.uniqueKey(1);
 
         MapperUtils.deleteByUniqueKey(new User2TestMapper() {
             @Override
@@ -1326,8 +1326,8 @@ public class MapperUtilsTest extends CommonTest {
 
     @Test
     public void deleteByUniqueKeys() {
-        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
-        UniqueKey uKey2 = new UniqueKey(UserProperties.userId.value(2));
+        UniqueKey uKey1 = UserProperties.userId.uniqueKey(1);
+        UniqueKey uKey2 = UserProperties.userId.uniqueKey(2);
         MapperUtils.deleteByUniqueKeys(new User2TestMapper() {
             @Override
             public int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams) {
@@ -1396,9 +1396,9 @@ public class MapperUtilsTest extends CommonTest {
         user.setType(UserType.u1);
         user.setPassword("12345678");
 
-        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
-        UniqueKey uKey2 = new UniqueKey(UserProperties.userId.value(2));
-        UniqueKey uKey3 = new UniqueKey(UserProperties.userId.value(3));
+        UniqueKey uKey1 = UserProperties.userId.uniqueKey(1);
+        UniqueKey uKey2 = UserProperties.userId.uniqueKey(2);
+        UniqueKey uKey3 = UserProperties.userId.uniqueKey(3);
 
         MapperUtils.updateByUniqueKeys(new User2TestMapper() {
             @Override

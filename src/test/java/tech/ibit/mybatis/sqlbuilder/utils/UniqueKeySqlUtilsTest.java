@@ -43,8 +43,8 @@ public class UniqueKeySqlUtilsTest extends CommonTest {
     @Test
     public void getByUniqueKeys() {
 
-        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
-        UniqueKey uKey2 = new UniqueKey(UserProperties.userId.value(2));
+        UniqueKey uKey1 = UserProperties.userId.uniqueKey(1);
+        UniqueKey uKey2 = UserProperties.userId.uniqueKey(2);
         PrepareStatement prepareStatement = UniqueKeySqlUtils.getByUniqueKeys(
                 userMapper, User.class, Arrays.asList(uKey1, uKey2)).getPrepareStatement();
         assertPrepareStatementEquals(
@@ -92,7 +92,7 @@ public class UniqueKeySqlUtilsTest extends CommonTest {
 
     @Test
     public void getByUniqueKey() {
-        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
+        UniqueKey uKey1 = UserProperties.userId.uniqueKey(1);
         PrepareStatement prepareStatement = UniqueKeySqlUtils.getByUniqueKey(userMapper, User.class, uKey1).getPrepareStatement();
         assertPrepareStatementEquals(
                 "SELECT u.user_id, u.login_id, u.name, u.email, u.password, u.mobile_phone, u.type FROM user u WHERE u.user_id = ? LIMIT ?, ?",
@@ -119,8 +119,8 @@ public class UniqueKeySqlUtilsTest extends CommonTest {
 
     @Test
     public void deleteByUniqueKeys() {
-        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
-        UniqueKey uKey2 = new UniqueKey(UserProperties.userId.value(2));
+        UniqueKey uKey1 = UserProperties.userId.uniqueKey(1);
+        UniqueKey uKey2 = UserProperties.userId.uniqueKey(2);
 
         PrepareStatement prepareStatement = UniqueKeySqlUtils.deleteByUniqueKeys(
                 userMapper, Collections.singletonList(uKey1)).getPrepareStatement();
@@ -162,7 +162,7 @@ public class UniqueKeySqlUtilsTest extends CommonTest {
 
     @Test
     public void deleteByUniqueKey() {
-        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
+        UniqueKey uKey1 = UserProperties.userId.uniqueKey(1);
         PrepareStatement prepareStatement = UniqueKeySqlUtils.deleteByUniqueKey(userMapper, uKey1).getPrepareStatement();
         assertPrepareStatementEquals(
                 "DELETE FROM user WHERE user_id = ?",
@@ -218,9 +218,9 @@ public class UniqueKeySqlUtilsTest extends CommonTest {
         user.setType(UserType.u1);
         user.setPassword("12345678");
 
-        UniqueKey uKey1 = new UniqueKey(UserProperties.userId.value(1));
-        UniqueKey uKey2 = new UniqueKey(UserProperties.userId.value(2));
-        UniqueKey uKey3 = new UniqueKey(UserProperties.userId.value(3));
+        UniqueKey uKey1 = UserProperties.userId.uniqueKey(1);
+        UniqueKey uKey2 = UserProperties.userId.uniqueKey(2);
+        UniqueKey uKey3 = UserProperties.userId.uniqueKey(3);
         PrepareStatement prepareStatement = UniqueKeySqlUtils.updateByUniqueKeys(
                 userMapper, user, Arrays.asList(uKey1, uKey2, uKey3)).getPrepareStatement();
         assertPrepareStatementEquals(

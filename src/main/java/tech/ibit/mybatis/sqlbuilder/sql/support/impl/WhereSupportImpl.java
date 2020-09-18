@@ -75,75 +75,33 @@ public class WhereSupportImpl<T> extends CriteriaSupportImpl
         return sql;
     }
 
-    /**
-     * `WHERE` 语句
-     *
-     * @param criteria WHERE相关条件
-     * @return SQL对象
-     * @see Criteria
-     */
     @Override
     public T where(Criteria criteria) {
         getWhere().addItem(criteria);
         return getSql();
     }
 
-    /**
-     * `WHERE` 语句
-     *
-     * @param criterion WHERE相关条件列表
-     * @return SQL对象
-     * @see Criteria
-     */
     @Override
     public T where(List<Criteria> criterion) {
         getWhere().addItems(criterion);
         return getSql();
     }
 
-    /**
-     * `WHERE AND` 语句
-     *
-     * @param item WHERE相关条件
-     * @return SQL对象
-     * @see Criteria
-     */
     @Override
     public T andWhere(CriteriaItem item) {
         return where(item.and());
     }
 
-    /**
-     * `WHERE AND` 语句
-     *
-     * @param criterion WHERE相关条件列表
-     * @return SQL对象
-     * @see Criteria
-     */
     @Override
     public T andWhere(List<Criteria> criterion) {
         return where(Criteria.and(criterion));
     }
 
-    /**
-     * `WHERE OR`语句
-     *
-     * @param item WHERE相关条件
-     * @return SQL对象
-     * @see Criteria
-     */
     @Override
     public T orWhere(CriteriaItem item) {
         return where(item.or());
     }
 
-    /**
-     * `WHERE OR`语句
-     *
-     * @param criterion WHERE相关条件列表
-     * @return SQL对象
-     * @see Criteria
-     */
     @Override
     public T orWhere(List<Criteria> criterion) {
         return where(Criteria.or(criterion));

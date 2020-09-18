@@ -25,11 +25,6 @@ public class ColumnAs extends Column {
         this.nameAs = nameAs;
     }
 
-    /**
-     * Gets the value of nameAs
-     *
-     * @return the value of nameAs
-     */
     @Override
     public String getNameAs() {
         return nameAs;

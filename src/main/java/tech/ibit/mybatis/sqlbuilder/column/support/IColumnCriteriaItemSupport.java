@@ -14,14 +14,7 @@ import java.util.Collection;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface IColumnCriteriaItemSupport {
-
-    /**
-     * 获取列
-     *
-     * @return 列
-     */
-    IColumn getColumn();
+public interface IColumnCriteriaItemSupport extends IColumnSupport {
 
     /**
      * 构造"IS NULL"条件内容

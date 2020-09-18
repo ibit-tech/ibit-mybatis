@@ -52,25 +52,12 @@ public class LimitSupportImpl<T> implements SqlSupport<T>,
         return sql;
     }
 
-    /**
-     * `LIMIT #{start}, #{limit}` 语句
-     *
-     * @param start 开始位置
-     * @param limit 限制条数
-     * @return SQL对象
-     */
     @Override
     public T limit(int start, int limit) {
         getLimit().limit(start, limit);
         return getSql();
     }
 
-    /**
-     * `LIMIT 0, #{limit}` 语句
-     *
-     * @param limit 限制条数
-     * @return SQL对象
-     */
     @Override
     public T limit(int limit) {
         getLimit().limit(limit);

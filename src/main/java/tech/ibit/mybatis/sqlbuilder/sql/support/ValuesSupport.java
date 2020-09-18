@@ -33,6 +33,15 @@ public interface ValuesSupport<T> {
     T values(ColumnValue columnValue);
 
     /**
+     * `(column1) VALUES(?)`语句
+     *
+     * @param column 列
+     * @param value  值
+     * @return SQL对象
+     */
+    T values(Column column, Object value);
+
+    /**
      * `(column1, column2, ...) VALUES(?, ?, ...)`语句
      *
      * @param columns 列列表

@@ -25,7 +25,6 @@ public class QuerySqlImpl<T> extends SqlLogImpl
         implements QuerySql<T>,
         UseAliasSupport, PrepareStatementBuildSupport {
 
-
     /**
      * 列支持
      */
@@ -259,6 +258,17 @@ public class QuerySqlImpl<T> extends SqlLogImpl
     public QuerySql<T> orderBy(List<IOrderBy> orderBys) {
         return orderBySupport.orderBy(orderBys);
     }
+
+    @Override
+    public QuerySql<T> orderBy(IColumn column) {
+        return orderBySupport.orderBy(column);
+    }
+
+    @Override
+    public QuerySql<T> orderBy(IColumn column, boolean desc) {
+        return orderBySupport.orderBy(column, desc);
+    }
+
 
     @Override
     public QuerySql<T> limit(int start, int limit) {

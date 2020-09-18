@@ -397,7 +397,7 @@ public class SqlTest extends CommonTest {
 
         sql = SqlFactory
                 .createUpdate(userTestMapper)
-                .set(UserProperties.name.set("IBIT"))
+                .set(UserProperties.name, "IBIT")
                 .andWhere(UserProperties.userId.eq(1));
 
         assertPrepareStatementEquals(
@@ -1183,11 +1183,8 @@ public class SqlTest extends CommonTest {
                                 UserProperties.currentProjectId,
                                 ProjectProperties.projectId)
                 )
-                .orderBy(
-                        Arrays.asList(
-                                ProjectProperties.projectId.orderBy(),
-                                UserProperties.userId.orderBy(true)
-                        ))
+                .orderBy(ProjectProperties.projectId)
+                .orderBy(UserProperties.userId, true)
                 .limit(1000);
         assertPrepareStatementEquals(
                 "SELECT u.user_id, u.name, p.name FROM user u LEFT JOIN project p ON u.current_project_id = p.project_id ORDER BY p.project_id, u.user_id DESC LIMIT ?, ?",
@@ -1252,12 +1249,8 @@ public class SqlTest extends CommonTest {
                 .andHaving(
                         minAge.egt(1)
                 )
-                .orderBy(
-                        Arrays.asList(
-                                UserProperties.gender.orderBy(),
-                                minAge.orderBy(true)
-                        )
-                );
+                .orderBy(UserProperties.gender)
+                .orderBy(minAge, true);
         assertPrepareStatementEquals(
                 "SELECT MIN(u.age) AS min_age, MAX(u.age) AS max_age, u.gender FROM user u WHERE u.age >= ? " +
                         "GROUP BY u.gender HAVING min_age >= ? ORDER BY u.gender, min_age DESC",

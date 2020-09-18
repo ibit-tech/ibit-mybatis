@@ -10,15 +10,7 @@ import tech.ibit.mybatis.sqlbuilder.enums.AggregateFunctionNameEnum;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface IColumnAggregateSupport {
-
-    /**
-     * 获取列
-     *
-     * @return 列
-     */
-    IColumn getColumn();
-
+public interface IColumnAggregateSupport extends IColumnSupport {
 
     /**
      * 平均数

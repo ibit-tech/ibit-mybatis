@@ -1,9 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import tech.ibit.mybatis.sqlbuilder.column.support.IColumnAggregateSupport;
-import tech.ibit.mybatis.sqlbuilder.column.support.IColumnCriteriaItemSupport;
-import tech.ibit.mybatis.sqlbuilder.column.support.IColumnOrderBySupport;
-import tech.ibit.mybatis.sqlbuilder.column.support.IColumnSetItemSupport;
+import tech.ibit.mybatis.sqlbuilder.column.support.*;
 
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -15,7 +12,8 @@ import java.util.StringJoiner;
  * @version 1.0
  */
 public class Column implements IColumn,
-        IColumnCriteriaItemSupport, IColumnAggregateSupport, IColumnSetItemSupport, IColumnOrderBySupport {
+        IColumnCriteriaItemSupport, IColumnAggregateSupport,
+        IColumnSetItemSupport, IColumnOrderBySupport, IColumnUniqueKeySupport {
 
     /**
      * 表
@@ -64,21 +62,11 @@ public class Column implements IColumn,
                 .toString();
     }
 
-    /**
-     * 获取带表别名的列名
-     *
-     * @return 带表别名的列名
-     */
     @Override
     public String getNameWithTableAlias() {
         return table.getAlias() + "." + name;
     }
 
-    /**
-     * 获取字段别名（as后面的名称）
-     *
-     * @return 别名
-     */
     @Override
     public String getNameAs() {
         // 这里不定义别名

@@ -24,24 +24,12 @@ public class OnDuplicateKeyUpdateSupportImpl<T>
         super(sql, new ListField<>());
     }
 
-    /**
-     * 增加设置内容
-     *
-     * @param item 设置项
-     * @return SQL对象
-     */
     @Override
     public T onDuplicateKeyUpdate(SetItem item) {
         getSet().addItem(item);
         return getSql();
     }
 
-    /**
-     * 批量增加设置内容
-     *
-     * @param items 设置项
-     * @return SQL对象
-     */
     @Override
     public T onDuplicateKeyUpdate(List<SetItem> items) {
         getSet().addItems(items);

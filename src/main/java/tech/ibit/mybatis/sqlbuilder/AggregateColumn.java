@@ -160,11 +160,6 @@ public class AggregateColumn implements IColumn,
         this.columns = columns;
     }
 
-    /**
-     * Gets the value of nameAs
-     *
-     * @return the value of nameAs
-     */
     @Override
     public String getNameAs() {
         return nameAs;

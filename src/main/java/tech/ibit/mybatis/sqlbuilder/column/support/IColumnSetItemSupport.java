@@ -1,7 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.column.support;
 
 import tech.ibit.mybatis.sqlbuilder.Column;
-import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.SetItem;
 
 /**
@@ -10,15 +9,7 @@ import tech.ibit.mybatis.sqlbuilder.SetItem;
  * @author IBIT程序猿
  * @version 2.0
  */
-public interface IColumnSetItemSupport {
-
-
-    /**
-     * 获取列
-     *
-     * @return 列
-     */
-    IColumn getColumn();
+public interface IColumnSetItemSupport extends IColumnSupport {
 
     /**
      * 设置具体值

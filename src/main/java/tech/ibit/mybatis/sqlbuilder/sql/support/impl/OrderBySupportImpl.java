@@ -1,6 +1,8 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
+import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.IOrderBy;
+import tech.ibit.mybatis.sqlbuilder.OrderBy;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.OrderBySupport;
@@ -49,31 +51,31 @@ public class OrderBySupportImpl<T> implements SqlSupport<T>,
         return sql;
     }
 
-    /**
-     * `ORDER BY` 语句
-     *
-     * @param orderBy 相关orderBy
-     * @return SQL对象
-     * @see IOrderBy
-     */
     @Override
     public T orderBy(IOrderBy orderBy) {
         getOrderBy().addItem(orderBy);
         return getSql();
     }
 
-    /**
-     * `ORDER BY` 语句
-     *
-     * @param orderBys 相关orderBy列表
-     * @return SQL对象
-     * @see IOrderBy
-     */
     @Override
     public T orderBy(List<IOrderBy> orderBys) {
         getOrderBy().addItems(orderBys);
         return getSql();
     }
+
+    @Override
+    public T orderBy(IColumn column) {
+        return orderBy(column, false);
+    }
+
+    @Override
+    public T orderBy(IColumn column, boolean desc) {
+        if (null != column) {
+            getOrderBy().addItem(new OrderBy(column, desc));
+        }
+        return getSql();
+    }
+
 
     /**
      * 获取预查询SQL对象

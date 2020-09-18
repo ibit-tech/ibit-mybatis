@@ -66,12 +66,6 @@ public class FlagCriteriaItem extends CriteriaItem {
         return new FlagCriteriaItem(column, containsType, value);
     }
 
-    /**
-     * 获取预查询SQL对象
-     *
-     * @param useAlias 是否使用别名
-     * @return 预查询SQL对象
-     */
     @Override
     public PrepareStatement getPrepareStatement(boolean useAlias) {
 

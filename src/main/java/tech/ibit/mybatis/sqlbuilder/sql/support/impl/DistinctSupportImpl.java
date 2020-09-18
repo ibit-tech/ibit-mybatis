@@ -67,23 +67,11 @@ public class DistinctSupportImpl<T> implements SqlSupport<T>,
         return distinct;
     }
 
-    /**
-     * distinct 操作
-     *
-     * @return SQL对象
-     */
     @Override
     public T distinct() {
         return distinct(true);
     }
 
-
-    /**
-     * distinct 操作
-     *
-     * @param distinct 是否distinct
-     * @return SQL对象
-     */
     @Override
     public T distinct(boolean distinct) {
         getDistinct().setValue(distinct);
