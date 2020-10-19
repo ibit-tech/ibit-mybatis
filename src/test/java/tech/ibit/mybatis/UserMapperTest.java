@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import tech.ibit.mybatis.demo.entity.User;
 import tech.ibit.mybatis.demo.entity.UserPo;
+import tech.ibit.mybatis.demo.entity.UserTypeTotal;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.demo.entity.type.UserType;
 import tech.ibit.mybatis.demo.mapper.UserMapper;
@@ -77,6 +78,24 @@ public class UserMapperTest extends CommonTest {
 
     private User insertUser() {
         User user = getUser();
+        userMapper.insert(user);
+        testUsers.add(user);
+        return user;
+    }
+
+    private User getUser2() {
+        User user = new User();
+        user.setLoginId("dev2");
+        user.setName("dev2");
+        user.setEmail("dev2@ibit.tech");
+        user.setPassword("password**");
+        user.setMobilePhone("1097");
+        user.setType(UserType.u2);
+        return user;
+    }
+
+    private User insertUser2() {
+        User user = getUser2();
         userMapper.insert(user);
         testUsers.add(user);
         return user;
@@ -457,6 +476,16 @@ public class UserMapperTest extends CommonTest {
         assertEquals(user.getEmail(), userPo.getEmail());
         assertEquals(user.getMobilePhone(), userPo.getMobilePhone());
         assertEquals(user.getType(), userPo.getType());
+    }
+
+    @Test
+    public void listTypeTotals() {
+        User user = insertUser();
+        insertUser2();
+        List<UserTypeTotal> totals = userService.listTypeTotals();
+        System.out.println(totals.get(0).getTotal());
+
+        UserPo userPo = userMapper.getPoById(UserPo.class, user.getUserId());
 
     }
 }

@@ -2,6 +2,7 @@ package tech.ibit.mybatis.demo.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.ibit.mybatis.demo.entity.UserTypeTotal;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.demo.mapper.UserMapper;
 import tech.ibit.mybatis.demo.service.UserService;
@@ -46,5 +47,20 @@ public class UserServiceImpl implements UserService {
                 .from(UserProperties.TABLE)
                 .orderBy(UserProperties.userId.orderBy())
                 .executeQueryDefaultPage();
+    }
+
+    /**
+     * 按照用户类型统计数量
+     *
+     * @return 用户类型统计
+     */
+    @Override
+    public List<UserTypeTotal> listTypeTotals() {
+        return mapper.createQuery()
+                .column(UserProperties.type)
+                .column(UserProperties.type.count("total"))
+                .groupBy(UserProperties.type)
+                .orderBy(UserProperties.type.orderBy())
+                .executeQueryWithType(UserTypeTotal.class);
     }
 }

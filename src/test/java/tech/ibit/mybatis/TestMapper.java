@@ -47,4 +47,9 @@ public class TestMapper<T> implements RawMapper<T> {
     public <P> List<P> rawSelectDefault(PrepareStatement sqlParams) {
         return null;
     }
+
+    @Override
+    public <V> List<V> rawSelectWithType(PrepareStatement sqlParams, Class<V> resultType) {
+        return null;
+    }
 }

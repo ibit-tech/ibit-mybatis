@@ -397,6 +397,12 @@ public class QuerySqlImpl<T> extends SqlLogImpl
     }
 
     @Override
+    public <V> List<V> executeQueryWithType(Class<V> resultType) {
+        PrepareStatement statement = logAndGetPrepareStatement();
+        return mapper.rawSelectWithType(statement, resultType);
+    }
+
+    @Override
     public QuerySql<T> columnDefaultPo() {
         return columnPo(mapper.getPoClazz());
     }

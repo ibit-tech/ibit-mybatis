@@ -35,6 +35,11 @@ public class SqlProvider {
     public static final String METHOD_EXECUTE = "execute";
 
     /**
+     * 参数resultType
+     */
+    public static final String PARAM_KEY_RESULT_TYPE = "resultType";
+
+    /**
      * 值转换器
      */
     private static Map<Class<?>, Function<Object, Object>> valueFormatter;

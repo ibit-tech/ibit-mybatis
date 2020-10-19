@@ -43,6 +43,20 @@ public interface RawMapper<T> {
     <V> List<V> rawSelectDefault(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
+     * 基本类型查询
+     *
+     * @param sqlParams  SQL语句-参数对象
+     * @param resultType 返回类型类
+     * @param <V>        基本类型
+     * @return 结果列表
+     */
+    @SelectProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
+    <V> List<V> rawSelectWithType(
+            @Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams,
+            @Param(SqlProvider.PARAM_KEY_RESULT_TYPE) Class<V> resultType
+    );
+
+    /**
      * 计数
      *
      * @param sqlParams SQL语句-参数对象
