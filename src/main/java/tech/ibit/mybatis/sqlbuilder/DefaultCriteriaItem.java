@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @author IBIT程序猿
  * @since 2.6
  */
-public class DefaultCriteriaItem implements CriteriaItem {
+public class DefaultCriteriaItem extends CriteriaItem {
 
     /**
      * 第一列

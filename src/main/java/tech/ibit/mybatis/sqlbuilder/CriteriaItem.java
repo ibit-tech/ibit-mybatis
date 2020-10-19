@@ -7,14 +7,14 @@ package tech.ibit.mybatis.sqlbuilder;
  * @author IBIT程序猿
  * @version 1.0
  */
-public interface CriteriaItem extends PrepareStatementSupplier {
+public abstract class CriteriaItem implements PrepareStatementSupplier {
 
     /**
      * 生成or条件
      *
      * @return or条件
      */
-    default Criteria or() {
+    public Criteria or() {
         return Criteria.or(this);
     }
 
@@ -23,7 +23,7 @@ public interface CriteriaItem extends PrepareStatementSupplier {
      *
      * @return and条件
      */
-    default Criteria and() {
+    public Criteria and() {
         return Criteria.and(this);
     }
 

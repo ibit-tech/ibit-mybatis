@@ -8,7 +8,7 @@ import java.util.Collections;
  * @author IBIT程序猿
  * @version 1.0
  */
-public class FlagCriteriaItem implements CriteriaItem {
+public class FlagCriteriaItem extends CriteriaItem {
 
     /**
      * 第一列
