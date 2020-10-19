@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * InsertSql实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public class InsertSqlImpl extends SqlLogImpl implements InsertSql,

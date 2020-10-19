@@ -3,7 +3,7 @@ package tech.ibit.mybatis.sqlbuilder.enums;
 /**
  * 操作符号
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public enum OperatorEnum {

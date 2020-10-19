@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * SetSupport
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public interface OnDuplicateKeyUpdateSupport<T> {

@@ -6,7 +6,7 @@ import tech.ibit.mybatis.sqlbuilder.Table;
 /**
  * DbTable for sz_project
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public interface ProjectProperties {

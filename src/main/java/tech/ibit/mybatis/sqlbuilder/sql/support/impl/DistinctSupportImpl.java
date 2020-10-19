@@ -7,7 +7,7 @@ import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 /**
  * DistinctSupport实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class DistinctSupportImpl<T> implements SqlSupport<T>,
         DistinctSupport<T> {

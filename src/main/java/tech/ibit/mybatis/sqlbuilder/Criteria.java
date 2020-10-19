@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 查询条件（where 或 having）
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class Criteria implements PrepareStatementSupplier {

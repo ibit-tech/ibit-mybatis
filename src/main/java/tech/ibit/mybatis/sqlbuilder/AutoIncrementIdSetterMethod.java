@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 /**
  * 自增长id Setter相关方法
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class AutoIncrementIdSetterMethod {

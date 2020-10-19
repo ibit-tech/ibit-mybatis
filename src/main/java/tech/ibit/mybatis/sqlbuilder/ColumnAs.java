@@ -3,7 +3,7 @@ package tech.ibit.mybatis.sqlbuilder;
 /**
  * 列（带别名）
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class ColumnAs extends Column {

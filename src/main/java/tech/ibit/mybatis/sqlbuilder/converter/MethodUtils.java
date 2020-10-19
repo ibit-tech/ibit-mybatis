@@ -7,7 +7,7 @@ import java.lang.reflect.Modifier;
 /**
  * Method工具类
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 class MethodUtils {

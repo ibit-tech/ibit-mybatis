@@ -6,7 +6,7 @@ import tech.ibit.mybatis.sqlbuilder.Table;
 /**
  * Table for organization
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public interface OrganizationProperties {
 

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Dao for user
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public interface UserService {
 

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 /**
  * 自定义排序
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class CustomOrderBy extends OrderBy {

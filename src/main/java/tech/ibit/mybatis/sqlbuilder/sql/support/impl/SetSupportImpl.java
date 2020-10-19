@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * SetSupport实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class SetSupportImpl<T> extends BaseSetSupportImpl<T> implements SetSupport<T> {
 

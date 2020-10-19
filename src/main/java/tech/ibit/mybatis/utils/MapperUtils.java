@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Mapper工具类
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class MapperUtils {
 

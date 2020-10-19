@@ -11,7 +11,7 @@ import tech.ibit.mybatis.sqlbuilder.SqlFactory;
 import java.util.List;
 
 /**
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 @Service
 public class UserLoginRecordServiceImpl implements UserLoginRecordService {

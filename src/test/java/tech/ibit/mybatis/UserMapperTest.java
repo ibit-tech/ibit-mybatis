@@ -29,7 +29,7 @@ import static org.junit.Assert.assertNull;
 /**
  * 单主键dao测试
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * mailto: ibit_tech@aliyun.com
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)

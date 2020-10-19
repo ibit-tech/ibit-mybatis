@@ -11,7 +11,7 @@ import java.util.List;
  * InsertTableSupport实现
  *
  * @param <T> 对象模板类型
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class InsertTableSupportImpl<T> extends BaseTableSupportImpl<T> implements InsertTableSupport<T> {
 

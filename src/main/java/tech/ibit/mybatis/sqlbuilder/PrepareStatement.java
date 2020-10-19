@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * 预查询SQL对象
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class PrepareStatement {

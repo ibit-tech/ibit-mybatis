@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Entity for user_login_record
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 @DbTable(name = "user_login_record", alias = "ulr")
 public class UserLoginRecord {

@@ -6,7 +6,7 @@ import tech.ibit.mybatis.sqlbuilder.SetItem;
 /**
  * 列构造setItem
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public interface IColumnSetItemSupport extends IColumnSupport {

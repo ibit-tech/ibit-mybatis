@@ -7,7 +7,7 @@ import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
 /**
  * Entity for organization
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 @DbTable(name = "organization", alias = "o")
 public class Organization {

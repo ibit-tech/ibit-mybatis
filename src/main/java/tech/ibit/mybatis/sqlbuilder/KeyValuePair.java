@@ -3,7 +3,7 @@ package tech.ibit.mybatis.sqlbuilder;
 /**
  * 键-值对
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class KeyValuePair {

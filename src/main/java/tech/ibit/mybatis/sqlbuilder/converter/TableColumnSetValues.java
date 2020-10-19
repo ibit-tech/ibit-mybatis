@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 列-值信息（带列额外信息）
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class TableColumnSetValues {

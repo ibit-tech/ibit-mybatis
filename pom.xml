@@ -37,14 +37,14 @@
     </scm>
 
     <organization>
-        <name>IBIT程序猿</name>
+        <name>iBit程序猿</name>
         <url>https://github.com/ibit-tech</url>
     </organization>
 
     <developers>
         <developer>
             <id>ibit-tech</id>
-            <name>IBIT程序猿</name>
+            <name>iBit程序猿</name>
             <email>ibit_tech@aliyun.com</email>
         </developer>
 

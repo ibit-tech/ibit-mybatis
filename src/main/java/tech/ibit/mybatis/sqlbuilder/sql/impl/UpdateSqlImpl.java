@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * UpdateSql实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public class UpdateSqlImpl extends SqlLogImpl

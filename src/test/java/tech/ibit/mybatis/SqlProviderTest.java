@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNull;
 /**
  * SQLBuilder测试用例
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * mailto: ibit_tech@aliyun.com
  */
 public class SqlProviderTest extends CommonTest {

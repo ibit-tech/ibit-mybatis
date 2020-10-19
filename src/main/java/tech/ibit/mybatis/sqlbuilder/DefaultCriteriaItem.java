@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * 条件内容对象
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @since 2.6
  */
 public class DefaultCriteriaItem extends CriteriaItem {

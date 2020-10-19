@@ -9,7 +9,7 @@ import tech.ibit.mybatis.sqlbuilder.sql.support.ValuesSupport;
 /**
  * InsertSql
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public interface InsertSql extends InsertTableSupport<InsertSql>,

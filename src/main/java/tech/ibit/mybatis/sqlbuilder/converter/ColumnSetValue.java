@@ -6,7 +6,7 @@ import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 /**
  * 列-值对（带列额外信息）
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class ColumnSetValue extends ColumnValue {

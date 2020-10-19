@@ -12,7 +12,7 @@ import java.util.List;
  * TableSupport实现
  *
  * @param <T> 对象模板类型
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public class BaseTableSupportImpl<T> implements PrepareStatementBuildSupport, SqlSupport<T> {

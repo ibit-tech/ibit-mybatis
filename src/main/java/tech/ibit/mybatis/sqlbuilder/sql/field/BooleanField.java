@@ -3,7 +3,7 @@ package tech.ibit.mybatis.sqlbuilder.sql.field;
 /**
  * Distinct 字段
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public class BooleanField {

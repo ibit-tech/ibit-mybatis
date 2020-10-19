@@ -5,7 +5,7 @@ import tech.ibit.mybatis.CommonEnum;
 /**
  * 用户类型
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * mailto: ibit_tech@aliyun.com
  */
 public enum UserType implements CommonEnum {

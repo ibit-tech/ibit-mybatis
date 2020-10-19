@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * 定义聚合函数列
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class AggregateColumn implements IColumn,

@@ -13,7 +13,7 @@ import java.util.List;
  * SetSupport实现
  *
  * @param <T> sql对象模板类型
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class BaseSetSupportImpl<T> implements SqlSupport<T>, PrepareStatementBuildSupport {
 

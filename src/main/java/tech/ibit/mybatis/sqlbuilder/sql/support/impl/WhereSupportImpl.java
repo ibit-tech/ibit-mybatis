@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * WhereSupport实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class WhereSupportImpl<T> extends CriteriaSupportImpl
         implements SqlSupport<T>, WhereSupport<T> {

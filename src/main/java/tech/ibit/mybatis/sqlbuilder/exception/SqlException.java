@@ -3,7 +3,7 @@ package tech.ibit.mybatis.sqlbuilder.exception;
 /**
  * SQL语法不支持异常
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class SqlException extends RuntimeException {

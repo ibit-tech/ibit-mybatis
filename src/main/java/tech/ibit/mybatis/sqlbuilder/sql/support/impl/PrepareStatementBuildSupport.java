@@ -12,7 +12,7 @@ import java.util.function.Function;
 /**
  * 条件支持
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public interface PrepareStatementBuildSupport {

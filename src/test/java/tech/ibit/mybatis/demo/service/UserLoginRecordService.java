@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 用户登录记录 Service
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public interface UserLoginRecordService {
 

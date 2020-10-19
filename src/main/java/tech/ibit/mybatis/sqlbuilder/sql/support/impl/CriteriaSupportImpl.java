@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * CriteriaSupport实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public class CriteriaSupportImpl {

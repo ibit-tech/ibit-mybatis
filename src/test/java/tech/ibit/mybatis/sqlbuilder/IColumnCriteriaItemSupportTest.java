@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 /**
  * 列默认方法测试用例
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public class IColumnCriteriaItemSupportTest {

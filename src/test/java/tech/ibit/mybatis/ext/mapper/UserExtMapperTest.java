@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * MapperTest
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)

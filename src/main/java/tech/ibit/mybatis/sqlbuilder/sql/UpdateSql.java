@@ -5,7 +5,7 @@ import tech.ibit.mybatis.sqlbuilder.sql.support.*;
 /**
  * UpdateSql
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public interface UpdateSql extends UpdateTableSupport<UpdateSql>,

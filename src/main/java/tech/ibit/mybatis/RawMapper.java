@@ -10,7 +10,7 @@ import java.util.List;
  * 抽象Mapper接口（定义基础增、删、改、查）
  *
  * @param <T> 实体类型
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public interface RawMapper<T> {
 

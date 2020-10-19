@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * publicValuesSupport
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class ValuesSupportImpl<T> implements SqlSupport<T>,
         ValuesSupport<T>, PrepareStatementBuildSupport {

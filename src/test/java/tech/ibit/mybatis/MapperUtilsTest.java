@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * 工具类测试
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * mailto: ibit_tech@aliyun.com
  */
 public class MapperUtilsTest extends CommonTest {

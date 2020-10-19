@@ -8,7 +8,7 @@ import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
 /**
  * User po
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 @DbTable(name = "user", alias = "u")
 public class UserPo {

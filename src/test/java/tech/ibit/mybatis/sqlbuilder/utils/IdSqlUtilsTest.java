@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 /**
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)

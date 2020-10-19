@@ -12,7 +12,7 @@ import java.util.Collection;
 /**
  * 条件内容创建类
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public interface IColumnCriteriaItemSupport extends IColumnSupport {

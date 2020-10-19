@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 定义列表字段
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public class ListField<T> {

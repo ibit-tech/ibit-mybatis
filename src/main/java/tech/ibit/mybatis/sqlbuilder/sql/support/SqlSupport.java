@@ -3,7 +3,7 @@ package tech.ibit.mybatis.sqlbuilder.sql.support;
 /**
  * DefaultSqlSupport
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public interface SqlSupport<T> {
 

@@ -8,7 +8,7 @@ import java.util.StringJoiner;
 /**
  * 列定义
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class Column implements IColumn,

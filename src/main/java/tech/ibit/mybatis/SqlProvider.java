@@ -10,7 +10,7 @@ import java.util.function.Function;
 /**
  * Mybatis SQL构造器
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class SqlProvider {
 

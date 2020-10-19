@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Id 相关的 sql 工具类
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class IdSqlUtils {

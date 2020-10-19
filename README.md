@@ -1,4 +1,4 @@
-# ibit-mybatis 2.1 介绍
+# ibit-mybatis 2.x 介绍
 
 ## 概述
 
@@ -243,7 +243,7 @@ default Column getId() {
 
 喜欢我的文章，请关注公众号
 
-![IBIT程序猿](https://x-halo.oss-cn-beijing.aliyuncs.com/halo/wechat_1589272852710.jpg)
+![iBit程序猿](https://x-halo.oss-cn-beijing.aliyuncs.com/halo/wechat_1589272852710.jpg)
 
 
 

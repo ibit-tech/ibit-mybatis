@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * JoinOnSupport实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class JoinOnSupportImpl<T> implements SqlSupport<T>,
         JoinOnSupport<T>, PrepareStatementBuildSupport {

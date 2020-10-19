@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * OrderBySupport实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class OrderBySupportImpl<T> implements SqlSupport<T>,
         OrderBySupport<T>, PrepareStatementBuildSupport {

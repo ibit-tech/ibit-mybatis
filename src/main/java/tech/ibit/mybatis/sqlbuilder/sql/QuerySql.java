@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 定义搜索接口
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,

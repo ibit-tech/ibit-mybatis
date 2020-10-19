@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * UserExtMapper
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public interface UserExtMapper {
 

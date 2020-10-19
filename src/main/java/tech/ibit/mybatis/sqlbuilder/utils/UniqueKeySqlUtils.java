@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Unique Key SQL 工具类
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class UniqueKeySqlUtils {
 

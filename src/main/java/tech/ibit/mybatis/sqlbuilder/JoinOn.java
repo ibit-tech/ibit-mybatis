@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 定义JoinOn
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public class JoinOn implements PrepareStatementSupplier {

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * 表字段信息类
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class TableColumnInfo {

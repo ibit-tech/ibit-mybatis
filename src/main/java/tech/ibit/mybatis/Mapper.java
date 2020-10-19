@@ -15,7 +15,7 @@ import java.util.List;
  * 基础 Mapper
  *
  * @param <T> 实体类型
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public interface Mapper<T> extends RawMapper<T> {
 

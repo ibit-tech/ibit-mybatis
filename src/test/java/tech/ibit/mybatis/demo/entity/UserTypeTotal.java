@@ -5,7 +5,7 @@ import tech.ibit.mybatis.demo.entity.type.UserType;
 /**
  * 用户类型统计
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * mailto: ibit_tech@aliyun.com
  */
 public class UserTypeTotal {

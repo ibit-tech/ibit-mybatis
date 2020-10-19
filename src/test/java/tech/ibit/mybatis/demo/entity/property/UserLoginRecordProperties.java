@@ -7,7 +7,7 @@ import tech.ibit.mybatis.sqlbuilder.Table;
 /**
  * Table for user_login_record
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public interface UserLoginRecordProperties {
 

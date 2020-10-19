@@ -9,7 +9,7 @@ import tech.ibit.mybatis.sqlbuilder.Table;
 /**
  * RawMapper for user
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public interface UserMapper extends SingleIdMapper<User, Integer> {
 

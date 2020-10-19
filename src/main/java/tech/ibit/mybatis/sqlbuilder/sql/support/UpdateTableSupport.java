@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 更新表Support
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 2.0
  */
 public interface UpdateTableSupport<T> {

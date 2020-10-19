@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 测试的mapper
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * mailto: ibit_tech@aliyun.com
  */
 public class TestMapper<T> implements RawMapper<T> {

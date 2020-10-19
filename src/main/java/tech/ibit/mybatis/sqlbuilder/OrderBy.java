@@ -5,7 +5,7 @@ import java.util.Collections;
 /**
  * 定义排序类
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class OrderBy implements IOrderBy {

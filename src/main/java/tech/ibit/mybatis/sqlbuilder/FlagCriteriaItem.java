@@ -5,7 +5,7 @@ import java.util.Collections;
 /**
  * 标记位查询条件
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  * @version 1.0
  */
 public class FlagCriteriaItem extends CriteriaItem {

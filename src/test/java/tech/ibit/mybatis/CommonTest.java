@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * 公共测试类
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class CommonTest {
 

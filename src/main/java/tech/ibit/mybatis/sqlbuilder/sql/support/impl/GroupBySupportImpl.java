@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * GroupBySupport实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class GroupBySupportImpl<T> implements SqlSupport<T>,
         GroupBySupport<T>, PrepareStatementBuildSupport {

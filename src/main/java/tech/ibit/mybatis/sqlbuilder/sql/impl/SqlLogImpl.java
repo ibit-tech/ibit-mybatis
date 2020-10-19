@@ -7,7 +7,7 @@ import tech.ibit.structlog4j.StructLoggerFactory;
 /**
  * 日志相关实现
  *
- * @author IBIT程序猿
+ * @author iBit程序猿
  */
 public class SqlLogImpl {
 
