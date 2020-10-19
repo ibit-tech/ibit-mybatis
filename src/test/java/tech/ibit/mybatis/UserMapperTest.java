@@ -483,9 +483,8 @@ public class UserMapperTest extends CommonTest {
         User user = insertUser();
         insertUser2();
         List<UserTypeTotal> totals = userService.listTypeTotals();
-        System.out.println(totals.get(0).getTotal());
 
-        UserPo userPo = userMapper.getPoById(UserPo.class, user.getUserId());
+        userMapper.getPoById(UserPo.class, user.getUserId());
 
     }
 }

@@ -61,6 +61,6 @@ public class UserServiceImpl implements UserService {
                 .column(UserProperties.type.count("total"))
                 .groupBy(UserProperties.type)
                 .orderBy(UserProperties.type.orderBy())
-                .executeQueryWithType(UserTypeTotal.class);
+                .executeQuery(UserTypeTotal.class);
     }
 }

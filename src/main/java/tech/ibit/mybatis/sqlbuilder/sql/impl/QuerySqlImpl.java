@@ -2,7 +2,6 @@ package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
 import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
-import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
 import tech.ibit.mybatis.sqlbuilder.sql.CountSql;
 import tech.ibit.mybatis.sqlbuilder.sql.Page;
 import tech.ibit.mybatis.sqlbuilder.sql.QuerySql;
@@ -366,7 +365,8 @@ public class QuerySqlImpl<T> extends SqlLogImpl
 
     @Override
     public <P> List<P> executeQuery(Class<P> clazz) {
-        return EntityConverter.copyColumns(executeQuery(), clazz);
+        PrepareStatement statement = logAndGetPrepareStatement();
+        return mapper.rawSelectWithType(statement, clazz);
     }
 
     @Override
@@ -377,7 +377,8 @@ public class QuerySqlImpl<T> extends SqlLogImpl
 
     @Override
     public <P> P executeQueryOne(Class<P> clazz) {
-        return EntityConverter.copyColumns(executeQueryOne(), clazz);
+        PrepareStatement statement = logAndGetPrepareStatement();
+        return mapper.rawSelectOneWithType(statement, clazz);
     }
 
     @Override
@@ -394,12 +395,6 @@ public class QuerySqlImpl<T> extends SqlLogImpl
     public <V> List<V> executeQueryDefault() {
         PrepareStatement statement = logAndGetPrepareStatement();
         return mapper.rawSelectDefault(statement);
-    }
-
-    @Override
-    public <V> List<V> executeQueryWithType(Class<V> resultType) {
-        PrepareStatement statement = logAndGetPrepareStatement();
-        return mapper.rawSelectWithType(statement, resultType);
     }
 
     @Override

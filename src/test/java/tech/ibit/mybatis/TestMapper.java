@@ -52,4 +52,9 @@ public class TestMapper<T> implements RawMapper<T> {
     public <V> List<V> rawSelectWithType(PrepareStatement sqlParams, Class<V> resultType) {
         return null;
     }
+
+    @Override
+    public <V> V rawSelectOneWithType(PrepareStatement sqlParams, Class<V> resultType) {
+        return null;
+    }
 }

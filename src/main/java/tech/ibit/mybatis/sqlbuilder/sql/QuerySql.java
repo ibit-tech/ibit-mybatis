@@ -93,15 +93,6 @@ public interface QuerySql<T> extends ColumnSupport<QuerySql<T>>,
     <V> List<V> executeQueryDefault();
 
     /**
-     * 查询基本类型
-     *
-     * @param resultType 查询类类型
-     * @param <V>        基本类型
-     * @return 结果列表
-     */
-    <V> List<V> executeQueryWithType(Class<V> resultType);
-
-    /**
      * 定义搜索列（从mapper getPoClazz中获取）
      *
      * @return sql对象本身
