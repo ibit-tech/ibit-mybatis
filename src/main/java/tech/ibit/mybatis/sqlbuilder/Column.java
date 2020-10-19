@@ -12,8 +12,12 @@ import java.util.StringJoiner;
  * @version 1.0
  */
 public class Column implements IColumn,
-        IColumnCriteriaItemSupport, IColumnAggregateSupport,
-        IColumnSetItemSupport, IColumnOrderBySupport, IColumnUniqueKeySupport {
+        IColumnCriteriaItemSupport,
+        IColumnAggregateSupport,
+        IColumnFullTextSupport,
+        IColumnSetItemSupport,
+        IColumnOrderBySupport,
+        IColumnUniqueKeySupport {
 
     /**
      * 表

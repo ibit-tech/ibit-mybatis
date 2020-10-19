@@ -50,7 +50,10 @@ public interface PrepareStatementBuildSupport {
 
             prepareSql.append(prepareSqlGetter.apply(clause));
             if (null != valuesGetter) {
-                values.addAll(valuesGetter.apply(clause));
+                List<ColumnValue> cvs = valuesGetter.apply(clause);
+                if (CollectionUtils.isNotEmpty(cvs)) {
+                    values.addAll(cvs);
+                }
             }
         }
 

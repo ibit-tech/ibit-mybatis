@@ -1,5 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
+import tech.ibit.mybatis.sqlbuilder.FullTextColumn;
 import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
@@ -8,6 +9,7 @@ import tech.ibit.mybatis.sqlbuilder.sql.support.ColumnSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -105,7 +107,13 @@ public class ColumnSupportImpl<T>
         }
 
         return getPrepareStatement("", columns
-                , (IColumn column) -> column.getSelectColumnName(useAlias), null, ", ");
+                , (IColumn column) -> column.getSelectColumnName(useAlias), (IColumn column) -> {
+                    // 全文索引有点特殊
+                    if (column instanceof FullTextColumn) {
+                        return Collections.singletonList(column.value(((FullTextColumn) column).getValue()));
+                    }
+                    return null;
+                }, ", ");
     }
 
 }

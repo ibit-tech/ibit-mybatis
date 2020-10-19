@@ -5,6 +5,8 @@ import tech.ibit.mybatis.sqlbuilder.column.support.IColumnCriteriaItemSupport;
 import tech.ibit.mybatis.sqlbuilder.column.support.IColumnOrderBySupport;
 
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 /**
@@ -192,5 +194,37 @@ public class AggregateColumn implements IColumn,
      */
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", AggregateColumn.class.getSimpleName() + "[", "]")
+                .add("functionName='" + functionName + "'")
+                .add("columns=" + Arrays.toString(columns))
+                .add("nameAs='" + nameAs + "'")
+                .add("distinct=" + distinct)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AggregateColumn that = (AggregateColumn) o;
+        return isDistinct() == that.isDistinct() &&
+                getFunctionName().equals(that.getFunctionName()) &&
+                Arrays.equals(getColumns(), that.getColumns()) &&
+                Objects.equals(getNameAs(), that.getNameAs());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getFunctionName(), getNameAs(), isDistinct());
+        result = 31 * result + Arrays.hashCode(getColumns());
+        return result;
     }
 }
