@@ -10,6 +10,8 @@ import tech.ibit.mybatis.demo.entity.UserPo;
 import tech.ibit.mybatis.demo.entity.property.OrganizationProperties;
 import tech.ibit.mybatis.demo.entity.property.ProjectProperties;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
+import tech.ibit.mybatis.demo.entity.type.UserType;
+import tech.ibit.mybatis.sqlbuilder.enums.FullTextModeEnum;
 import tech.ibit.mybatis.sqlbuilder.sql.*;
 
 import java.util.Arrays;
@@ -28,7 +30,7 @@ public class SqlTest extends CommonTest {
     private UserTestMapper userTestMapper;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         userTestMapper = new UserTestMapper();
     }
 
@@ -176,7 +178,7 @@ public class SqlTest extends CommonTest {
         sql = SqlFactory.createCount(userTestMapper);
         assertPrepareStatementEquals("SELECT COUNT(*) FROM user u", sql.getPrepareStatement());
 
-        sql = SqlFactory.createCount(userTestMapper).fromDefault();
+        sql = SqlFactory.createCount(userTestMapper);
         assertPrepareStatementEquals("SELECT COUNT(*) FROM user u", sql.getPrepareStatement());
     }
 
@@ -226,8 +228,7 @@ public class SqlTest extends CommonTest {
         // 默认的
         sql = SqlFactory.createCount(userTestMapper)
                 .distinct()
-                .column(UserProperties.userId)
-                .fromDefault();
+                .column(UserProperties.userId);
         assertPrepareStatementEquals(
                 "SELECT COUNT(DISTINCT u.user_id) FROM user u",
                 sql.getPrepareStatement());
@@ -239,8 +240,7 @@ public class SqlTest extends CommonTest {
                                 UserProperties.name,
                                 UserProperties.email
                         )
-                )
-                .fromDefault();
+                );
         assertPrepareStatementEquals(
                 "SELECT COUNT(DISTINCT u.name, u.email) FROM user u",
                 sql.getPrepareStatement());
@@ -1427,6 +1427,129 @@ public class SqlTest extends CommonTest {
                         UserProperties.userId.value(1),
                         UserProperties.name.value("%IBIT%")
                 ), sql.getPrepareStatement());
+
+    }
+
+    @Test
+    public void fullTextMatch() {
+
+        // 查询列中有全文索引
+        FullTextColumn nameMatchScore = UserProperties.name.fullText("IBIT", "score");
+        QuerySql<?> sql = SqlFactory.createQuery(null)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId,
+                                nameMatchScore
+                        )
+                )
+                .from(UserProperties.TABLE)
+                .andWhere(UserProperties.type.eq(UserType.u1))
+                .orderBy(nameMatchScore.orderBy());
+        assertPrepareStatementEquals(
+                "SELECT u.user_id, MATCH(u.name) AGAINST(?) AS score FROM user u WHERE u.type = ? ORDER BY score",
+                Arrays.asList(
+                        nameMatchScore.value(),
+                        UserProperties.type.value(UserType.u1)
+                ),
+                sql.getPrepareStatement());
+
+        // boolean 模式
+        nameMatchScore = UserProperties.name.fullText("IBIT", FullTextModeEnum.BOOLEAN, "score");
+        sql = SqlFactory.createQuery(null)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId,
+                                nameMatchScore
+                        )
+                )
+                .from(UserProperties.TABLE)
+                .andWhere(UserProperties.type.eq(UserType.u1))
+                .orderBy(nameMatchScore.orderBy());
+        assertPrepareStatementEquals(
+                "SELECT u.user_id, MATCH(u.name) AGAINST(? IN BOOLEAN MODE) AS score FROM user u WHERE u.type = ? ORDER BY score",
+                Arrays.asList(
+                        nameMatchScore.value(),
+                        UserProperties.type.value(UserType.u1)
+                ),
+                sql.getPrepareStatement());
+
+        // natural language模式
+        nameMatchScore = UserProperties.name.fullText("IBIT", FullTextModeEnum.NATURAL_LANGUAGE, "score");
+        sql = SqlFactory.createQuery(null)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId,
+                                nameMatchScore
+                        )
+                )
+                .from(UserProperties.TABLE)
+                .andWhere(UserProperties.type.eq(UserType.u1))
+                .orderBy(nameMatchScore.orderBy());
+        assertPrepareStatementEquals(
+                "SELECT u.user_id, MATCH(u.name) AGAINST(? IN NATURAL LANGUAGE MODE) AS score FROM user u WHERE u.type = ? ORDER BY score",
+                Arrays.asList(
+                        nameMatchScore.value(),
+                        UserProperties.type.value(UserType.u1)
+                ),
+                sql.getPrepareStatement());
+
+
+        // 查询条件，默认
+        sql = SqlFactory.createQuery(null)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId,
+                                UserProperties.name
+                        )
+                )
+                .from(UserProperties.TABLE)
+                .andWhere(UserProperties.type.eq(UserType.u1))
+                .andWhere(UserProperties.name.fullTextMatch("IBIT"));
+        assertPrepareStatementEquals(
+                "SELECT u.user_id, u.name FROM user u WHERE u.type = ? AND MATCH(u.name) AGAINST(?)",
+                Arrays.asList(
+                        UserProperties.type.value(UserType.u1),
+                        UserProperties.name.fullText("IBIT").value()
+                ),
+                sql.getPrepareStatement());
+
+        // boolean
+        sql = SqlFactory.createQuery(null)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId,
+                                UserProperties.name
+                        )
+                )
+                .from(UserProperties.TABLE)
+                .andWhere(UserProperties.type.eq(UserType.u1))
+                .andWhere(UserProperties.name.fullTextMatch("IBIT", FullTextModeEnum.BOOLEAN));
+        assertPrepareStatementEquals(
+                "SELECT u.user_id, u.name FROM user u WHERE u.type = ? AND MATCH(u.name) AGAINST(? IN BOOLEAN MODE)",
+                Arrays.asList(
+                        UserProperties.type.value(UserType.u1),
+                        UserProperties.name.fullText("IBIT", FullTextModeEnum.BOOLEAN).value()
+                ),
+                sql.getPrepareStatement());
+
+        // natural language
+        sql = SqlFactory.createQuery(null)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId,
+                                UserProperties.name
+                        )
+                )
+                .from(UserProperties.TABLE)
+                .andWhere(UserProperties.type.eq(UserType.u1))
+                .andWhere(UserProperties.name.fullTextMatch("IBIT", FullTextModeEnum.NATURAL_LANGUAGE));
+        assertPrepareStatementEquals(
+                "SELECT u.user_id, u.name FROM user u WHERE u.type = ? AND MATCH(u.name) AGAINST(? IN NATURAL LANGUAGE MODE)",
+                Arrays.asList(
+                        UserProperties.type.value(UserType.u1),
+                        UserProperties.name.fullText("IBIT", FullTextModeEnum.NATURAL_LANGUAGE).value()
+                ),
+                sql.getPrepareStatement());
 
     }
 

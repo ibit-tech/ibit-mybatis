@@ -59,7 +59,7 @@ public class UserMapperTest extends CommonTest {
     }
 
     @Autowired
-    private UserService userExtMapper;
+    private UserService userService;
 
     @Autowired
     private UserMapper userMapper;
@@ -433,7 +433,7 @@ public class UserMapperTest extends CommonTest {
     public void listUserIds() {
         User user0 = insertUser();
         User user1 = insertUser();
-        List<Integer> userIds = userExtMapper.listUserIds();
+        List<Integer> userIds = userService.listUserIds();
         assertEquals(user0.getUserId(), userIds.get(0));
         assertEquals(user1.getUserId(), userIds.get(1));
     }
@@ -442,7 +442,7 @@ public class UserMapperTest extends CommonTest {
     public void listUserIdsWithTotal() {
         User user0 = insertUser();
         User user1 = insertUser();
-        Page<Integer> page = userExtMapper.listUserIdsWithTotal();
+        Page<Integer> page = userService.listUserIdsWithTotal();
         assertEquals(2, page.getTotal());
         assertEquals(user0.getUserId(), page.getResults().get(0));
         assertEquals(user1.getUserId(), page.getResults().get(1));

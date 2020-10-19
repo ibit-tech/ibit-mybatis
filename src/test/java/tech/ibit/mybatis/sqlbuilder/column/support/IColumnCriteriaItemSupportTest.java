@@ -1,8 +1,11 @@
-package tech.ibit.mybatis.sqlbuilder;
+package tech.ibit.mybatis.sqlbuilder.column.support;
 
 import org.junit.Test;
 import tech.ibit.mybatis.demo.entity.property.OrganizationProperties;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
+import tech.ibit.mybatis.sqlbuilder.DefaultCriteriaItem;
+import tech.ibit.mybatis.sqlbuilder.FlagCriteriaItem;
+import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.enums.OperatorEnum;
 
 import java.util.Arrays;
