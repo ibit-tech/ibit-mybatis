@@ -22,7 +22,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void isNull() {
-        CriteriaItem item = UserProperties.userId.isNull();
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.isNull();
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.IS_NULL, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -41,7 +41,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void isNotNull() {
-        CriteriaItem item = UserProperties.userId.isNotNull();
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.isNotNull();
         assertEquals(item.getColumn(), UserProperties.userId);
         assertEquals(item.getOperator(), OperatorEnum.IS_NOT_NULL);
         assertNull(item.getSecondColumn());
@@ -61,7 +61,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void isEmpty() {
-        CriteriaItem item = UserProperties.userId.isEmpty();
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.isEmpty();
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.IS_EMPTY, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -80,7 +80,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void isNotEmpty() {
-        CriteriaItem item = UserProperties.userId.isNotEmpty();
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.isNotEmpty();
         assertEquals(item.getColumn(), UserProperties.userId);
         assertEquals(item.getOperator(), OperatorEnum.IS_NOT_EMPTY);
         assertNull(item.getSecondColumn());
@@ -99,7 +99,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void eq() {
-        CriteriaItem item = UserProperties.userId.eq(1);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.eq(1);
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.EQ, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -120,7 +120,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void eq1() {
-        CriteriaItem item = UserProperties.orgId.eq(OrganizationProperties.orgId);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.orgId.eq(OrganizationProperties.orgId);
         assertEquals(UserProperties.orgId, item.getColumn());
         assertEquals(OperatorEnum.EQ, item.getOperator());
         assertEquals(OrganizationProperties.orgId, item.getSecondColumn());
@@ -139,7 +139,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void neq() {
-        CriteriaItem item = UserProperties.userId.neq(1);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.neq(1);
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.NEQ, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -160,7 +160,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void neq1() {
-        CriteriaItem item = UserProperties.orgId.neq(OrganizationProperties.orgId);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.orgId.neq(OrganizationProperties.orgId);
         assertEquals(UserProperties.orgId, item.getColumn());
         assertEquals(OperatorEnum.NEQ, item.getOperator());
         assertEquals(OrganizationProperties.orgId, item.getSecondColumn());
@@ -179,7 +179,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void gt() {
-        CriteriaItem item = UserProperties.userId.gt(1);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.gt(1);
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.GT, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -200,7 +200,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void gt1() {
-        CriteriaItem item = UserProperties.orgId.gt(OrganizationProperties.orgId);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.orgId.gt(OrganizationProperties.orgId);
         assertEquals(UserProperties.orgId, item.getColumn());
         assertEquals(OperatorEnum.GT, item.getOperator());
         assertEquals(OrganizationProperties.orgId, item.getSecondColumn());
@@ -218,7 +218,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void egt() {
-        CriteriaItem item = UserProperties.userId.egt(1);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.egt(1);
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.EGT, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -239,7 +239,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void egt1() {
-        CriteriaItem item = UserProperties.orgId.egt(OrganizationProperties.orgId);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.orgId.egt(OrganizationProperties.orgId);
         assertEquals(UserProperties.orgId, item.getColumn());
         assertEquals(OperatorEnum.EGT, item.getOperator());
         assertEquals(OrganizationProperties.orgId, item.getSecondColumn());
@@ -257,7 +257,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void lt() {
-        CriteriaItem item = UserProperties.userId.lt(1);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.lt(1);
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.LT, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -278,7 +278,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void lt1() {
-        CriteriaItem item = UserProperties.orgId.lt(OrganizationProperties.orgId);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.orgId.lt(OrganizationProperties.orgId);
         assertEquals(UserProperties.orgId, item.getColumn());
         assertEquals(OperatorEnum.LT, item.getOperator());
         assertEquals(OrganizationProperties.orgId, item.getSecondColumn());
@@ -298,7 +298,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void elt() {
-        CriteriaItem item = UserProperties.userId.elt(1);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.elt(1);
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.ELT, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -318,7 +318,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void elt1() {
-        CriteriaItem item = UserProperties.orgId.elt(OrganizationProperties.orgId);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.orgId.elt(OrganizationProperties.orgId);
         assertEquals(UserProperties.orgId, item.getColumn());
         assertEquals(OperatorEnum.ELT, item.getOperator());
         assertEquals(OrganizationProperties.orgId, item.getSecondColumn());
@@ -338,14 +338,14 @@ public class IColumnCriteriaItemSupportTest {
     public void in() {
 
         //value more than one
-        CriteriaItem item = UserProperties.userId.in(Arrays.asList(1, 2));
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.in(Arrays.asList(1, 2));
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.IN, item.getOperator());
         assertNull(item.getSecondColumn());
         assertTrue(item.getValue() instanceof List<?>);
-        assertEquals(1, ((List) item.getValue()).get(0));
-        assertEquals(2, ((List) item.getValue()).get(1));
-        assertEquals(2, ((List) item.getValue()).size());
+        assertEquals(1, ((List<?>) item.getValue()).get(0));
+        assertEquals(2, ((List<?>) item.getValue()).get(1));
+        assertEquals(2, ((List<?>) item.getValue()).size());
         assertNull(item.getSecondValue());
 
         PrepareStatement statement = item.getPrepareStatement();
@@ -362,7 +362,7 @@ public class IColumnCriteriaItemSupportTest {
 
 
         //Only one
-        item = UserProperties.userId.in(Collections.singletonList(1));
+        item = (DefaultCriteriaItem) UserProperties.userId.in(Collections.singletonList(1));
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.EQ, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -383,14 +383,14 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void notIn() {
-        CriteriaItem item = UserProperties.userId.notIn(Arrays.asList(1, 2));
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.notIn(Arrays.asList(1, 2));
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.NOT_IN, item.getOperator());
         assertNull(item.getSecondColumn());
         assertTrue(item.getValue() instanceof List<?>);
-        assertEquals(((List) item.getValue()).get(0), 1);
-        assertEquals(((List) item.getValue()).get(1), 2);
-        assertEquals(((List) item.getValue()).size(), 2);
+        assertEquals(((List<?>) item.getValue()).get(0), 1);
+        assertEquals(((List<?>) item.getValue()).get(1), 2);
+        assertEquals(((List<?>) item.getValue()).size(), 2);
         assertNull(item.getSecondValue());
 
         PrepareStatement statement = item.getPrepareStatement();
@@ -406,7 +406,7 @@ public class IColumnCriteriaItemSupportTest {
         assertEquals(2, statement.getValues().size());
 
         //Only one
-        item = UserProperties.userId.notIn(Collections.singletonList(1));
+        item = (DefaultCriteriaItem) UserProperties.userId.notIn(Collections.singletonList(1));
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.NEQ, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -427,7 +427,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void between() {
-        CriteriaItem item = UserProperties.userId.between(1, 2);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.between(1, 2);
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.BETWEEN, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -450,7 +450,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void notBetween() {
-        CriteriaItem item = UserProperties.userId.notBetween(1, 2);
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.userId.notBetween(1, 2);
         assertEquals(UserProperties.userId, item.getColumn());
         assertEquals(OperatorEnum.NOT_BETWEEN, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -473,7 +473,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void like() {
-        CriteriaItem item = UserProperties.name.like("小%");
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.name.like("小%");
         assertEquals(UserProperties.name, item.getColumn());
         assertEquals(OperatorEnum.LIKE, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -493,7 +493,7 @@ public class IColumnCriteriaItemSupportTest {
 
     @Test
     public void notLike() {
-        CriteriaItem item = UserProperties.name.notLike("小%");
+        DefaultCriteriaItem item = (DefaultCriteriaItem) UserProperties.name.notLike("小%");
         assertEquals(UserProperties.name, item.getColumn());
         assertEquals(OperatorEnum.NOT_LIKE, item.getOperator());
         assertNull(item.getSecondColumn());
@@ -509,6 +509,30 @@ public class IColumnCriteriaItemSupportTest {
         assertEquals("u.name NOT LIKE ?", statement.getPrepareSql());
         assertEquals(1, statement.getValues().size());
         assertEquals(UserProperties.name.value("小%"), statement.getValues().get(0));
+    }
+
+    @Test
+    public void allFlgs() {
+        FlagCriteriaItem criteriaItem = (FlagCriteriaItem) UserProperties.userId.allFlgs(1);
+        assertEquals(UserProperties.userId, criteriaItem.getColumn());
+        assertEquals(1L, criteriaItem.getValue());
+        assertEquals(FlagCriteriaItem.ContainsType.CONTAINS_ALL, criteriaItem.getContainsType());
+    }
+
+    @Test
+    public void noFlgs() {
+        FlagCriteriaItem criteriaItem = (FlagCriteriaItem) UserProperties.userId.noFlgs(1);
+        assertEquals(UserProperties.userId, criteriaItem.getColumn());
+        assertEquals(1L, criteriaItem.getValue());
+        assertEquals(FlagCriteriaItem.ContainsType.CONTAINS_NONE, criteriaItem.getContainsType());
+    }
+
+    @Test
+    public void anyFlgs() {
+        FlagCriteriaItem criteriaItem = (FlagCriteriaItem) UserProperties.userId.anyFlgs(1);
+        assertEquals(UserProperties.userId, criteriaItem.getColumn());
+        assertEquals(1L, criteriaItem.getValue());
+        assertEquals(FlagCriteriaItem.ContainsType.CONTAINS_ANY, criteriaItem.getContainsType());
     }
 
 }

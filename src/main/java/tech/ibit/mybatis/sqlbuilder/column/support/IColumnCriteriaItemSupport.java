@@ -1,6 +1,7 @@
 package tech.ibit.mybatis.sqlbuilder.column.support;
 
 import tech.ibit.mybatis.sqlbuilder.CriteriaItem;
+import tech.ibit.mybatis.sqlbuilder.DefaultCriteriaItem;
 import tech.ibit.mybatis.sqlbuilder.FlagCriteriaItem;
 import tech.ibit.mybatis.sqlbuilder.IColumn;
 import tech.ibit.mybatis.sqlbuilder.enums.OperatorEnum;
@@ -22,7 +23,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem isNull() {
-        return CriteriaItem.getNoValueInstance(getColumn(), OperatorEnum.IS_NULL);
+        return DefaultCriteriaItem.getNoValueInstance(getColumn(), OperatorEnum.IS_NULL);
     }
 
     /**
@@ -31,7 +32,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem isNotNull() {
-        return CriteriaItem.getNoValueInstance(getColumn(), OperatorEnum.IS_NOT_NULL);
+        return DefaultCriteriaItem.getNoValueInstance(getColumn(), OperatorEnum.IS_NOT_NULL);
     }
 
 
@@ -41,7 +42,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem isEmpty() {
-        return CriteriaItem.getNoValueInstance(getColumn(), OperatorEnum.IS_EMPTY);
+        return DefaultCriteriaItem.getNoValueInstance(getColumn(), OperatorEnum.IS_EMPTY);
     }
 
     /**
@@ -50,7 +51,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem isNotEmpty() {
-        return CriteriaItem.getNoValueInstance(getColumn(), OperatorEnum.IS_NOT_EMPTY);
+        return DefaultCriteriaItem.getNoValueInstance(getColumn(), OperatorEnum.IS_NOT_EMPTY);
     }
 
     /**
@@ -60,7 +61,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem eq(Object value) {
-        return CriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.EQ, value);
+        return DefaultCriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.EQ, value);
     }
 
     /**
@@ -70,7 +71,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem eq(IColumn secondColumn) {
-        return CriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.EQ, secondColumn);
+        return DefaultCriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.EQ, secondColumn);
     }
 
     /**
@@ -80,7 +81,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem neq(Object value) {
-        return CriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.NEQ, value);
+        return DefaultCriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.NEQ, value);
     }
 
     /**
@@ -90,7 +91,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem neq(IColumn secondColumn) {
-        return CriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.NEQ, secondColumn);
+        return DefaultCriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.NEQ, secondColumn);
     }
 
     /**
@@ -100,7 +101,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem gt(Object value) {
-        return CriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.GT, value);
+        return DefaultCriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.GT, value);
     }
 
     /**
@@ -110,7 +111,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem gt(IColumn secondColumn) {
-        return CriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.GT, secondColumn);
+        return DefaultCriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.GT, secondColumn);
     }
 
     /**
@@ -120,7 +121,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem egt(Object value) {
-        return CriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.EGT, value);
+        return DefaultCriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.EGT, value);
     }
 
     /**
@@ -130,7 +131,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem egt(IColumn secondColumn) {
-        return CriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.EGT, secondColumn);
+        return DefaultCriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.EGT, secondColumn);
     }
 
     /**
@@ -140,7 +141,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem lt(Object value) {
-        return CriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.LT, value);
+        return DefaultCriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.LT, value);
     }
 
     /**
@@ -150,7 +151,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem lt(IColumn secondColumn) {
-        return CriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.LT, secondColumn);
+        return DefaultCriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.LT, secondColumn);
     }
 
     /**
@@ -160,7 +161,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem elt(Object value) {
-        return CriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.ELT, value);
+        return DefaultCriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.ELT, value);
     }
 
     /**
@@ -170,7 +171,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem elt(IColumn secondColumn) {
-        return CriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.ELT, secondColumn);
+        return DefaultCriteriaItem.getColumnCompareInstance(getColumn(), OperatorEnum.ELT, secondColumn);
     }
 
     /**
@@ -183,7 +184,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
         if (null != values && 1 == values.size()) {
             return eq(new ArrayList<>(values).get(0));
         }
-        return CriteriaItem.getMultiValueInstance(getColumn(), OperatorEnum.IN, values);
+        return DefaultCriteriaItem.getMultiValueInstance(getColumn(), OperatorEnum.IN, values);
     }
 
     /**
@@ -196,7 +197,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
         if (null != values && 1 == values.size()) {
             return neq(new ArrayList<>(values).get(0));
         }
-        return CriteriaItem.getMultiValueInstance(getColumn(), OperatorEnum.NOT_IN, values);
+        return DefaultCriteriaItem.getMultiValueInstance(getColumn(), OperatorEnum.NOT_IN, values);
     }
 
     /**
@@ -207,7 +208,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem between(Object value1, Object value2) {
-        return CriteriaItem.getBetweenInstance(getColumn(), OperatorEnum.BETWEEN, value1, value2);
+        return DefaultCriteriaItem.getBetweenInstance(getColumn(), OperatorEnum.BETWEEN, value1, value2);
     }
 
     /**
@@ -218,7 +219,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem notBetween(Object value1, Object value2) {
-        return CriteriaItem.getBetweenInstance(getColumn(), OperatorEnum.NOT_BETWEEN, value1, value2);
+        return DefaultCriteriaItem.getBetweenInstance(getColumn(), OperatorEnum.NOT_BETWEEN, value1, value2);
     }
 
     /**
@@ -228,7 +229,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem like(String value) {
-        return CriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.LIKE, value);
+        return DefaultCriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.LIKE, value);
     }
 
     /**
@@ -238,7 +239,7 @@ public interface IColumnCriteriaItemSupport extends IColumnSupport {
      * @return 条件内容
      */
     default CriteriaItem notLike(String value) {
-        return CriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.NOT_LIKE, value);
+        return DefaultCriteriaItem.getSingleValueInstance(getColumn(), OperatorEnum.NOT_LIKE, value);
     }
 
 

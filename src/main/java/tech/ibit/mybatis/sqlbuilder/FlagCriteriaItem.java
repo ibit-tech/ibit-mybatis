@@ -1,8 +1,5 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-
-import tech.ibit.mybatis.sqlbuilder.enums.CriteriaItemValueTypeEnum;
-
 import java.util.Collections;
 
 /**
@@ -11,7 +8,17 @@ import java.util.Collections;
  * @author IBIT程序猿
  * @version 1.0
  */
-public class FlagCriteriaItem extends CriteriaItem {
+public class FlagCriteriaItem implements CriteriaItem {
+
+    /**
+     * 第一列
+     */
+    private final IColumn column;
+
+    /**
+     * 值
+     */
+    private final long value;
 
     /**
      * 包含类型
@@ -50,7 +57,8 @@ public class FlagCriteriaItem extends CriteriaItem {
      * @param value        位long值
      */
     private FlagCriteriaItem(IColumn column, ContainsType containsType, long value) {
-        super(column, null, null, value, null, CriteriaItemValueTypeEnum.SINGLE_VALUE);
+        this.column = column;
+        this.value = value;
         this.containsType = containsType;
     }
 
@@ -70,7 +78,7 @@ public class FlagCriteriaItem extends CriteriaItem {
     public PrepareStatement getPrepareStatement(boolean useAlias) {
 
         StringBuilder whereSql = new StringBuilder();
-        String columnName = getColumn().getCompareColumnName(useAlias);
+        String columnName = column.getCompareColumnName(useAlias);
         switch (containsType) {
             case CONTAINS_ALL:
                 whereSql.append(columnName)
@@ -87,7 +95,7 @@ public class FlagCriteriaItem extends CriteriaItem {
                 break;
             default:
         }
-        return new PrepareStatement(whereSql.toString(), Collections.singletonList(new ColumnValue(getColumn(), getValue())));
+        return new PrepareStatement(whereSql.toString(), Collections.singletonList(new ColumnValue(column, value)));
     }
 
     /**
@@ -107,5 +115,23 @@ public class FlagCriteriaItem extends CriteriaItem {
      */
     public void setContainsType(ContainsType containsType) {
         this.containsType = containsType;
+    }
+
+    /**
+     * Gets the value of column
+     *
+     * @return the value of column
+     */
+    public IColumn getColumn() {
+        return column;
+    }
+
+    /**
+     * Gets the value of value
+     *
+     * @return the value of value
+     */
+    public long getValue() {
+        return value;
     }
 }
