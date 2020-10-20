@@ -16,9 +16,10 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * ResultMap拦截器（支持参数中指定ResultMap)
+ * 动态解析 ResultType
  *
  * @author IBIT TECH
+ * @since 2.6
  */
 @Intercepts({
         @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
@@ -52,13 +53,16 @@ public class ResultMapInterceptor implements Interceptor {
                 && invocation.getArgs()[1] instanceof Map
                 && ((Map<?, ?>) invocation.getArgs()[1]).containsKey(SqlProvider.PARAM_KEY_RESULT_TYPE)) {
             Class<?> resultType = (Class<?>) ((Map<?, ?>) invocation.getArgs()[1]).get(SqlProvider.PARAM_KEY_RESULT_TYPE);
-            String newMsId = ms.getId() + resultType.getName().replace(".", "-") + "-class";
+            String newMsId = ms.getId() + resultType.getName().replace(".", "-");
 
             try {
-                MappedStatement newMs = ms.getConfiguration().getMappedStatement(newMsId, false);
-                invocation.getArgs()[0] = newMs;
+                // 动态修改ms
+                invocation.getArgs()[0] = ms.getConfiguration().getMappedStatement(newMsId, false);
             } catch (IllegalArgumentException iae) {
-                ResultMap newRm = new ResultMap.Builder(ms.getConfiguration(), newMsId, resultType
+
+                // 异常，关联的ms不存在，则需要动态往 Configuration 里面添加 MappedStatement 和 ResultMap
+                String newRmId = newMsId + "-class";
+                ResultMap newRm = new ResultMap.Builder(ms.getConfiguration(), newRmId, resultType
                         , resultMap.getResultMappings(), resultMap.getAutoMapping()).build();
 
                 MappedStatement newMs = new MappedStatement
