@@ -164,6 +164,8 @@ mybatis.configuration.map-underscore-to-camel-case=true
 
 ### 其他说明
 
+#### 指定 CommonEnumTYpeHandler
+
 `ibit-mybatis` 定义了枚举类型（`CommonEnum`，枚举-Integer转换），其`TypeHandler`为 `CommonEnumTypeHandler`。
 
 如果使用 `CommonEnum` 作为系统通用枚举类，则需要做以下改造。 
@@ -180,7 +182,7 @@ SqlProvider.setValueFormatter(new LinkedHashMap<Class, Function<Object, Object>>
 
 **c.** 修改默认的枚举 TypeHandler
 
-**方式1**：使用 mybatis-config.xml
+**方式1**：配置mybatis-config.xml
 
 ```
 <configuration>
@@ -206,7 +208,7 @@ mybatis.configuration.default-enum-type-handler=tech.ibit.mybatis.CommonEnumType
 
 ### 版本升级说明
 
-ibit\-mybatis 从 2.0 升级到 2.1+ 需要做的事情，针对生成的 `mapper`
+#### ibit\-mybatis 从 2.0 升级到 2.1+ 需要做的事情，针对生成的 `mapper`
 
 继承 `SingleIdMapper`、`MultipleIdMapper` 和 `NoIdMapper` 的接口，需要重载以下方法
 
@@ -238,6 +240,96 @@ default Column getId() {
 ```
 
 最简单的方式，就是拿 ibit-mybatis-generator 2.1 重新生成一下 mapper 即可。
+
+#### 升级到2.6+，需要增加拦截类`ResultMapInterceptor`，动态指定`ResultType`
+
+tech.ibit.mybatis.plugin.ResultMapInterceptor
+
+**相关用例**：
+
+```
+/**
+ * 按照用户类型统计数量
+ *
+ * @return 用户类型统计
+ */
+@Override
+public List<UserTypeTotal> listTypeTotals() {
+    return mapper.createQuery()
+            .column(UserProperties.type)
+            .column(UserProperties.type.count("total"))
+            .groupBy(UserProperties.type)
+            .orderBy(UserProperties.type.orderBy())
+            .executeQuery(UserTypeTotal.class);
+}
+```
+
+**方式1**：配置mybatis-config.xml
+
+```
+<plugins>
+  <plugin interceptor="org.mybatis.example.ExamplePlugin">
+  </plugin>
+</plugins>
+
+```
+
+**方式2**：配置Bean
+
+```
+@Bean
+public ResultMapInterceptor getResultMapInterceptor() {
+    return new ResultMapInterceptor();
+}
+```
+
+### 新功能介绍
+
+#### 2.6 新增mysql全文搜索
+
+```
+/**
+ * 给出搜索关键字，查找名称关联度
+ *
+ * @param keyword 查询关键字
+ * @return 名称关联度
+ */
+public List<UserNameScoreDto> listUserNameScores(String keyword) {
+    if (StringUtils.isBlank(keyword)) {
+        return Collections.emptyList();
+    }
+    FullTextColumn score = UserProperties.userName.fullText(new IColumn[]{UserProperties.nickName}, keyword, "score");
+    return mapper.createQuery()
+            .column(Arrays.asList(
+                    UserProperties.userId,
+                    UserProperties.nickName,
+                    UserProperties.userName,
+                    score))
+            .andHaving(score.gt(0))
+            .orderBy(score.orderBy(true))
+            .executeQuery(UserNameScoreDto.class);
+}
+
+/**
+ * 给出关键字，全文搜索用户名或者昵称
+ *
+ * @param keyword 查询关键字
+ * @return 用户名列表
+ */
+public List<UserNameDto> listUsers(String keyword) {
+    if (StringUtils.isBlank(keyword)) {
+        return Collections.emptyList();
+    }
+    return mapper.createQuery()
+            .column(Arrays.asList(
+                    UserProperties.userId,
+                    UserProperties.userName,
+                    UserProperties.nickName
+            ))
+            .andWhere(UserProperties.userName.fullTextMatch(new IColumn[]{UserProperties.nickName}, keyword))
+            .executeQuery(UserNameDto.class);
+}
+```
 
 ## 公众号
 

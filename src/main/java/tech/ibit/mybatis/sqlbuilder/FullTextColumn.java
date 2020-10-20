@@ -1,5 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder;
 
+import tech.ibit.mybatis.sqlbuilder.column.support.IColumnCriteriaItemSupport;
 import tech.ibit.mybatis.sqlbuilder.column.support.IColumnOrderBySupport;
 import tech.ibit.mybatis.sqlbuilder.enums.FullTextModeEnum;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  * @author iBit程序猿
  * @since 2.6
  */
-public class FullTextColumn implements IColumn, IColumnOrderBySupport {
+public class FullTextColumn implements IColumn, IColumnOrderBySupport, IColumnCriteriaItemSupport {
 
     /**
      * 列分割符
