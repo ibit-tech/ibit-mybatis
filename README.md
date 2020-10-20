@@ -50,6 +50,7 @@
 | ValuesSupport | values | `(column1, column2, ...) VALUES(?, ?, ...)`语句 |
 | WhereSupport | where </br> andWhere </br> orWhere | `WHERE` 语句 |
 | OnDuplicateKeyUpdateSupport | onDuplicateKeyUpdate | `ON DUPLICATE KEY UPDATE column1 = ? [, column2= ?...]` 语句 | 
+| IColumnFullTextSupport | fullText </br> fullTextMatch | MATCH(column1 [, column2, ...]) AGAINST(? [IN (BOOLEAN \| NATURAL LANGUAGE) MODE]) |
 
 #### sql 工厂类
 
