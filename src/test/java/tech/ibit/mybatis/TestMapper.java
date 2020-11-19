@@ -24,22 +24,22 @@ public class TestMapper<T> implements RawMapper<T> {
     }
 
     @Override
-    public int rawCount(PrepareStatement sqlParams) {
+    public Integer rawCount(PrepareStatement sqlParams) {
         return 0;
     }
 
     @Override
-    public int rawUpdate(PrepareStatement sqlParams) {
+    public Integer rawUpdate(PrepareStatement sqlParams) {
         return 0;
     }
 
     @Override
-    public int rawInsertWithGenerateKeys(PrepareStatement sqlParams, KeyValuePair key) {
+    public Integer rawInsertWithGenerateKeys(PrepareStatement sqlParams, KeyValuePair key) {
         return 0;
     }
 
     @Override
-    public int rawInsert(PrepareStatement sqlParams) {
+    public Integer rawInsert(PrepareStatement sqlParams) {
         return 0;
     }
 

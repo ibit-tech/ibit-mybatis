@@ -375,7 +375,8 @@ public class CountSqlImpl extends SqlLogImpl
     public int executeCount() {
         PrepareStatement statement = getPrepareStatement();
         doLog(statement);
-        return mapper.rawCount(statement);
+        Integer result = mapper.rawCount(statement);
+        return null == result ? 0 : result;
     }
 
 }

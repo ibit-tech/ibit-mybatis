@@ -77,7 +77,7 @@ public interface RawMapper<T> {
      * @return 计数结果
      */
     @SelectProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
-    int rawCount(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
+    Integer rawCount(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 更新
@@ -86,7 +86,7 @@ public interface RawMapper<T> {
      * @return 更新条数
      */
     @UpdateProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
-    int rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
+    Integer rawUpdate(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
     /**
      * 插入并生成主键
@@ -97,7 +97,7 @@ public interface RawMapper<T> {
      */
     @InsertProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
     @Options(useGeneratedKeys = true, keyProperty = SqlProvider.PARAM_KEY_VALUE)
-    int rawInsertWithGenerateKeys(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams,
+    Integer rawInsertWithGenerateKeys(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams,
                                   @Param(SqlProvider.PARAM_KEY) KeyValuePair key);
 
     /**
@@ -107,6 +107,6 @@ public interface RawMapper<T> {
      * @return 插入条数（0或1）
      */
     @InsertProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
-    int rawInsert(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
+    Integer rawInsert(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams);
 
 }
