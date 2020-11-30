@@ -1786,4 +1786,58 @@ public class SqlTest extends CommonTest {
         System.out.println(UserProperties.avatarId.value(1).equals(UserProperties.avatarId.value(1)));
 
     }
+
+    @Test
+    public void countAggregate() {
+
+        CountSql countSql = SqlFactory.createCount(userTestMapper)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId.sum("user_id_sum"),
+                                UserProperties.userId.avg("user_id_avg"))
+                ).from(UserProperties.TABLE)
+                .groupBy(UserProperties.userId);
+
+        assertPrepareStatementEquals(
+                "SELECT COUNT(DISTINCT u.user_id) FROM user u",
+                countSql.getPrepareStatement());
+
+
+        countSql = SqlFactory.createCount(userTestMapper)
+                .column(
+                        Collections.singletonList(
+                                UserProperties.userId.count("user_id_total")
+                        )
+                ).from(UserProperties.TABLE);
+        assertPrepareStatementEquals(
+                "SELECT COUNT(DISTINCT 1) FROM user u",
+                countSql.getPrepareStatement());
+    }
+
+    @Test
+    public void toCountSql() {
+
+        CountSql countSql = SqlFactory.createQuery(userTestMapper)
+                .column(
+                        Arrays.asList(
+                                UserProperties.userId.sum("user_id_sum"),
+                                UserProperties.userId.avg("user_id_avg"))
+                ).from(UserProperties.TABLE)
+                .groupBy(UserProperties.userId).toCountSql();
+
+        assertPrepareStatementEquals(
+                "SELECT COUNT(DISTINCT u.user_id) FROM user u",
+                countSql.getPrepareStatement());
+
+
+        countSql = SqlFactory.createQuery(userTestMapper)
+                .column(
+                        Collections.singletonList(
+                                UserProperties.userId.count("user_id_total")
+                        )
+                ).from(UserProperties.TABLE).toCountSql();
+        assertPrepareStatementEquals(
+                "SELECT COUNT(DISTINCT 1) FROM user u",
+                countSql.getPrepareStatement());
+    }
 }

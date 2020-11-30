@@ -11,6 +11,7 @@ import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * ColumnSupport实现
@@ -58,7 +59,7 @@ public class ColumnSupportImpl<T>
      * @return 复制后的对象
      */
     public <K> ColumnSupportImpl<K> copy(K sql) {
-        return new ColumnSupportImpl<>(sql, column);
+        return new ColumnSupportImpl<>(sql, column.copy());
     }
 
     /**
@@ -90,6 +91,18 @@ public class ColumnSupportImpl<T>
     @Override
     public T columnPo(Class<?> poClass) {
         getColumn().addItems(EntityConverter.getColumns(poClass));
+        return getSql();
+    }
+
+
+    /**
+     * 重置列
+     *
+     * @param columns 列
+     * @return SQL对象
+     */
+    public T resetColumn(List<? extends IColumn> columns) {
+        column.setItems(columns.stream().map(c -> (IColumn) c).collect(Collectors.toList()));
         return getSql();
     }
 

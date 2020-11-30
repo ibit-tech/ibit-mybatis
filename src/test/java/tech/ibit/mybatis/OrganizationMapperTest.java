@@ -467,10 +467,10 @@ public class OrganizationMapperTest extends CommonTest {
     public void getByUniqueKey() {
         Organization organization = insertOrganization();
         Organization organization1 = organizationMapper.getByUniqueKey(
-                        new UniqueKey(
-                                OrganizationProperties.cityCode.value(organization.getCityCode()),
-                                OrganizationProperties.name.value(organization.getName())
-                        )
+                new UniqueKey(
+                        OrganizationProperties.cityCode.value(organization.getCityCode()),
+                        OrganizationProperties.name.value(organization.getName())
+                )
         );
         assetObjectEquals(organization, organization1);
     }

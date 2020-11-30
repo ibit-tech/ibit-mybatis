@@ -46,4 +46,13 @@ public class BooleanField {
     public void setValue(boolean value) {
         this.value = value;
     }
+
+    /**
+     * 复制
+     *
+     * @return 新的BooleanField
+     */
+    public BooleanField copy() {
+        return new BooleanField(value);
+    }
 }

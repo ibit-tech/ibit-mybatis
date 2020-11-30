@@ -7,6 +7,7 @@ import tech.ibit.mybatis.sqlbuilder.sql.support.GroupBySupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 import tech.ibit.mybatis.utils.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,7 +56,7 @@ public class GroupBySupportImpl<T> implements SqlSupport<T>,
      * @return 复制后的对象
      */
     public <K> GroupBySupportImpl<K> copy(K sql) {
-        return new GroupBySupportImpl<>(sql, groupBy);
+        return new GroupBySupportImpl<>(sql, groupBy.copy());
     }
 
     /**
@@ -82,6 +83,18 @@ public class GroupBySupportImpl<T> implements SqlSupport<T>,
     public T groupBy(List<Column> groupBys) {
         getGroupBy().addItems(groupBys);
         return getSql();
+    }
+
+
+    /**
+     * 获取GroupBy列
+     *
+     * @return GroupBy 列
+     */
+    public List<Column> getGroupByColumns() {
+        return null == groupBy
+                ? Collections.emptyList()
+                : (CollectionUtils.isEmpty(groupBy.getItems()) ? Collections.emptyList() : groupBy.getItems());
     }
 
     /**

@@ -45,7 +45,7 @@ public class MapperUtilsTest extends CommonTest {
         MapperUtils.insert(new UserTestMapper() {
             @Override
             public Integer rawInsertWithGenerateKeys(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams,
-                                                 @Param(SqlProvider.PARAM_KEY) KeyValuePair key) {
+                                                     @Param(SqlProvider.PARAM_KEY) KeyValuePair key) {
                 assertPrepareStatementEquals(
                         "INSERT INTO user(login_id, name, email, password, mobile_phone, type) VALUES(?, ?, ?, ?, ?, ?)",
                         Arrays.asList(

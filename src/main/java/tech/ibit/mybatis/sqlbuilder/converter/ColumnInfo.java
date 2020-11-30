@@ -5,7 +5,7 @@ import tech.ibit.mybatis.sqlbuilder.Column;
 /**
  * 列信息
  *
- * @author IBIT-TECH
+ * @author iBit程序猿
  * mailto: ibit_tech@aliyun.com
  */
 public class ColumnInfo {

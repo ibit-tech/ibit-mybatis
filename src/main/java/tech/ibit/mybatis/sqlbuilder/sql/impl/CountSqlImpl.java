@@ -336,12 +336,34 @@ public class CountSqlImpl extends SqlLogImpl
     @Override
     public PrepareStatement getPrepareStatement() {
 
+        List<Column> groupColumns = groupBySupport.getGroupByColumns();
+
+        if (CollectionUtils.isNotEmpty(groupColumns)) {
+            // group by 需要重置
+            distinct();
+            columnSupport.resetColumn(groupColumns);
+        }
+
         boolean useAlias = isUseAlias();
+        String columnStr = null;
+
+        // 没有groupBy，但是如果存在聚合函数列，则应该永远返回1
+        if (CollectionUtils.isEmpty(groupColumns)) {
+            List<IColumn> columns = columnSupport.getColumn().getItems();
+            boolean hasAggregateColumn = columns.stream().anyMatch(column -> column instanceof AggregateColumn);
+            if (hasAggregateColumn) {
+                distinct();
+                columnStr = "1";
+            }
+        }
+
+        // 写死只返回1
+        if (null == columnStr) {
+            PrepareStatement columnPrepareStatement = columnSupport.getColumnPrepareStatement(useAlias);
+            columnStr = columnPrepareStatement.getPrepareSql();
+        }
+
         boolean distinct = distinctSupport.getDistinct().isValue();
-
-        PrepareStatement columnPrepareStatement = columnSupport.getColumnPrepareStatement(useAlias);
-
-        String columnStr = columnPrepareStatement.getPrepareSql();
         if (StringUtils.isBlank(columnStr) && distinct) {
             throw new SqlException("Columns cannot be empty while at distinct statement!");
         }
@@ -364,7 +386,6 @@ public class CountSqlImpl extends SqlLogImpl
                         fromSupport.getFromPrepareStatement(useAlias),
                         joinOnSupport.getJoinOnPrepareStatement(useAlias),
                         whereSupport.getWherePrepareStatement(useAlias),
-                        groupBySupport.getGroupByPrepareStatement(useAlias),
                         havingSupport.getHavingPrepareStatement(useAlias)
                 ), prepareSql, values
         );

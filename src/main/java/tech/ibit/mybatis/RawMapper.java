@@ -98,7 +98,7 @@ public interface RawMapper<T> {
     @InsertProvider(type = SqlProvider.class, method = SqlProvider.METHOD_EXECUTE)
     @Options(useGeneratedKeys = true, keyProperty = SqlProvider.PARAM_KEY_VALUE)
     Integer rawInsertWithGenerateKeys(@Param(SqlProvider.PARAM_SQL_PARAMS) PrepareStatement sqlParams,
-                                  @Param(SqlProvider.PARAM_KEY) KeyValuePair key);
+                                      @Param(SqlProvider.PARAM_KEY) KeyValuePair key);
 
     /**
      * 插入
