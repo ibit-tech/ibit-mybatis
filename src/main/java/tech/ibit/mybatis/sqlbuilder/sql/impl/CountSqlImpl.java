@@ -12,6 +12,7 @@ import tech.ibit.mybatis.utils.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * CountSql实现
@@ -359,6 +360,18 @@ public class CountSqlImpl extends SqlLogImpl
 
         // 写死只返回1
         if (null == columnStr) {
+            List<IColumn> columns = columnSupport.getColumn().getItems();
+            // 存在可以为null的列，用''代替
+            if (columns.stream().anyMatch(column -> column instanceof Column && ((Column) column).isNullable())) {
+                columns = columns.stream().map(
+                        column ->
+                                (column instanceof Column && ((Column) column).isNullable())
+                                        ? ((Column) column).ifnullEmpty()
+                                        : column
+                ).collect(Collectors.toList());
+                columnSupport.resetColumn(columns);
+            }
+
             PrepareStatement columnPrepareStatement = columnSupport.getColumnPrepareStatement(useAlias);
             columnStr = columnPrepareStatement.getPrepareSql();
         }

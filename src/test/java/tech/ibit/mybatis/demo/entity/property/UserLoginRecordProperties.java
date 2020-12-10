@@ -19,12 +19,12 @@ public interface UserLoginRecordProperties {
     /**
      * 用户id
      */
-    Column userId = new Column(TABLE, "user_id");
+    Column userId = Column.getInstance(TABLE, "user_id", false);
 
     /**
      * 组织名称
      */
-    Column loginTime = new Column(TABLE, "login_time");
+    Column loginTime = Column.getInstance(TABLE, "login_time", false);
 
 
 }

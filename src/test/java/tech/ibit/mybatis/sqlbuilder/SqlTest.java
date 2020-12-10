@@ -205,6 +205,20 @@ public class SqlTest extends CommonTest {
                 "SELECT COUNT(DISTINCT u.name, u.email) FROM user u",
                 sql.getPrepareStatement());
 
+        sql = SqlFactory.createCount(null)
+                .distinct()
+                .column(
+                        Arrays.asList(
+                                UserProperties.name,
+                                UserProperties.email,
+                                UserProperties.loginId
+                        )
+                )
+                .from(UserProperties.TABLE);
+        assertPrepareStatementEquals(
+                "SELECT COUNT(DISTINCT u.name, u.email, IFNULL(u.login_id, '')) FROM user u",
+                sql.getPrepareStatement());
+
         // 默认的
         sql = SqlFactory.createCount(userTestMapper)
                 .distinct()
@@ -705,12 +719,12 @@ public class SqlTest extends CommonTest {
     @Test
     public void innerJoinOn() {
         Table region = new Table("region", "r");
-        Column regionName = new Column(region, "name");
-        Column regionParentCode = new Column(region, "parent_code");
+        Column regionName = Column.getInstance(region, "name");
+        Column regionParentCode = Column.getInstance(region, "parent_code");
 
         Table parentRegion = new Table("region", "pr");
-        Column parentRegionCode = new Column(parentRegion, "code");
-        Column parentRegionName = new Column(parentRegion, "name");
+        Column parentRegionCode = Column.getInstance(parentRegion, "code");
+        Column parentRegionName = Column.getInstance(parentRegion, "name");
 
         QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(
@@ -872,12 +886,12 @@ public class SqlTest extends CommonTest {
     @Test
     public void complexInnerJoinOn() {
         Table region = new Table("region", "r");
-        Column regionName = new Column(region, "name");
-        Column regionParentCode = new Column(region, "parent_code");
+        Column regionName = Column.getInstance(region, "name");
+        Column regionParentCode = Column.getInstance(region, "parent_code");
 
         Table parentRegion = new Table("region", "pr");
-        Column parentRegionCode = new Column(parentRegion, "code");
-        Column parentRegionName = new Column(parentRegion, "name");
+        Column parentRegionCode = Column.getInstance(parentRegion, "code");
+        Column parentRegionName = Column.getInstance(parentRegion, "name");
 
         QuerySql<?> sql = SqlFactory.createQuery(null)
                 .column(

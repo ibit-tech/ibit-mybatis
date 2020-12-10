@@ -9,10 +9,9 @@ import tech.ibit.mybatis.demo.entity.UserPo;
 import tech.ibit.mybatis.demo.entity.property.UserProperties;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbColumn;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
-import tech.ibit.mybatis.sqlbuilder.converter.ColumnSetValue;
 import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
 import tech.ibit.mybatis.sqlbuilder.converter.TableColumnInfo;
-import tech.ibit.mybatis.sqlbuilder.converter.TableColumnSetValues;
+import tech.ibit.mybatis.sqlbuilder.converter.TableColumnValues;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 
 import java.util.Arrays;
@@ -72,34 +71,34 @@ public class EntityConverterTest {
     public void getTableColumnValues() {
         User user = getUser1();
 
-        TableColumnSetValues entity = EntityConverter.getTableColumnValues(user, false);
+        TableColumnValues entity = EntityConverter.getTableColumnValues(user, false);
 
-        List<ColumnSetValue> columnSetValues = entity.getColumnValues();
+        List<ColumnValue> columnSetValues = entity.getColumnValues();
         assertEquals(5, columnSetValues.size());
-        assertColumnSetValue(columnSetValues.get(0), UserProperties.userId, 1, true, false);
-        assertColumnSetValue(columnSetValues.get(1), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
-        assertColumnSetValue(columnSetValues.get(2), UserProperties.name, "ibit-tech", false, false);
-        assertColumnSetValue(columnSetValues.get(3), UserProperties.email, "ibit_tech@aliyun.com", false, false);
-        assertColumnSetValue(columnSetValues.get(4), UserProperties.mobilePhone, "188", false, false);
+        assertColumnValue(columnSetValues.get(0), UserProperties.userId, 1, true, false);
+        assertColumnValue(columnSetValues.get(1), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
+        assertColumnValue(columnSetValues.get(2), UserProperties.name, "ibit-tech", false, false);
+        assertColumnValue(columnSetValues.get(3), UserProperties.email, "ibit_tech@aliyun.com", false, false);
+        assertColumnValue(columnSetValues.get(4), UserProperties.mobilePhone, "188", false, false);
 
         entity = EntityConverter.getTableColumnValues(user, Arrays.asList(UserProperties.loginId, UserProperties.email, UserProperties.type));
         columnSetValues = entity.getColumnValues();
         assertEquals(3, columnSetValues.size());
-        assertColumnSetValue(columnSetValues.get(0), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
-        assertColumnSetValue(columnSetValues.get(1), UserProperties.email, "ibit_tech@aliyun.com", false, false);
-        assertColumnSetValue(columnSetValues.get(2), UserProperties.type, null, false, false);
+        assertColumnValue(columnSetValues.get(0), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
+        assertColumnValue(columnSetValues.get(1), UserProperties.email, "ibit_tech@aliyun.com", false, false);
+        assertColumnValue(columnSetValues.get(2), UserProperties.type, null, false, false);
 
 
         entity = EntityConverter.getTableColumnValues(user, true);
         columnSetValues = entity.getColumnValues();
         assertEquals(7, columnSetValues.size());
-        assertColumnSetValue(columnSetValues.get(0), UserProperties.userId, 1, true, false);
-        assertColumnSetValue(columnSetValues.get(1), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
-        assertColumnSetValue(columnSetValues.get(2), UserProperties.name, "ibit-tech", false, false);
-        assertColumnSetValue(columnSetValues.get(3), UserProperties.email, "ibit_tech@aliyun.com", false, false);
-        assertColumnSetValue(columnSetValues.get(4), UserProperties.password, null, false, false);
-        assertColumnSetValue(columnSetValues.get(5), UserProperties.mobilePhone, "188", false, false);
-        assertColumnSetValue(columnSetValues.get(6), UserProperties.type, null, false, false);
+        assertColumnValue(columnSetValues.get(0), UserProperties.userId, 1, true, false);
+        assertColumnValue(columnSetValues.get(1), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
+        assertColumnValue(columnSetValues.get(2), UserProperties.name, "ibit-tech", false, false);
+        assertColumnValue(columnSetValues.get(3), UserProperties.email, "ibit_tech@aliyun.com", false, false);
+        assertColumnValue(columnSetValues.get(4), UserProperties.password, null, false, false);
+        assertColumnValue(columnSetValues.get(5), UserProperties.mobilePhone, "188", false, false);
+        assertColumnValue(columnSetValues.get(6), UserProperties.type, null, false, false);
     }
 
 
@@ -109,33 +108,33 @@ public class EntityConverterTest {
         User user1 = getUser1();
         User user2 = getUser2();
 
-        List<TableColumnSetValues> entities = EntityConverter.getTableColumnValuesList(Arrays.asList(user1, user2), false);
+        List<TableColumnValues> entities = EntityConverter.getTableColumnValuesList(Arrays.asList(user1, user2), false);
         assertEquals(entities.size(), 2);
 
-        List<ColumnSetValue> columnSetValues = entities.get(0).getColumnValues();
-        assertColumnSetValue(columnSetValues.get(0), UserProperties.userId, 1, true, false);
-        assertColumnSetValue(columnSetValues.get(1), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
-        assertColumnSetValue(columnSetValues.get(2), UserProperties.name, "ibit-tech", false, false);
-        assertColumnSetValue(columnSetValues.get(3), UserProperties.email, "ibit_tech@aliyun.com", false, false);
-        assertColumnSetValue(columnSetValues.get(4), UserProperties.mobilePhone, "188", false, false);
+        List<ColumnValue> columnSetValues = entities.get(0).getColumnValues();
+        assertColumnValue(columnSetValues.get(0), UserProperties.userId, 1, true, false);
+        assertColumnValue(columnSetValues.get(1), UserProperties.loginId, "ibit_tech@aliyun.com", false, true);
+        assertColumnValue(columnSetValues.get(2), UserProperties.name, "ibit-tech", false, false);
+        assertColumnValue(columnSetValues.get(3), UserProperties.email, "ibit_tech@aliyun.com", false, false);
+        assertColumnValue(columnSetValues.get(4), UserProperties.mobilePhone, "188", false, false);
 
 
         columnSetValues = entities.get(1).getColumnValues();
-        assertColumnSetValue(columnSetValues.get(0), UserProperties.userId, 2, true, false);
-        assertColumnSetValue(columnSetValues.get(1), UserProperties.loginId, "xiao2@ibit.tech", false, true);
-        assertColumnSetValue(columnSetValues.get(2), UserProperties.name, "xiao2", false, false);
-        assertColumnSetValue(columnSetValues.get(3), UserProperties.email, "xiao2@ibit.tech", false, false);
-        assertColumnSetValue(columnSetValues.get(4), UserProperties.mobilePhone, "199", false, false);
+        assertColumnValue(columnSetValues.get(0), UserProperties.userId, 2, true, false);
+        assertColumnValue(columnSetValues.get(1), UserProperties.loginId, "xiao2@ibit.tech", false, true);
+        assertColumnValue(columnSetValues.get(2), UserProperties.name, "xiao2", false, false);
+        assertColumnValue(columnSetValues.get(3), UserProperties.email, "xiao2@ibit.tech", false, false);
+        assertColumnValue(columnSetValues.get(4), UserProperties.mobilePhone, "199", false, false);
 
     }
 
 
-    private void assertColumnSetValue(ColumnSetValue columnSetValue, Column column, Object value
+    private void assertColumnValue(ColumnValue columnSetValue, Column column, Object value
             , boolean isId, boolean nullable) {
         assertEquals(column, columnSetValue.getColumn());
         assertEquals(value, columnSetValue.getValue());
-        assertEquals(isId, columnSetValue.isId());
-        assertEquals(nullable, columnSetValue.isNullable());
+        assertEquals(isId, column.isId());
+        assertEquals(nullable, column.isNullable());
     }
 
     private User getUser1() {

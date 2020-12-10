@@ -13,7 +13,8 @@ public interface ProjectProperties {
 
     Table TABLE = new Table("project", "p");
 
-    Column projectId = new Column(TABLE, "project_id");
-    Column name = new Column(TABLE, "name");
+    Column projectId = Column.getIdInstance(TABLE, "project_id", true);
+    
+    Column name = Column.getInstance(TABLE, "name", false);
 
 }

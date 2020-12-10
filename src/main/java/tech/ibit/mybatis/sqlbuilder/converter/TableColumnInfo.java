@@ -24,7 +24,7 @@ public class TableColumnInfo {
     /**
      * 列
      */
-    private List<ColumnInfo> columnInfos;
+    private List<Column> columnInfos;
 
     /**
      * 无参构造函数
@@ -38,7 +38,7 @@ public class TableColumnInfo {
      * @param table       表
      * @param columnInfos 列信息列表
      */
-    public TableColumnInfo(Table table, List<ColumnInfo> columnInfos) {
+    public TableColumnInfo(Table table, List<Column> columnInfos) {
         this.table = table;
         this.columnInfos = columnInfos;
     }
@@ -52,8 +52,7 @@ public class TableColumnInfo {
         if (CollectionUtils.isEmpty(columnInfos)) {
             return Collections.emptyList();
         }
-        return columnInfos.stream().filter(c -> !c.isId())
-                .map(ColumnInfo::getColumn).collect(Collectors.toList());
+        return columnInfos.stream().filter(c -> !c.isId()).collect(Collectors.toList());
     }
 
     /**
@@ -65,8 +64,8 @@ public class TableColumnInfo {
         if (CollectionUtils.isEmpty(columnInfos)) {
             return Collections.emptyList();
         }
-        return columnInfos.stream().filter(ColumnInfo::isId)
-                .map(ColumnInfo::getColumn).collect(Collectors.toList());
+        return columnInfos.stream().filter(Column::isId)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -78,8 +77,7 @@ public class TableColumnInfo {
         if (CollectionUtils.isEmpty(columnInfos)) {
             return Collections.emptyList();
         }
-        return columnInfos.stream()
-                .map(ColumnInfo::getColumn).collect(Collectors.toList());
+        return Collections.unmodifiableList(columnInfos);
     }
 
     /**
@@ -91,32 +89,4 @@ public class TableColumnInfo {
         return table;
     }
 
-    /**
-     * Sets the table
-     * <p>You can use getTable() to get the value of table</p>
-     *
-     * @param table table
-     */
-    public void setTable(Table table) {
-        this.table = table;
-    }
-
-    /**
-     * Gets the value of columnInfos
-     *
-     * @return the value of columnInfos
-     */
-    public List<ColumnInfo> getColumnInfos() {
-        return columnInfos;
-    }
-
-    /**
-     * Sets the columnInfos
-     * <p>You can use getColumnInfos() to get the value of columnInfos</p>
-     *
-     * @param columnInfos columnInfos
-     */
-    public void setColumnInfos(List<ColumnInfo> columnInfos) {
-        this.columnInfos = columnInfos;
-    }
 }

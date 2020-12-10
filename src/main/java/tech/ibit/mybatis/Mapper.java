@@ -3,6 +3,7 @@ package tech.ibit.mybatis;
 import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.Table;
 import tech.ibit.mybatis.sqlbuilder.UniqueKey;
+import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
 import tech.ibit.mybatis.sqlbuilder.exception.OperationNotSupportedException;
 import tech.ibit.mybatis.sqlbuilder.sql.*;
 import tech.ibit.mybatis.sqlbuilder.sql.impl.*;
@@ -90,6 +91,15 @@ public interface Mapper<T> extends RawMapper<T> {
      */
     default Table getDefaultTable() {
         throw new OperationNotSupportedException("Method getDefaultTable needs to override!");
+    }
+
+    /**
+     * 获取表中id列表
+     *
+     * @return id列表
+     */
+    default List<Column> getIds() {
+        return EntityConverter.getTableColumns(getPoClazz()).getIds();
     }
 
     /**

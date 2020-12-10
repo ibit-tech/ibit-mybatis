@@ -31,7 +31,7 @@ public class AggregateColumn implements IColumn,
     /**
      * 函数名称
      */
-    private String functionName;
+    private final String functionName;
 
     /**
      * 定义统计的列数组
@@ -46,7 +46,24 @@ public class AggregateColumn implements IColumn,
     /**
      * 是否distinct
      */
-    private boolean distinct;
+    private final boolean distinct;
+
+    /**
+     * 使用空串
+     */
+    private boolean useEmpty;
+
+
+    /**
+     * 构造函数
+     *
+     * @param functionName 函数名称
+     * @param column       列数
+     */
+    public AggregateColumn(String functionName, IColumn column) {
+        this(functionName, new IColumn[]{column}, null, false);
+        this.useEmpty = true;
+    }
 
     /**
      * 构造函数
@@ -72,6 +89,7 @@ public class AggregateColumn implements IColumn,
         this.columns = columns;
         this.nameAs = nameAs;
         this.distinct = distinct;
+        this.useEmpty = false;
     }
 
     @Override
@@ -106,7 +124,9 @@ public class AggregateColumn implements IColumn,
         if (ArrayUtils.isEmpty(columns)) {
             return ALL_COLUMNS;
         }
-        return Arrays.stream(columns).map(IColumn::getName).collect(Collectors.joining(COLUMN_SEPARATOR));
+        String columnNames = Arrays.stream(columns)
+                .map(IColumn::getName).collect(Collectors.joining(COLUMN_SEPARATOR));
+        return useEmpty ? (columnNames + COLUMN_SEPARATOR + "''") : columnNames;
     }
 
     /**
@@ -116,7 +136,9 @@ public class AggregateColumn implements IColumn,
         if (ArrayUtils.isEmpty(columns)) {
             return ALL_COLUMNS;
         }
-        return Arrays.stream(columns).map(IColumn::getNameWithTableAlias).collect(Collectors.joining(COLUMN_SEPARATOR));
+        String columnNames = Arrays.stream(columns)
+                .map(IColumn::getNameWithTableAlias).collect(Collectors.joining(COLUMN_SEPARATOR));
+        return useEmpty ? (columnNames + COLUMN_SEPARATOR + "''") : columnNames;
     }
 
     @Override
@@ -133,15 +155,6 @@ public class AggregateColumn implements IColumn,
         return functionName;
     }
 
-    /**
-     * Sets the functionName
-     * <p>You can use getFunctionName() to get the value of functionName</p>
-     *
-     * @param functionName functionName
-     */
-    public void setFunctionName(String functionName) {
-        this.functionName = functionName;
-    }
 
     /**
      * Gets the value of columns
@@ -186,16 +199,6 @@ public class AggregateColumn implements IColumn,
         return distinct;
     }
 
-    /**
-     * Sets the distinct
-     * <p>You can use getDistinct() to get the value of distinct</p>
-     *
-     * @param distinct distinct
-     */
-    public void setDistinct(boolean distinct) {
-        this.distinct = distinct;
-    }
-
     @Override
     public String toString() {
         return new StringJoiner(", ", AggregateColumn.class.getSimpleName() + "[", "]")
@@ -203,6 +206,7 @@ public class AggregateColumn implements IColumn,
                 .add("columns=" + Arrays.toString(columns))
                 .add("nameAs='" + nameAs + "'")
                 .add("distinct=" + distinct)
+                .add("useEmpty=" + useEmpty)
                 .toString();
     }
 
@@ -216,6 +220,7 @@ public class AggregateColumn implements IColumn,
         }
         AggregateColumn that = (AggregateColumn) o;
         return isDistinct() == that.isDistinct() &&
+                useEmpty == that.useEmpty &&
                 getFunctionName().equals(that.getFunctionName()) &&
                 Arrays.equals(getColumns(), that.getColumns()) &&
                 Objects.equals(getNameAs(), that.getNameAs());
@@ -223,7 +228,7 @@ public class AggregateColumn implements IColumn,
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getFunctionName(), getNameAs(), isDistinct());
+        int result = Objects.hash(getFunctionName(), getNameAs(), isDistinct(), useEmpty);
         result = 31 * result + Arrays.hashCode(getColumns());
         return result;
     }

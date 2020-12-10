@@ -18,67 +18,67 @@ public interface UserProperties {
     /**
      * 用户id
      */
-    Column userId = new Column(TABLE, "user_id");
+    Column userId = Column.getIdInstance(TABLE, "user_id", true);
 
     /**
      * 用户名称
      */
-    Column name = new Column(TABLE, "name");
+    Column name = Column.getInstance(TABLE, "name");
 
     /**
      * 登录id
      */
-    Column loginId = new Column(TABLE, "login_id");
+    Column loginId = Column.getInstance(TABLE, "login_id", true);
 
     /**
      * 邮箱
      */
-    Column email = new Column(TABLE, "email");
+    Column email = Column.getInstance(TABLE, "email");
 
     /**
      * 密码
      */
-    Column password = new Column(TABLE, "password");
+    Column password = Column.getInstance(TABLE, "password");
 
     /**
      * 手机
      */
-    Column mobilePhone = new Column(TABLE, "mobile_phone");
+    Column mobilePhone = Column.getInstance(TABLE, "mobile_phone");
 
     /**
      * 用户类型
      */
-    Column type = new Column(TABLE, "type");
+    Column type = Column.getInstance(TABLE, "type");
 
     /**
      * 组织id
      */
-    Column orgId = new Column(TABLE, "org_id");
+    Column orgId = Column.getInstance(TABLE, "org_id");
 
     /**
      * 当前项目
      */
-    Column currentProjectId = new Column(TABLE, "current_project_id");
+    Column currentProjectId = Column.getInstance(TABLE, "current_project_id");
 
     /**
      * 年龄
      */
-    Column age = new Column(TABLE, "age");
+    Column age = Column.getInstance(TABLE, "age");
 
     /**
      * 性别
      */
-    Column gender = new Column(TABLE, "gender");
+    Column gender = Column.getInstance(TABLE, "gender");
 
     /**
      * 头像
      */
-    Column avatarId = new Column(TABLE, "avatar_id");
+    Column avatarId = Column.getInstance(TABLE, "avatar_id");
 
     /**
      * 登录次数
      */
-    Column loginTimes = new Column(TABLE, "login_times");
+    Column loginTimes = Column.getInstance(TABLE, "login_times");
 
 
 }

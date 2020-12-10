@@ -19,27 +19,27 @@ public interface OrganizationProperties {
     /**
      * 组织id
      */
-    Column orgId = new Column(TABLE, "org_id");
+    Column orgId = Column.getIdInstance(TABLE, "org_id", true);
 
     /**
      * 城市编码
      */
-    Column cityCode = new Column(TABLE, "city_code");
+    Column cityCode = Column.getIdInstance(TABLE, "city_code");
 
     /**
      * 组织名称
      */
-    Column name = new Column(TABLE, "name");
+    Column name = Column.getIdInstance(TABLE, "name");
 
     /**
      * 组织类型
      */
-    Column type = new Column(TABLE, "type");
+    Column type = Column.getInstance(TABLE, "type");
 
     /**
      * 手机
      */
-    Column phone = new Column(TABLE, "phone");
+    Column phone = Column.getInstance(TABLE, "phone", true);
 
 
 }

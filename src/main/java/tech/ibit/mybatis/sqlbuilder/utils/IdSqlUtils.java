@@ -4,10 +4,9 @@ import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.MultipleIdMapper;
 import tech.ibit.mybatis.SingleIdMapper;
 import tech.ibit.mybatis.sqlbuilder.*;
-import tech.ibit.mybatis.sqlbuilder.converter.ColumnSetValue;
 import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
 import tech.ibit.mybatis.sqlbuilder.converter.TableColumnInfo;
-import tech.ibit.mybatis.sqlbuilder.converter.TableColumnSetValues;
+import tech.ibit.mybatis.sqlbuilder.converter.TableColumnValues;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.DeleteSql;
 import tech.ibit.mybatis.sqlbuilder.sql.InsertSql;
@@ -146,10 +145,10 @@ public class IdSqlUtils {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
-        List<TableColumnSetValues> idValueList
+        List<TableColumnValues> idValueList
                 = EntityConverter.getTableColumnValuesList(new ArrayList<>(idValues), true);
 
-        TableColumnSetValues firstIdValues = idValueList.get(0);
+        TableColumnValues firstIdValues = idValueList.get(0);
 
         //没有主键
         if (firstIdValues.getColumnValues().isEmpty()) {
@@ -249,9 +248,9 @@ public class IdSqlUtils {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
-        List<TableColumnSetValues> idValueList =
+        List<TableColumnValues> idValueList =
                 EntityConverter.getTableColumnValuesList(idValues, true);
-        TableColumnSetValues firstIdValues = idValueList.get(0);
+        TableColumnValues firstIdValues = idValueList.get(0);
 
         //没有主键
         if (firstIdValues.getColumnValues().isEmpty()) {
@@ -294,12 +293,12 @@ public class IdSqlUtils {
         // 逻辑，1）只插入非null字段，
         // 2）如果字段不允许为null，值为null报错，
         // 3）id不允许为null
-        TableColumnSetValues entity = EntityConverter.getTableColumnValues(po, true);
+        TableColumnValues entity = EntityConverter.getTableColumnValues(po, true);
         if (entity.getColumnValues().isEmpty()) {
             throw SqlException.columnValueNotFound();
         }
 
-        List<ColumnSetValue> columnValues2Insert = getFilterColumnSetValues(entity.getColumnValues());
+        List<ColumnValue> columnValues2Insert = getFilterColumnValues(entity.getColumnValues());
         if (columnValues2Insert.isEmpty()) {
             throw SqlException.columnValueNotFound();
         }
@@ -313,24 +312,24 @@ public class IdSqlUtils {
     /**
      * 获取过滤的是指值
      *
-     * @param columnSetValues 待设置值
+     * @param columnValues 待设置值
      * @return 过滤后可插入的值
      */
-    private static List<ColumnSetValue> getFilterColumnSetValues(List<ColumnSetValue> columnSetValues) {
+    private static List<ColumnValue> getFilterColumnValues(List<ColumnValue> columnValues) {
 
-        List<ColumnSetValue> columnValues2Insert = new ArrayList<>();
-        columnSetValues.forEach(columnSetValue -> {
-            Column column = (Column) columnSetValue.getColumn();
-            Object value = columnSetValue.getValue();
+        List<ColumnValue> columnValues2Insert = new ArrayList<>();
+        columnValues.forEach(columnValue -> {
+            Column column = (Column) columnValue.getColumn();
+            Object value = columnValue.getValue();
             if (null != value) {
                 // 子增长的id不能设置
-                if (columnSetValue.isAutoIncrease()) {
+                if (column.isAutoIncrease()) {
                     throw SqlException.idAutoIncrease(column.getTable().getName(), column.getName());
                 }
-                columnValues2Insert.add(columnSetValue);
+                columnValues2Insert.add(columnValue);
             } else {
                 // 需要判断值是否可以为null
-                if (isColumnNotNullable(columnSetValue)) {
+                if (isColumnNotNullable(columnValue)) {
                     throw SqlException.columnNullPointer(column.getTable().getName(), column.getName());
                 }
             }
@@ -341,11 +340,12 @@ public class IdSqlUtils {
     /**
      * 判断字段是否不能为null
      *
-     * @param columnSetValue 设置列-值
+     * @param columnValue 设置列-值
      * @return 判断结果
      */
-    private static boolean isColumnNotNullable(ColumnSetValue columnSetValue) {
-        return !columnSetValue.isAutoIncrease() && !columnSetValue.isNullable();
+    private static boolean isColumnNotNullable(ColumnValue columnValue) {
+        Column column = (Column) columnValue.getColumn();
+        return !column.isAutoIncrease() && !column.isNullable();
     }
 
 
@@ -400,7 +400,7 @@ public class IdSqlUtils {
             updateColumnSet.addAll(idEntity.getIds());
             updateColumns = new ArrayList<>(updateColumnSet);
         }
-        TableColumnSetValues tableColumnValues = null == updateColumns
+        TableColumnValues tableColumnValues = null == updateColumns
                 ? EntityConverter.getTableColumnValues(updateObject, false)
                 : EntityConverter.getTableColumnValues(updateObject, updateColumns);
 
@@ -409,16 +409,16 @@ public class IdSqlUtils {
 
         UpdateSql sql = mapper.createUpdate();
 
-        for (ColumnSetValue cv : tableColumnValues.getColumnValues()) {
+        for (ColumnValue cv : tableColumnValues.getColumnValues()) {
             Column column = (Column) cv.getColumn();
             Object value = cv.getValue();
-            if (cv.isId()) {
+            if (column.isId()) {
                 if (null == value) {
                     throw SqlException.idNullPointer(idEntity.getTable().getName(), column.getName());
                 }
                 sql.andWhere(column.eq(value));
             } else {
-                if (!cv.isNullable() && null == value) {
+                if (!column.isNullable() && null == value) {
                     throw SqlException.columnNullPointer(idEntity.getTable().getName(), column.getName());
                 }
                 sql.set(column.set(value));
@@ -460,7 +460,7 @@ public class IdSqlUtils {
             throw SqlException.idValueNotFound();
         }
 
-        TableColumnSetValues tableColumnValues = null == updateColumns
+        TableColumnValues tableColumnValues = null == updateColumns
                 ? EntityConverter.getTableColumnValues(updateObject, false)
                 : EntityConverter.getTableColumnValues(updateObject, updateColumns);
 
@@ -505,17 +505,17 @@ public class IdSqlUtils {
         if (CollectionUtils.isEmpty(idValues)) {
             throw SqlException.idValueNotFound();
         }
-        List<TableColumnSetValues> idValueList =
+        List<TableColumnValues> idValueList =
                 EntityConverter.getTableColumnValuesList(
                         new ArrayList<>(idValues), true);
-        TableColumnSetValues firstIdValues = idValueList.get(0);
+        TableColumnValues firstIdValues = idValueList.get(0);
 
         Table table = firstIdValues.getTable();
         if (firstIdValues.getColumnValues().isEmpty()) {
             throw SqlException.idNotFound(table.getName());
         }
 
-        TableColumnSetValues tableColumnValues = null == updateColumns
+        TableColumnValues tableColumnValues = null == updateColumns
                 ? EntityConverter.getTableColumnValues(updateObject, false)
                 : EntityConverter.getTableColumnValues(updateObject, updateColumns);
 
@@ -531,15 +531,15 @@ public class IdSqlUtils {
      * 检查主键是否为null
      *
      * @param ids             主键离列表
-     * @param columnSetValues 列-值对
+     * @param columnValues 列-值对
      */
-    private static void checkIdNotNull(List<Column> ids, List<ColumnSetValue> columnSetValues) {
+    private static void checkIdNotNull(List<Column> ids, List<ColumnValue> columnValues) {
         Map<String, Object> idValueMap = new LinkedHashMap<>();
         ids.forEach(id -> idValueMap.put(id.getNameWithTableAlias(), null));
-        columnSetValues.forEach(columnSetValue -> {
-            String columnAlias = columnSetValue.getColumn().getNameWithTableAlias();
+        columnValues.forEach(columnValue -> {
+            String columnAlias = columnValue.getColumn().getNameWithTableAlias();
             if (idValueMap.containsKey(columnAlias)) {
-                idValueMap.put(columnAlias, columnSetValue.getValue());
+                idValueMap.put(columnAlias, columnValue.getValue());
             }
         });
         for (Column id : ids) {
@@ -555,15 +555,15 @@ public class IdSqlUtils {
      * @param tableColumnValues 表列-值信息
      * @param sql               SQL对象
      */
-    public static void addSetsSql(TableColumnSetValues tableColumnValues, SetSupport<?> sql) {
-        for (ColumnSetValue cv : tableColumnValues.getColumnValues()) {
+    public static void addSetsSql(TableColumnValues tableColumnValues, SetSupport<?> sql) {
+        for (ColumnValue cv : tableColumnValues.getColumnValues()) {
             Column column = (Column) cv.getColumn();
             Object value = cv.getValue();
             //id不能更新
-            if (cv.isId()) {
+            if (column.isId()) {
                 throw SqlException.idInvalidUpdate(((Column) cv.getColumn()).getTable().getName(), column.getName());
             } else {
-                if (!cv.isNullable() && null == value) {
+                if (!column.isNullable() && null == value) {
                     throw SqlException.columnNullPointer(((Column) cv.getColumn()).getTable().getName(), column.getName());
                 }
                 sql.set(column.set(value));
@@ -578,9 +578,9 @@ public class IdSqlUtils {
      * @param columnValuesList 列-值列表
      * @return 主键值列表
      */
-    private static List<Object> getIdValues(Column id, List<TableColumnSetValues> columnValuesList) {
+    private static List<Object> getIdValues(Column id, List<TableColumnValues> columnValuesList) {
         List<Object> idValues = new ArrayList<>(columnValuesList.size());
-        for (TableColumnSetValues columnValues : columnValuesList) {
+        for (TableColumnValues columnValues : columnValuesList) {
             for (ColumnValue kvPair : columnValues.getColumnValues()) {
                 if (kvPair.getColumn().equals(id)) {
                     idValues.add(kvPair.getValue());
@@ -596,11 +596,11 @@ public class IdSqlUtils {
      * @param columnValuesList 列-值列表
      * @param sql              Sql对象
      */
-    private static void appendWhereSql(List<TableColumnSetValues> columnValuesList, WhereSupport<?> sql) {
+    private static void appendWhereSql(List<TableColumnValues> columnValuesList, WhereSupport<?> sql) {
 
         // 优化只有一个值
         if (columnValuesList.size() == 1) {
-            List<ColumnSetValue> cvs = columnValuesList.get(0).getColumnValues();
+            List<ColumnValue> cvs = columnValuesList.get(0).getColumnValues();
             if (CollectionUtils.isNotEmpty(cvs)) {
                 cvs.stream().filter(Objects::nonNull).forEach(
                         cv ->
@@ -613,7 +613,7 @@ public class IdSqlUtils {
             return;
         }
 
-        TableColumnSetValues firstIdValues = columnValuesList.get(0);
+        TableColumnValues firstIdValues = columnValuesList.get(0);
 
         // 优化只有一个column
         if (firstIdValues.getColumnValues().size() == 1) {
@@ -625,8 +625,8 @@ public class IdSqlUtils {
             return;
         }
 
-        for (TableColumnSetValues columnValues : columnValuesList) {
-            List<ColumnSetValue> cvs = columnValues.getColumnValues();
+        for (TableColumnValues columnValues : columnValuesList) {
+            List<ColumnValue> cvs = columnValues.getColumnValues();
             if (CollectionUtils.isNotEmpty(cvs)) {
                 List<CriteriaItem> items = cvs.stream()
                         .filter(Objects::nonNull)
@@ -672,7 +672,7 @@ public class IdSqlUtils {
         List<Object> values = new ArrayList<>(objs.size() * columns.size());
         Table table = null;
         for (Object obj : objs) {
-            TableColumnSetValues entity = EntityConverter.getTableColumnValues(obj, true);
+            TableColumnValues entity = EntityConverter.getTableColumnValues(obj, true);
             if (null == table) {
                 table = entity.getTable();
             } else {
@@ -680,7 +680,7 @@ public class IdSqlUtils {
                     throw SqlException.tableNotMatched(table.getName(), entity.getTable().getName());
                 }
             }
-            List<ColumnSetValue> columnValues2Insert = getFilterColumnSetValues(entity.getColumnValues(), filterColumnSet);
+            List<ColumnValue> columnValues2Insert = getFilterColumnValues(entity.getColumnValues(), filterColumnSet);
             columnValues2Insert.forEach(columnValue -> values.add(columnValue.getValue()));
         }
         return new BatchInsertItems(table, columns, values);
@@ -689,42 +689,42 @@ public class IdSqlUtils {
     /**
      * 获取过滤的是指值
      *
-     * @param columnSetValues 待设置值
+     * @param columnValues 待设置值
      * @return 过滤后可插入的值
      */
-    private static List<ColumnSetValue> getFilterColumnSetValues(List<ColumnSetValue> columnSetValues
+    private static List<ColumnValue> getFilterColumnValues(List<ColumnValue> columnValues
             , Set<String> filterColumnSet) {
 
-        Map<String, ColumnSetValue> columnSetValueMap = new HashMap<>();
+        Map<String, ColumnValue> columnValueMap = new HashMap<>();
 
-        columnSetValues.forEach(columnSetValue -> {
+        columnValues.forEach(columnValue -> {
 
-            Column column = (Column) columnSetValue.getColumn();
+            Column column = (Column) columnValue.getColumn();
             String columnNameWithTableAlias = column.getNameWithTableAlias();
-            Object value = columnSetValue.getValue();
+            Object value = columnValue.getValue();
 
             // 包含该字段
             if (filterColumnSet.contains(columnNameWithTableAlias)) {
                 if (null != value) {
-                    if (columnSetValue.isAutoIncrease()) {
+                    if (column.isAutoIncrease()) {
                         throw SqlException.idAutoIncrease(column.getTable().getName(), column.getName());
                     }
                 } else {
-                    if (isColumnNotNullable(columnSetValue)) {
+                    if (isColumnNotNullable(columnValue)) {
                         throw SqlException.columnNullPointer(column.getTable().getName(), column.getName());
                     }
                 }
-                columnSetValueMap.put(columnNameWithTableAlias, columnSetValue);
+                columnValueMap.put(columnNameWithTableAlias, columnValue);
             } else {
                 // 字段不存在
-                if (isColumnNotNullable(columnSetValue)) {
+                if (isColumnNotNullable(columnValue)) {
                     throw SqlException.columnNullPointer(column.getTable().getName(), column.getName());
                 }
             }
         });
 
-        List<ColumnSetValue> columnValues2Insert = new ArrayList<>();
-        filterColumnSet.forEach(column -> columnValues2Insert.add(columnSetValueMap.get(column)));
+        List<ColumnValue> columnValues2Insert = new ArrayList<>();
+        filterColumnSet.forEach(column -> columnValues2Insert.add(columnValueMap.get(column)));
         return columnValues2Insert;
     }
 

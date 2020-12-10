@@ -21,7 +21,7 @@ public class ColumnAs extends Column {
      * @param nameAs 别名（as后面的名称）
      */
     public ColumnAs(Column column, String nameAs) {
-        super(column.getTable(), column.getName());
+        super(column);
         this.nameAs = nameAs;
     }
 

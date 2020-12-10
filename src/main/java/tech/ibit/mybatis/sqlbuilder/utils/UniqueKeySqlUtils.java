@@ -3,7 +3,7 @@ package tech.ibit.mybatis.sqlbuilder.utils;
 import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
-import tech.ibit.mybatis.sqlbuilder.converter.TableColumnSetValues;
+import tech.ibit.mybatis.sqlbuilder.converter.TableColumnValues;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.DeleteSql;
 import tech.ibit.mybatis.sqlbuilder.sql.QuerySql;
@@ -124,7 +124,7 @@ public class UniqueKeySqlUtils {
             throw SqlException.uniqueKeyValueNotFound();
         }
 
-        TableColumnSetValues tableColumnValues = null == updateColumns
+        TableColumnValues tableColumnValues = null == updateColumns
                 ? EntityConverter.getTableColumnValues(updateObject, false)
                 : EntityConverter.getTableColumnValues(updateObject, updateColumns);
 

@@ -2,6 +2,7 @@ package tech.ibit.mybatis.sqlbuilder.converter;
 
 import tech.ibit.mybatis.sqlbuilder.AutoIncrementIdSetterMethod;
 import tech.ibit.mybatis.sqlbuilder.Column;
+import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.Table;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbColumn;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbId;
@@ -46,7 +47,7 @@ public class EntityConverter {
         Table dbTable = new Table(table.name(), table.alias());
         int depth = 0;
         Set<String> existedColumns = new HashSet<>();
-        List<ColumnInfo> columnInfoList = new ArrayList<>(10);
+        List<Column> columnInfoList = new ArrayList<>(10);
 
         while (isContinue(poClazz, depth)) {
             depth++;
@@ -57,7 +58,7 @@ public class EntityConverter {
                         if (null != dbColumn) {
                             String columnName = dbColumn.name();
                             if (!existedColumns.contains(columnName)) {
-                                columnInfoList.add(new ColumnInfo(new Column(dbTable, columnName), false, dbColumn.nullable()));
+                                columnInfoList.add(Column.getInstance(dbTable, columnName, dbColumn.nullable()));
                                 existedColumns.add(columnName);
                             }
                         } else {
@@ -65,7 +66,7 @@ public class EntityConverter {
                             if (null != id) {
                                 String idName = id.name();
                                 if (!existedColumns.contains(idName)) {
-                                    columnInfoList.add(new ColumnInfo(new Column(dbTable, idName), true, false));
+                                    columnInfoList.add(Column.getIdInstance(dbTable, idName, id.autoIncrease()));
                                     existedColumns.add(idName);
                                 }
                             }
@@ -118,7 +119,7 @@ public class EntityConverter {
      * @return "列-值"信息列表
      * @see TableColumnValues
      */
-    public static List<TableColumnSetValues> getTableColumnValuesList(Collection<?> pos, boolean returnNullValue) {
+    public static List<TableColumnValues> getTableColumnValuesList(Collection<?> pos, boolean returnNullValue) {
         if (null == pos || pos.isEmpty()) {
             return Collections.emptyList();
         }
@@ -134,7 +135,7 @@ public class EntityConverter {
      * @param columnsOrder 指定列
      * @return "列-值"信息列表
      */
-    public static List<TableColumnSetValues> getTableColumnValuesList(Collection<?> pos, List<Column> columnsOrder) {
+    public static List<TableColumnValues> getTableColumnValuesList(Collection<?> pos, List<Column> columnsOrder) {
         if (null == pos || pos.isEmpty()) {
             return Collections.emptyList();
         }
@@ -398,55 +399,39 @@ public class EntityConverter {
      * @param returnNullValue 是否返回null的字段
      * @return 列更新信息
      */
-    public static TableColumnSetValues getTableColumnValues(Object entity,
-                                                            boolean returnNullValue) {
+    public static TableColumnValues getTableColumnValues(Object entity,
+                                                         boolean returnNullValue) {
         Class<?> clazz = entity.getClass();
         checkEntityClazz(clazz);
 
         DbTable table = clazz.getAnnotation(DbTable.class);
         Table dbTable = new Table(table.name(), table.alias());
         int depth = 0;
-        Map<String, ColumnSetValue> columnValueMap = new LinkedHashMap<>();
+        Map<String, ColumnValue> columnValueMap = new LinkedHashMap<>();
         while (isContinue(clazz, depth)) {
 
             depth++;
             for (Field field : clazz.getDeclaredFields()) {
-                //主键
-                if (field.isAnnotationPresent(DbId.class)) {
-                    DbId idAnnotation = field.getAnnotation(DbId.class);
-                    Column id = new Column(dbTable, idAnnotation.name());
-                    String idAlias = id.getNameWithTableAlias();
-                    //set field accessible
-                    field.setAccessible(true);
-                    try {
-                        Object value = field.get(entity);
-                        if (returnNullValue || null != value) {
-                            columnValueMap.putIfAbsent(idAlias, new ColumnSetValue(id, value, true, false, idAnnotation.autoIncrease()));
-                        }
-                    } catch (IllegalAccessException e) {
-                        //ignore
-                    }
-                } else if (field.isAnnotationPresent(DbColumn.class)) {
-                    DbColumn columnAnnotation = field.getAnnotation(DbColumn.class);
-                    Column column = new Column(dbTable, columnAnnotation.name());
+                Column column = getColumn(field, dbTable);
+
+                if (null != column) {
                     String columnAlias = column.getNameWithTableAlias();
                     field.setAccessible(true);
                     try {
                         Object value = field.get(entity);
                         if (returnNullValue || null != value) {
-                            columnValueMap.putIfAbsent(columnAlias, new ColumnSetValue(column, value, false, columnAnnotation.nullable(), false));
+                            columnValueMap.putIfAbsent(columnAlias, column.value(value));
                         }
                     } catch (IllegalAccessException e) {
                         //ignore
                     }
-
                 }
             }
             clazz = clazz.getSuperclass();
         }
-        List<ColumnSetValue> columnValues = new ArrayList<>();
+        List<ColumnValue> columnValues = new ArrayList<>();
         columnValueMap.forEach((column, value) -> columnValues.add(value));
-        return new TableColumnSetValues(dbTable, columnValues);
+        return new TableColumnValues(dbTable, columnValues);
     }
 
     /**
@@ -456,61 +441,65 @@ public class EntityConverter {
      * @param orderList 列排序列表（指定列）
      * @return 表-列值信息
      */
-    public static TableColumnSetValues getTableColumnValues(Object entity, List<Column> orderList) {
+    public static TableColumnValues getTableColumnValues(Object entity, List<Column> orderList) {
+
         Class<?> clazz = entity.getClass();
         checkEntityClazz(clazz);
 
         DbTable table = clazz.getAnnotation(DbTable.class);
         Table dbTable = new Table(table.name(), table.alias());
         if (CollectionUtils.isEmpty(orderList)) {
-            return new TableColumnSetValues(dbTable, Collections.emptyList());
+            return new TableColumnValues(dbTable, Collections.emptyList());
         }
+
         int depth = 0;
-        Map<String, ColumnSetValue> columnValueMap = new LinkedHashMap<>();
+        Map<String, ColumnValue> columnValueMap = new LinkedHashMap<>();
         Set<String> columnSet = orderList.stream().map(Column::getNameWithTableAlias).collect(Collectors.toSet());
         while (isContinue(clazz, depth)) {
 
             depth++;
             for (Field field : clazz.getDeclaredFields()) {
-                //主键
-                if (field.isAnnotationPresent(DbId.class)) {
-                    DbId idAnnotation = field.getAnnotation(DbId.class);
-                    Column id = new Column(dbTable, idAnnotation.name());
-                    String idAlias = id.getNameWithTableAlias();
-                    if (columnSet.contains(idAlias)) {
-                        //set field accessible
-                        field.setAccessible(true);
-                        try {
-                            Object value = field.get(entity);
-                            columnValueMap.putIfAbsent(idAlias, new ColumnSetValue(id, value, true, false
-                                    , idAnnotation.autoIncrease()));
-                        } catch (IllegalAccessException e) {
-                            //ignore
-                        }
-                    }
-                } else if (field.isAnnotationPresent(DbColumn.class)) {
-                    DbColumn columnAnnotation = field.getAnnotation(DbColumn.class);
-                    Column column = new Column(dbTable, columnAnnotation.name());
+
+                Column column = getColumn(field, dbTable);
+
+                if (null != column) {
                     String columnAlias = column.getNameWithTableAlias();
                     if (columnSet.contains(columnAlias)) {
                         //set field accessible
                         field.setAccessible(true);
                         try {
                             Object value = field.get(entity);
-                            columnValueMap.putIfAbsent(columnAlias, new ColumnSetValue(column, value, false, columnAnnotation.nullable()
-                                    , false));
+                            columnValueMap.putIfAbsent(columnAlias, column.value(value));
                         } catch (IllegalAccessException e) {
                             //ignore
                         }
                     }
-
                 }
             }
             clazz = clazz.getSuperclass();
         }
-        List<ColumnSetValue> columnValues = new ArrayList<>();
+        List<ColumnValue> columnValues = new ArrayList<>();
         orderList.forEach(column -> columnValues.add(columnValueMap.get(column.getNameWithTableAlias())));
-        return new TableColumnSetValues(dbTable, columnValues);
+        return new TableColumnValues(dbTable, columnValues);
+    }
+
+    /**
+     * 从字段中读取类
+     *
+     * @param field   字段
+     * @param dbTable 表
+     * @return 列
+     */
+    private static Column getColumn(Field field, Table dbTable) {
+        //主键
+        if (field.isAnnotationPresent(DbId.class)) {
+            DbId idAnnotation = field.getAnnotation(DbId.class);
+            return Column.getIdInstance(dbTable, idAnnotation.name(), idAnnotation.autoIncrease());
+        } else if (field.isAnnotationPresent(DbColumn.class)) {
+            DbColumn columnAnnotation = field.getAnnotation(DbColumn.class);
+            return Column.getInstance(dbTable, columnAnnotation.name(), columnAnnotation.nullable());
+        }
+        return null;
     }
 
     /**

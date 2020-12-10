@@ -90,6 +90,18 @@ public interface IColumnAggregateSupport extends IColumnSupport {
     }
 
     /**
+     * IFNULL函数
+     * <p>
+     * 语法: IFNULL(expr1, '')
+     * 规则: 如果 expr1 不为 NULL，就返回 expr1，否则返回 ''。
+     *
+     * @return IFNULL函数列
+     */
+    default AggregateColumn ifnullEmpty() {
+        return new AggregateColumn(AggregateFunctionNameEnum.IFNULL.name(), getColumn());
+    }
+
+    /**
      * NULLIF函数
      * <p>
      * 语法: NULLIF(expr1,expr2)
