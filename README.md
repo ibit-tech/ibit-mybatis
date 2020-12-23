@@ -332,6 +332,8 @@ public List<UserNameDto> listUsers(String keyword) {
 }
 ```
 
+### 使用 ibit-mybatis版本 2.9+，需要用 ibit-mybatis-generator 2.3+ 重新生成一下 XXXProperties类
+
 ## 公众号
 
 喜欢我的文章，请关注公众号

@@ -94,15 +94,6 @@ public interface Mapper<T> extends RawMapper<T> {
     }
 
     /**
-     * 获取表中id列表
-     *
-     * @return id列表
-     */
-    default List<Column> getIds() {
-        return EntityConverter.getTableColumns(getPoClazz()).getIds();
-    }
-
-    /**
      * 通过 unique key 删除记录
      *
      * @param uniqueKey unique key
