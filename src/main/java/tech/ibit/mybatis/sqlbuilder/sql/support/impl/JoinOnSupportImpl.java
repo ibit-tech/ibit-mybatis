@@ -1,10 +1,10 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.JoinOnSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
-import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.List;
 

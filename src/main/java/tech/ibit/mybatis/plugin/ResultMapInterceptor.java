@@ -8,8 +8,8 @@ import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.SqlProvider;
-import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.Collections;
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.Properties;
 /**
  * 动态解析 ResultType
  *
- * @author IBIT TECH
+ * @author iBit程序猿
  * @since 2.6
  */
 @Intercepts({

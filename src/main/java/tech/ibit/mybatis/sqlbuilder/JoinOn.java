@@ -1,7 +1,7 @@
 package tech.ibit.mybatis.sqlbuilder;
 
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.sqlbuilder.enums.JoinOnTypeEnum;
-import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -14,7 +14,7 @@ public interface ProjectProperties {
     Table TABLE = new Table("project", "p");
 
     Column projectId = Column.getIdInstance(TABLE, "project_id", true);
-    
+
     Column name = Column.getInstance(TABLE, "name", false);
 
 }

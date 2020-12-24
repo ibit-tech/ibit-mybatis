@@ -1,4 +1,4 @@
-package tech.ibit.mybatis.sqlbuilder.converter;
+package tech.ibit.mybatis.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,7 +10,7 @@ import java.lang.reflect.Modifier;
  * @author iBit程序猿
  * @version 1.0
  */
-class MethodUtils {
+public class MethodUtils {
 
     private MethodUtils() {
     }
@@ -22,7 +22,7 @@ class MethodUtils {
      * @param field 字段
      * @return 字段的Setter方法
      */
-    static Method getSetterMethod(Class<?> clazz, Field field) {
+    public static Method getSetterMethod(Class<?> clazz, Field field) {
         String fieldName = field.getName();
         String methodName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
         try {
@@ -44,7 +44,7 @@ class MethodUtils {
      * @param field 字段
      * @return 字段的Setter方法
      */
-    static Method getGetterMethod(Class<?> clazz, Field field) {
+    public static Method getGetterMethod(Class<?> clazz, Field field) {
         String prefix = (field.getType() == boolean.class || field.getType() == Boolean.class)
                 ? "is" : "get";
         String fieldName = field.getName();

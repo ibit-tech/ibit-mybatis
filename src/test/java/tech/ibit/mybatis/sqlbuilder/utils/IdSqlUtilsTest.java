@@ -311,7 +311,8 @@ public class IdSqlUtilsTest extends CommonTest {
 
         PrepareStatement prepareStatement = IdSqlUtils.batchInsertInto(
                 userMapper, Arrays.asList(user, user2),
-                Arrays.asList(UserProperties.name, UserProperties.email, UserProperties.mobilePhone, UserProperties.type, UserProperties.password)
+                Arrays.asList(UserProperties.name, UserProperties.email
+                        , UserProperties.mobilePhone, UserProperties.type, UserProperties.password)
         ).getPrepareStatement();
         assertPrepareStatementEquals(
                 "INSERT INTO user(name, email, mobile_phone, type, password) VALUES(?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",

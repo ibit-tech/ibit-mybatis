@@ -3,7 +3,6 @@ package tech.ibit.mybatis;
 import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.Table;
 import tech.ibit.mybatis.sqlbuilder.UniqueKey;
-import tech.ibit.mybatis.sqlbuilder.converter.EntityConverter;
 import tech.ibit.mybatis.sqlbuilder.exception.OperationNotSupportedException;
 import tech.ibit.mybatis.sqlbuilder.sql.*;
 import tech.ibit.mybatis.sqlbuilder.sql.impl.*;

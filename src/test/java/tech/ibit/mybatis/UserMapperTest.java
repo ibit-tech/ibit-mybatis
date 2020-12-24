@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.demo.entity.User;
 import tech.ibit.mybatis.demo.entity.UserPo;
 import tech.ibit.mybatis.demo.entity.UserTypeTotal;
@@ -19,7 +20,6 @@ import tech.ibit.mybatis.demo.service.UserService;
 import tech.ibit.mybatis.sqlbuilder.UniqueKey;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
 import tech.ibit.mybatis.sqlbuilder.sql.Page;
-import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Function;

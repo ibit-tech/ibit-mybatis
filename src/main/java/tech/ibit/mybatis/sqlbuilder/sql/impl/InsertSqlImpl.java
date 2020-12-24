@@ -1,5 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.impl;
 
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.sqlbuilder.*;
 import tech.ibit.mybatis.sqlbuilder.sql.InsertSql;
@@ -8,7 +9,6 @@ import tech.ibit.mybatis.sqlbuilder.sql.support.impl.InsertTableSupportImpl;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.OnDuplicateKeyUpdateSupportImpl;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.PrepareStatementBuildSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.impl.ValuesSupportImpl;
-import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

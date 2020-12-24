@@ -1,6 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.sql.field;
 
-import tech.ibit.mybatis.utils.CollectionUtils;
+import tech.ibit.common.collection.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

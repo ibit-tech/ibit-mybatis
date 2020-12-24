@@ -1,9 +1,9 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.PrepareStatementSupplier;
-import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

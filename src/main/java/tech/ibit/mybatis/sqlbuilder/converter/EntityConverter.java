@@ -1,5 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.converter;
 
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.sqlbuilder.AutoIncrementIdSetterMethod;
 import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
@@ -8,7 +9,7 @@ import tech.ibit.mybatis.sqlbuilder.annotation.DbColumn;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbId;
 import tech.ibit.mybatis.sqlbuilder.annotation.DbTable;
 import tech.ibit.mybatis.sqlbuilder.exception.SqlException;
-import tech.ibit.mybatis.utils.CollectionUtils;
+import tech.ibit.mybatis.utils.MethodUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

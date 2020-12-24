@@ -1,6 +1,7 @@
 package tech.ibit.mybatis.sqlbuilder.sql.support.impl;
 
 import org.apache.commons.lang.StringUtils;
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.ColumnValue;
 import tech.ibit.mybatis.sqlbuilder.CriteriaMaker;
@@ -8,7 +9,6 @@ import tech.ibit.mybatis.sqlbuilder.PrepareStatement;
 import tech.ibit.mybatis.sqlbuilder.sql.field.ListField;
 import tech.ibit.mybatis.sqlbuilder.sql.support.SqlSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.ValuesSupport;
-import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

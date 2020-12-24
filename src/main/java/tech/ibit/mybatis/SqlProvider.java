@@ -81,7 +81,7 @@ public class SqlProvider {
      * @param index 索引值
      * @return 参数键
      */
-    private String getParamKey(int index) {
+    public static String getParamKey(int index) {
         return PARAM_SQL_PARAMS + index;
     }
 

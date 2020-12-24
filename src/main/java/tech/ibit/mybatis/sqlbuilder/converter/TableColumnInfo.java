@@ -1,8 +1,8 @@
 package tech.ibit.mybatis.sqlbuilder.converter;
 
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.sqlbuilder.Column;
 import tech.ibit.mybatis.sqlbuilder.Table;
-import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;

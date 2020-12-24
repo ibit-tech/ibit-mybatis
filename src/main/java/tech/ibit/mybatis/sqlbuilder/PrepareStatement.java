@@ -1,6 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder;
 
-import tech.ibit.mybatis.utils.CollectionUtils;
+import tech.ibit.common.collection.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;

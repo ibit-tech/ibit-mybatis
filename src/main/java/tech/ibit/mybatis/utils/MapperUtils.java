@@ -1,6 +1,7 @@
 package tech.ibit.mybatis.utils;
 
 import org.apache.commons.lang.StringUtils;
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.MultipleIdMapper;
 import tech.ibit.mybatis.SingleIdMapper;

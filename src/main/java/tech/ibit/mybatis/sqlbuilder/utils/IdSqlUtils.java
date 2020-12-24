@@ -1,5 +1,6 @@
 package tech.ibit.mybatis.sqlbuilder.utils;
 
+import tech.ibit.common.collection.CollectionUtils;
 import tech.ibit.mybatis.Mapper;
 import tech.ibit.mybatis.MultipleIdMapper;
 import tech.ibit.mybatis.SingleIdMapper;
@@ -14,7 +15,6 @@ import tech.ibit.mybatis.sqlbuilder.sql.QuerySql;
 import tech.ibit.mybatis.sqlbuilder.sql.UpdateSql;
 import tech.ibit.mybatis.sqlbuilder.sql.support.SetSupport;
 import tech.ibit.mybatis.sqlbuilder.sql.support.WhereSupport;
-import tech.ibit.mybatis.utils.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;

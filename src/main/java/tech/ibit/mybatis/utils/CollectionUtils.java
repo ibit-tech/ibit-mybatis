@@ -8,6 +8,7 @@ import java.util.Collection;
  * @author iBit程序猿
  * @version 1.0
  */
+@Deprecated
 public class CollectionUtils {
 
     private CollectionUtils() {
