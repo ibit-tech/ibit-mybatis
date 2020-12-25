@@ -284,6 +284,24 @@ public ResultMapInterceptor getResultMapInterceptor() {
 }
 ```
 
+#### 升级到版本 2.9+
+
+使用 `ibit-mybatis` 版本 2.9+，需要用 `ibit-mybatis-generator` 版本 2.3+ 重新生成一下 `Properties` 类。
+
+**改动点：** Column 标识 字段是否为主键，是否自增，是否可以为null等。
+
+```
+/**
+ * 用户id
+ */
+Column userId = Column.getIdInstance(TABLE, "user_id", true);
+
+/**
+ * 用户名称
+ */
+Column name = Column.getInstance(TABLE, "name");
+```
+
 ### 新功能介绍
 
 #### 2.6 新增mysql全文搜索
@@ -332,7 +350,60 @@ public List<UserNameDto> listUsers(String keyword) {
 }
 ```
 
-### 使用 ibit-mybatis版本 2.9+，需要用 ibit-mybatis-generator 2.3+ 重新生成一下 XXXProperties类
+#### 2.10 新增了字段加密功能拦截器
+
+** ResultDecryptInterceptor**：`tech.ibit.mybatis.plugin.ResultDecryptInterceptor` 定义解密拦截器，针对返回的对象解密。
+
+构造函数如下：
+
+```
+public ResultDecryptInterceptor(TransferStrategy strategy) {
+    this.strategy = strategy;
+}
+```
+
+加解密策略需要实现接口 `tech.ibit.mybatis.plugin.strategy.TransferStrategy`。
+
+解密类需要，类和字段使用`tech.ibit.mybatis.plugin.annotation.Encrypt`注解。如：
+
+```
+@Encrypt
+class User {
+
+    private String username;
+
+    @Encrypt
+    private String email;
+
+    @Encrypt
+    private String password;
+
+    @Encrypt
+    private String idCardNo;
+    
+    // 省略构造函数.. Getter 和 Setter 方法
+}
+```
+
+** ParameterEncryptInterceptor**：`tech.ibit.mybatis.plugin.ParameterEncryptInterceptor` 入参对象加密拦截器。
+
+构造函数如下：
+
+```
+/**
+ * 参数加密
+ *
+ * @param columnsToEncrypt 参数加密
+ * @param strategy         加密策略
+ */
+public ParameterEncryptInterceptor(Set<String> columnsToEncrypt, TransferStrategy strategy) {
+    this.columnsToEncrypt = columnsToEncrypt;
+    this.strategy = strategy;
+}
+```
+
+指定需要加密的列，加解密策略需要实现接口 `tech.ibit.mybatis.plugin.strategy.TransferStrategy`。
+
 
 ## 公众号
 
